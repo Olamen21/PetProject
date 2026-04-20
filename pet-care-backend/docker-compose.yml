@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./services/auth-service:/usr/src/app
+      - /usr/src/app/node_modules
+
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./services/api-gateway:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - auth-service
