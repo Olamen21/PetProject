@@ -1,5 +1,17 @@
-version: '3.8'
+version: "3.8"
 services:
+  postgresdb:
+    image: postgres:15-alpine
+    container_name: pet-care-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: pet_care_auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   auth-service:
     build: ./services/auth-service
     ports:
@@ -7,6 +19,8 @@ services:
     volumes:
       - ./services/auth-service:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
 
   api-gateway:
     build: ./services/api-gateway
@@ -17,3 +31,5 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - auth-service
+volumes:
+  postgres_data:
