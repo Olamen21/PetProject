@@ -5,8 +5,8 @@ import {
   CreateDateColumn,
   BeforeInsert,
 } from 'typeorm';
-import { Role } from '../roles/role.enum';
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/roles/role.enum';
 
 @Entity('users')
 export class User {
@@ -16,8 +16,9 @@ export class User {
   @Column({ unique: true })
   email!: string;
 
-  @Column()
+  @Column({ select: false })
   password_hash!: string;
+
   @BeforeInsert()
   async hashPassword() {
     this.password_hash = await bcrypt.hash(this.password_hash, 10);
@@ -28,6 +29,15 @@ export class User {
 
   @Column({ nullable: true })
   phone!: string;
+
+  @Column({ nullable: true })
+  address!: string;
+
+  @Column({ nullable: true })
+  date_of_birth!: Date;
+
+  @Column({ nullable: true })
+  avatar_url!: string;
 
   @Column({
     type: 'enum',
@@ -41,7 +51,4 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
-
-  @Column({ default: true })
-  isActive!: boolean;
 }
