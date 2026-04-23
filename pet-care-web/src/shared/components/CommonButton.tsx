@@ -3,7 +3,7 @@ import type { IconType } from "react-icons";
 import { Colors } from "../../constants/Colors";
 
 type Props = {
-  title: string;
+  title?: string;
   onClick: () => void;
   Icon?: IconType;
   iconSize?: number;
@@ -23,7 +23,7 @@ const CommonButton: React.FC<Props> = ({
   Icon,
   iconSize = 24,
   backgroundColor = Colors.primary, 
-  textColor = Colors.white,
+  textColor = Colors.text,
   iconColor = Colors.white,
   style,
   textStyle,

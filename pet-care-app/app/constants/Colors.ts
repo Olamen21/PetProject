@@ -11,4 +11,5 @@ export const Colors = {
   info: "#5BC0DE",
   border: "#E0E4E8",
   gray: "#D0D5DD",
+  subtitleColor: "#4F5E6F"
 };

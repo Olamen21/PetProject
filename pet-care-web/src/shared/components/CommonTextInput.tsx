@@ -41,9 +41,8 @@ const CommonTextInput: React.FC<Props> = ({
       style={{
         display: "flex",
         alignItems: "center",
-        borderRadius: 12,
-        marginBottom: 16,
-        height: 56,
+        borderRadius: 5,
+        height: 45,
         border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
         backgroundColor: backgroundColor || "transparent",
         ...containerStyle,
@@ -63,11 +62,13 @@ const CommonTextInput: React.FC<Props> = ({
         type={secureTextEntry ? "password" : "text"}
         style={{
           flex: 1,
-          fontSize: 16,
+          fontSize: 13,
           color: Colors.text,
           fontWeight: "500",
           ...inputStyle,
-           border: "none",
+          border: "none",
+          padding: "0 10px",
+          outline: "none",
         }}
         {...rest}
       />
