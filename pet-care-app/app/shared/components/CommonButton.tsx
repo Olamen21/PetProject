@@ -37,7 +37,7 @@ export default function CommonButton({
       style={[
         styles.button, 
         { backgroundColor }, 
-        bordered && { borderWidth, borderColor, backgroundColor: 'transparent' }, 
+        bordered && { borderWidth, borderColor,}, 
         style
       ]}
       onPress={onPress}
@@ -47,13 +47,13 @@ export default function CommonButton({
         <Ionicons 
           name={iconName} 
           size={iconSize} 
-          color={bordered ? borderColor : iconColor} 
+          color={iconColor} 
           style={{ marginRight: 8 }} 
         />
       )}
       <Text style={[
         styles.text, 
-        { color: bordered ? borderColor : textColor }, 
+        { color: textColor }, 
         textStyle
       ]}>
         {title}
