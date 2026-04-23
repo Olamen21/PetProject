@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { RegisterDto } from './auth/dto/register.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AppService {
@@ -32,5 +33,10 @@ export class AppService {
     }
 
     return { message: 'Login successful' };
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltOrRounds = 10;
+    return await bcrypt.hash(password, saltOrRounds);
   }
 }
