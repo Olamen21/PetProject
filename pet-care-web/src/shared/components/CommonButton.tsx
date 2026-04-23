@@ -1,9 +1,9 @@
 import React from "react";
 import type { IconType } from "react-icons";
-import { Colors } from "../../constants/Colors";
+import { theme } from "../../styles/theme";
 
 type Props = {
-  title: string;
+  title?: string;
   onClick: () => void;
   Icon?: IconType;
   iconSize?: number;
@@ -22,13 +22,13 @@ const CommonButton: React.FC<Props> = ({
   onClick,
   Icon,
   iconSize = 24,
-  backgroundColor = Colors.primary, 
-  textColor = Colors.white,
-  iconColor = Colors.white,
+  backgroundColor = theme.colors.primary,
+  textColor = theme.colors.text,
+  iconColor = theme.colors.white,
   style,
   textStyle,
   bordered = false,
-  borderColor = Colors.primary,
+  borderColor = theme.colors.primary,
   borderWidth = 1.5,
 }) => {
   return (

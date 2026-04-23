@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Platform } from "react-native";
-import { Colors } from "../../constants/Colors";
+import Colors from "../../constants/Colors";
 
 interface Props {
   value: boolean;

@@ -8,7 +8,7 @@ import {
   TextInputProps,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../constants/Colors";
+import Colors from "../../constants/Colors";
 
 type Props = {
   icon?: keyof typeof Ionicons.glyphMap;

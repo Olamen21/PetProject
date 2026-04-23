@@ -1,6 +1,6 @@
 import React from "react";
 import { IoIosAlert, IoIosCheckmarkCircle, IoIosWarning, IoIosInformationCircle } from "react-icons/io";
-import { Colors } from "../../constants/Colors";
+import { theme } from "../../styles/theme";
 
 type Props = {
   type?: "error" | "success" | "warning" | "info";
@@ -16,10 +16,10 @@ const CommonMessage: React.FC<Props> = ({
   if (!visible) return null;
 
   const config = {
-    error: { color: Colors.error, Icon: IoIosAlert },
-    success: { color: Colors.success, Icon: IoIosCheckmarkCircle },
-    warning: { color: Colors.warning, Icon: IoIosWarning },
-    info: { color: Colors.info, Icon: IoIosInformationCircle },
+    error: { color: theme.colors.error, Icon: IoIosAlert },
+    success: { color: theme.colors.success, Icon: IoIosCheckmarkCircle },
+    warning: { color: theme.colors.warning, Icon: IoIosWarning },
+    info: { color: theme.colors.info, Icon: IoIosInformationCircle },
   };
 
   const { color, Icon } = config[type];
@@ -35,7 +35,7 @@ const CommonMessage: React.FC<Props> = ({
         borderRadius: 10,
         padding: 12,
         marginBottom: 12,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colors.white,
         gap: 8,
       }}
     >

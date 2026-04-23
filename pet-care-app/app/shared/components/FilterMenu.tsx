@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import { Colors } from "../../constants/Colors"; 
+import Colors from "../../constants/Colors"; 
 
 interface FilterMenuProps {
   filters: string[];                

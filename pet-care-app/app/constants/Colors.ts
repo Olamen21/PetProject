@@ -1,5 +1,5 @@
 
-export const Colors = {
+const Colors = {
   primary: "#5A7863",    // Xanh lá đậm
   secondary: "#90AB8B",  // Xanh lá nhạt
   background: "#EBF4DD", // Xanh kem nhạt
@@ -11,4 +11,7 @@ export const Colors = {
   info: "#5BC0DE",
   border: "#E0E4E8",
   gray: "#D0D5DD",
+  subtitleColor: "#4F5E6F"
 };
+
+export default Colors;

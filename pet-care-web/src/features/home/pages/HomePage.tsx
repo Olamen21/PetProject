@@ -1,6 +1,6 @@
 import CommonButton from '../../../shared/components/CommonButton';
 import { IoIosAdd } from 'react-icons/io';
-import { Colors } from '../../../constants/Colors';
+import { theme } from '../../../styles/theme';
 import CommonTextInput from '../../../shared/components/CommonTextInput';
 import React from 'react';
 import CommonMessage from '../../../shared/components/CommonMessage';
@@ -16,7 +16,7 @@ function HomePage() {
         onClick={() => alert("Clicked!")}
         Icon={IoIosAdd}
         bordered
-        backgroundColor= {Colors.background}
+        backgroundColor= {theme.colors.background}
       />
       <CommonTextInput 
         placeholder="Enter text here..."

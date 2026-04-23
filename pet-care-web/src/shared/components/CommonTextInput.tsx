@@ -1,6 +1,6 @@
 import React from "react";
 import type { IconType } from "react-icons";
-import { Colors } from "../../constants/Colors";
+import { theme } from "../../styles/theme";
 
 type Props = {
   Icon?: IconType;
@@ -22,7 +22,7 @@ type Props = {
 const CommonTextInput: React.FC<Props> = ({
   Icon,
   iconSize = 22, 
-  iconColor = Colors.secondary, 
+  iconColor = theme.colors.secondary, 
   placeholder,
   value,
   onChangeText,
@@ -30,9 +30,9 @@ const CommonTextInput: React.FC<Props> = ({
   rightIcon,
   containerStyle,
   inputStyle,
-  backgroundColor = Colors.white, 
+  backgroundColor = theme.colors.white, 
   bordered = true, 
-  borderColor = Colors.gray, 
+  borderColor = theme.colors.gray, 
   borderWidth = 1.5,
   ...rest
 }) => {
@@ -41,9 +41,8 @@ const CommonTextInput: React.FC<Props> = ({
       style={{
         display: "flex",
         alignItems: "center",
-        borderRadius: 12,
-        marginBottom: 16,
-        height: 56,
+        borderRadius: 5,
+        height: 45,
         border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
         backgroundColor: backgroundColor || "transparent",
         ...containerStyle,
@@ -63,11 +62,13 @@ const CommonTextInput: React.FC<Props> = ({
         type={secureTextEntry ? "password" : "text"}
         style={{
           flex: 1,
-          fontSize: 16,
-          color: Colors.text,
+          fontSize: 13,
+          color: theme.colors.text,
           fontWeight: "500",
           ...inputStyle,
            border: "none",
+          padding: "0 10px",
+          outline: "none",
         }}
         {...rest}
       />
