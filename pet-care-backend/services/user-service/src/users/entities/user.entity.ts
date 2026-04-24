@@ -5,8 +5,8 @@ import {
   CreateDateColumn,
   BeforeInsert,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/role.enum';
+import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {

@@ -31,5 +31,15 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - auth-service
+      
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./services/user-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
 volumes:
   postgres_data:
