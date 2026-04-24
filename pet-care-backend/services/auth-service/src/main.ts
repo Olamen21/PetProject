@@ -15,8 +15,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(3001, '0.0.0.0'); 
-  
+  await app.listen(3001, '0.0.0.0');
+
   console.log(`Auth Service is running on: http://localhost:3001/api/docs`);
 }
 bootstrap();
