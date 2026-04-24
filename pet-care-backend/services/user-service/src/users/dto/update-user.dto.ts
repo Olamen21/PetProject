@@ -1,15 +1,12 @@
-import { IsString, IsOptional, IsPhoneNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProfileDto {
-  @IsString()
-  @IsOptional()
+  @ApiProperty({ example: 'Huỳnh Thanh Thúy', description: 'Họ và tên' })
   full_name?: string;
 
-  @IsPhoneNumber('VN')
-  @IsOptional()
+  @ApiProperty({ example: '0901234567', description: 'Số điện thoại' })
   phone?: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiProperty({ example: 'https://image.com/avatar.png', required: false })
   avatar_url?: string;
 }

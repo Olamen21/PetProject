@@ -6,41 +6,51 @@ import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
 import { User } from './entities/user.entity';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 interface RequestWithUser extends Request {
   user: { id: number; email: string; role: Role };
 }
 
+@ApiTags('Users')
+@ApiBearerAuth('token')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  getProfile(@Req() req: RequestWithUser): Promise<User> {
-    const userId = req.user.id;
-    return this.usersService.findOne(userId);
+  @ApiOperation({ summary: 'Lấy thông tin cá nhân của User hiện tại' })
+  @ApiResponse({ status: 200, description: 'Thành công', type: User })
+  getProfile(@Req() req: RequestWithUser) {
+    if (!req.user) {
+      return {
+        message:
+          'Chưa có token nên chưa xác định được user, hãy đăng nhập để lấy token và thử lại',
+        example_id: 'Dán một cái UUID từ database vào đây',
+      };
+    }
+    return this.usersService.findOne(req.user.id);
   }
 
   @Patch('profile')
+  @ApiOperation({ summary: 'Cập nhật hồ sơ cá nhân' })
   updateProfile(
     @Req() req: RequestWithUser,
     @Body() updateProfileDto: UpdateProfileDto,
-  ): Promise<User> {
-    const userId = req.user.id;
-    return this.usersService.updateProfile(userId, updateProfileDto);
+  ) {
+    return this.usersService.updateProfile(req.user.id, updateProfileDto);
   }
 
   @Get('all-users')
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
-  findAll(): Promise<User[]> {
+  @ApiOperation({ summary: 'Lấy danh sách tất cả người dùng (Chỉ Admin)' })
+  findAll() {
     return this.usersService.findAll();
-  }
-
-  @Get('vet-stats')
-  @Roles(Role.VET, Role.ADMIN)
-  @UseGuards(RolesGuard)
-  getVetStats(): string {
-    return 'Dữ liệu thống kê thú cưng';
   }
 }
