@@ -15,12 +15,36 @@ import AuthFooterLink from "../components/AuthFooterLink";
 import AuthHeader from "../components/AuthHeader";
 import DividerWithText from "../components/DividerWithText";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
+import { login } from "../services/AuthApi";
+import CommonMessage from "@/app/shared/components/CommonMessage";
 
 export default function LoginScreen() {
   const router = useRouter();
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+
+  const handleSubmit = async () => {
+      setLoading(true);
+  
+      try {
+        if (email.trim() === "" || password.trim() === "" || username.trim() === "") {
+          setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
+          return;
+        }
+  
+        await login({email: email, password: password, full_name: username});
+        setMessage({ type: "success", text: "Đăng nhập thành công!" });
+      } catch (err: any) {
+        const errorMsg = err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+        setMessage({ type: "error", text: errorMsg });
+      } finally {
+            setLoading(false);
+          }
+    };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -44,6 +68,13 @@ export default function LoginScreen() {
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
+        />
+
+        <CommonTextInput
+          icon="mail-outline"
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
         />
 
         <CommonTextInput
@@ -71,17 +102,20 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <CommonButton
-          title="Login"
-          onPress={() => router.replace("./(tabs)/home")}
-          // iconName="stats-chart-outline"
-          // iconColor="#5A7863"
+          title={loading ? "Loading..." : "Login"}
+          onPress={handleSubmit}
           backgroundColor="#5A7863"
           textColor="#ffffff"
           style={{ margin: 10 }}
           bordered={true}
           borderColor="#F2F2F2"
           borderWidth={2}
+          disabled={loading}
         />
+
+        {message && (
+          <CommonMessage type={message.type} message={message.text} />
+        )}
 
         <DividerWithText text="or login with" />
         <CommonButton
@@ -100,7 +134,7 @@ export default function LoginScreen() {
         <AuthFooterLink
           text="Don't have account?"
           linkText="Sign Up"
-          onPress={() => router.replace("./SignUpScreen")}
+          onPress={() => router.replace("./SignupScreen")}
         />
       </View>
     </ScrollView>

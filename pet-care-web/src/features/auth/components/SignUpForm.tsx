@@ -5,14 +5,15 @@ const SignUpForm: React.FC<{
   formData: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
-}> = ({ formData, handleChange, handleSubmit }) => (
+  loading: boolean;
+}> = ({ formData, handleChange, handleSubmit, loading }) => (
   <form onSubmit={handleSubmit} style={styles.form}>
     <CommonTextInput name="userName" placeholder="User Name" value={formData.userName} onChangeText={handleChange} />
     <CommonTextInput type="email" name="email" placeholder="Email" value={formData.email} onChangeText={handleChange} />
     <CommonTextInput type="password" name="password" placeholder="Password" value={formData.password} onChangeText={handleChange} />
     <CommonTextInput type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChangeText={handleChange} />
-   <button type="submit" style={styles.button}>
-        Create account
+   <button type="submit" style={styles.button} disabled={loading}>
+        {loading ? "Creating account..." : "Create account"}
     </button>
   </form>
 );

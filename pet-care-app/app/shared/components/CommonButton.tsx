@@ -16,6 +16,7 @@ type Props = {
   bordered?: boolean;
   borderColor?: string;
   borderWidth?: number;
+  disabled?: boolean;
 };
 
 export default function CommonButton({
@@ -31,6 +32,7 @@ export default function CommonButton({
   bordered = false,
   borderColor = Colors.primary,
   borderWidth = 1.5,
+  disabled = false,
 }: Props) {
   return (
     <TouchableOpacity
@@ -42,6 +44,7 @@ export default function CommonButton({
       ]}
       onPress={onPress}
       activeOpacity={0.7} 
+      disabled={disabled}
     >
       {iconName && (
         <Ionicons 

@@ -4,37 +4,21 @@ import logo from "../../../assets/logo.png";
 import { Colors } from "../../../constants/Colors";
 import CommonButton from "../../../shared/components/CommonButton";
 import { FcGoogle } from "react-icons/fc";
-import SignUpForm from "../components/SignUpForm";
 import Divider from "../components/Divider";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
+import { login } from "../services/AuthApi";
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
   const navigate = useNavigate();
-
-  // Kiểm tra email hợp lệ
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
-  const validateUsername = (username: string) => {
-    return username.trim() !== "";
-  };
-  
-  // Kiểm tra password
-  const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return regex.test(password);
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,31 +29,34 @@ const LoginPage: React.FC = () => {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateUsername(formData.userName)) {
-      setMessage({ type: "error", text: "Username không được để trống!" });
+    if(formData.email.trim() === "" || formData.password.trim() === "" || formData.userName.trim() === "") {
+      setMessage({ type: "error", text: "Vui lòng nhập đầy đủ thông tin!" });
       return;
     }
 
-    if (!validateEmail(formData.email)) {
-      setMessage({ type: "error", text: "Email không hợp lệ!" });
-      return;
-    }
+     try {
+      setLoading(true);
+      setMessage(null);
 
-    if (!validatePassword(formData.password)) {
-      setMessage({ type: "error", text: "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
-      return;
-    }
+      const res = await login({
+        email: formData.email,
+        password: formData.password,
+        full_name: formData.userName,
+      });
 
-    if (formData.password !== formData.confirmPassword) {
-      setMessage({ type: "error", text: "Mật khẩu xác nhận không khớp!" });
-      return;
+      if (res.status === 201) {
+        setMessage({ type: "success", text: "Đăng nhập thành công!" });
+      } else {
+        setMessage({ type: "error", text: res.message || "Đăng nhập thất bại!" });
+      }
+    } catch (err: any) {
+      setMessage({ type: "error", text: err.message || "Có lỗi xảy ra, vui lòng thử lại!" });
+    } finally {
+      setLoading(false);
     }
-
-    setMessage({ type: "success", text: "Đăng ký thành công!" });
-    console.log("Form submitted:", formData);
   };
 
 
@@ -89,7 +76,7 @@ const LoginPage: React.FC = () => {
         <div style={styles.content}>
             <div style={styles.formBox}>
                 <h2 style={styles.heading}>Login</h2>
-                <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+                <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} loading={loading} />
                 {message && <CommonMessage type={message.type} message={message.text} />}
                 <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
                    Don’t have an account?
