@@ -37,6 +37,7 @@ const CommonMessage: React.FC<Props> = ({
         marginBottom: 12,
         backgroundColor: Colors.white,
         gap: 8,
+        marginTop: 10,
       }}
     >
       <Icon size={20} color={color} />

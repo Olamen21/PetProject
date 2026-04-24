@@ -6,6 +6,7 @@ import CommonButton from "../../../shared/components/CommonButton";
 import { FcGoogle } from "react-icons/fc";
 import SignUpForm from "../components/SignUpForm";
 import Divider from "../components/Divider";
+import CommonMessage from "../../../shared/components/CommonMessage";
 
 const SignUpPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,26 +14,61 @@ const SignUpPage: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    agree: false,
   });
+  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+
+  // Kiểm tra email hợp lệ
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validateUsername = (username: string) => {
+    return username.trim() !== "";
+  };
+  
+  // Kiểm tra password
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Mật khẩu không khớp!");
+
+    if (!validateUsername(formData.userName)) {
+      setMessage({ type: "error", text: "Username không được để trống!" });
       return;
     }
+
+    if (!validateEmail(formData.email)) {
+      setMessage({ type: "error", text: "Email không hợp lệ!" });
+      return;
+    }
+
+    if (!validatePassword(formData.password)) {
+      setMessage({ type: "error", text: "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setMessage({ type: "error", text: "Mật khẩu xác nhận không khớp!" });
+      return;
+    }
+
+    setMessage({ type: "success", text: "Đăng ký thành công!" });
     console.log("Form submitted:", formData);
-    // Gửi dữ liệu lên server tại đây
   };
+
 
   return (
     <div style={styles.container}>
@@ -58,6 +94,7 @@ const SignUpPage: React.FC = () => {
             <div style={styles.formBox}>
                 <h2 style={styles.heading}>Sign up</h2>
                 <SignUpForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+                {message && <CommonMessage type={message.type} message={message.text} />}
                 <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
                   Already have an account? <a style={styles.loginLink} href="/login">Login</a>
                 </p>

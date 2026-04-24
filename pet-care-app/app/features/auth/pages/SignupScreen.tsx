@@ -10,6 +10,7 @@ import AuthFooterLink from "../components/AuthFooterLink";
 import AuthHeader from "../components/AuthHeader";
 import DividerWithText from "../components/DividerWithText";
 import {Colors} from "../../../constants/Colors";
+import CommonMessage from "@/app/shared/components/CommonMessage";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -17,6 +18,34 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
+  const handleSubmit = () => {
+    if (!validateEmail(email)) {
+      setMessage({ type: "error", text: "Email không hợp lệ!" });
+      return;
+    }
+    if (username.trim() === "" || password.trim() === "") {
+      setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
+      return;
+    }
+    if (!validatePassword(password)) {
+      setMessage({ type: "error", text: "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
+      return;
+    }
+    setMessage({ type: "success", text: "Đăng ký thành công!" });
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -68,7 +97,7 @@ export default function SignupScreen() {
         <View style={styles.negativeMarginBottom}>
           <CommonButton
             title="Sign Up"
-            onPress={() => router.replace("./(tabs)/AddPetScreen")}
+            onPress={handleSubmit}
             backgroundColor= {Colors.primary}
             textColor= {Colors.white}
             style={{ margin: 10 }}
@@ -76,6 +105,9 @@ export default function SignupScreen() {
             borderColor= {Colors.border}
             borderWidth={2}
           />
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
         </View>
         <View style={styles.negativeMarginBottom}>
           <DividerWithText text="or Sign Up with" />
