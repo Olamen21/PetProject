@@ -8,8 +8,9 @@ import SignUpForm from "../components/SignUpForm";
 import Divider from "../components/Divider";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { useNavigate } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
 
-const SignUpPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -86,27 +87,20 @@ const SignUpPage: React.FC = () => {
 
         {/* img intro + form */}
         <div style={styles.content}>
-            <div style={styles.leftBox}>
-                <img 
-                    src= {signUpBackGround}
-                    alt="Sign Up Background"
-                    style={styles.image}
-                />
-            </div>
             <div style={styles.formBox}>
-                <h2 style={styles.heading}>Sign up</h2>
-                <SignUpForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+                <h2 style={styles.heading}>Login</h2>
+                <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
                 {message && <CommonMessage type={message.type} message={message.text} />}
                 <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
-                  Already have an account? 
+                   Don’t have an account?
                    <span 
                       style={styles.loginLink} 
-                      onClick={() => navigate("/login")}
+                      onClick={() => navigate("/signup")}
                     >
-                      Login
+                      Sign up
                     </span>
                 </p>
-                <Divider text="Or Sign up with" />
+                <Divider text="Or login with" />
                 <CommonButton
                   Icon={FcGoogle}
                   backgroundColor= {Colors.white}
@@ -115,6 +109,13 @@ const SignUpPage: React.FC = () => {
                   borderColor={Colors.secondary}
                   textColor={Colors.text}
                   style={{width: "100%"}}
+                />
+            </div>
+            <div style={styles.RightBox}>
+                <img 
+                    src= {signUpBackGround}
+                    alt="Sign Up Background"
+                    style={styles.image}
                 />
             </div>
         </div>
@@ -130,9 +131,9 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   logo: {
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     padding: "10px",
-    marginRight: "100px",
+    marginLeft: "90px",
   },
   content: {
     flex: 1,
@@ -143,12 +144,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: "40px",
     paddingLeft: "100px",
     paddingRight: "100px",
-  },
-  leftBox: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   },
   image: {
     width: "80%",
@@ -174,7 +169,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginLeft: "5px",
     cursor: "pointer" 
   },
+   RightBox: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
 };
 
-export default SignUpPage;
+export default LoginPage;
