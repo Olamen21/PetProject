@@ -8,6 +8,7 @@ import SignUpForm from "../components/SignUpForm";
 import Divider from "../components/Divider";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { useNavigate } from "react-router-dom";
+import { signUp } from "../services/AuthApi";
 
 const SignUpPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const SignUpPage: React.FC = () => {
   });
   const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   // Kiểm tra email hợp lệ
   const validateEmail = (email: string) => {
@@ -44,7 +46,7 @@ const SignUpPage: React.FC = () => {
   };
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateUsername(formData.userName)) {
@@ -67,8 +69,29 @@ const SignUpPage: React.FC = () => {
       return;
     }
 
-    setMessage({ type: "success", text: "Đăng ký thành công!" });
-    console.log("Form submitted:", formData);
+    // gọi API
+    try {
+      setLoading(true);
+      setMessage(null);
+
+      const res = await signUp({
+        email: formData.email,
+        password: formData.password,
+        full_name: formData.userName,
+      });
+
+      if (res.status === 201) {
+        setMessage({ type: "success", text: "Đăng ký thành công!" });
+        navigate("/login")
+
+      } else {
+        setMessage({ type: "error", text: res.message || "Đăng ký thất bại!" });
+      }
+    } catch (err: any) {
+      setMessage({ type: "error", text: err.message || "Có lỗi xảy ra, vui lòng thử lại!" });
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -95,7 +118,7 @@ const SignUpPage: React.FC = () => {
             </div>
             <div style={styles.formBox}>
                 <h2 style={styles.heading}>Sign up</h2>
-                <SignUpForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
+                <SignUpForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} loading={loading} />
                 {message && <CommonMessage type={message.type} message={message.text} />}
                 <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
                   Already have an account? 

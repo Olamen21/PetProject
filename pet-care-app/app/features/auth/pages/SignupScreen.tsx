@@ -4,13 +4,14 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
+import CommonMessage from "@/app/shared/components/CommonMessage";
+import { Colors } from "../../../constants/Colors";
 import CommonButton from "../../../shared/components/CommonButton";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
 import AuthFooterLink from "../components/AuthFooterLink";
 import AuthHeader from "../components/AuthHeader";
 import DividerWithText from "../components/DividerWithText";
-import {Colors} from "../../../constants/Colors";
-import CommonMessage from "@/app/shared/components/CommonMessage";
+import { signUp } from "../services/AuthApi";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function SignupScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,20 +32,31 @@ export default function SignupScreen() {
     return regex.test(password);
   };
 
-  const handleSubmit = () => {
-    if (!validateEmail(email)) {
-      setMessage({ type: "error", text: "Email không hợp lệ!" });
-      return;
-    }
-    if (username.trim() === "" || password.trim() === "") {
-      setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
-      return;
-    }
-    if (!validatePassword(password)) {
-      setMessage({ type: "error", text: "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
-      return;
-    }
-    setMessage({ type: "success", text: "Đăng ký thành công!" });
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    try {
+      if (!validateEmail(email)) {
+        setMessage({ type: "error", text: "Email không hợp lệ!" });
+        return;
+      }
+      if (username.trim() === "" || password.trim() === "") {
+        setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
+        return;
+      }
+      if (!validatePassword(password)) {
+        setMessage({ type: "error", text: "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
+        return;
+      }
+
+      await signUp({email: email, password: password, full_name: username});
+      router.replace("./LoginScreen");
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      setMessage({ type: "error", text: errorMsg });
+    } finally {
+          setLoading(false);
+        }
   };
 
 
@@ -96,7 +109,7 @@ export default function SignupScreen() {
         </View>
         <View style={styles.negativeMarginBottom}>
           <CommonButton
-            title="Sign Up"
+            title={loading ? "Loading..." : "Sign Up"}
             onPress={handleSubmit}
             backgroundColor= {Colors.primary}
             textColor= {Colors.white}
@@ -104,6 +117,7 @@ export default function SignupScreen() {
             bordered={true}
             borderColor= {Colors.border}
             borderWidth={2}
+            disabled={loading}
           />
           {message && (
             <CommonMessage type={message.type} message={message.text} />
