@@ -65,7 +65,7 @@ export class AppService {
       throw new UnauthorizedException('Sai mật khẩu!');
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       message: 'Login thành công!',
       access_token: await this.jwtService.signAsync(payload),
