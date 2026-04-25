@@ -23,6 +23,8 @@ export class DoctorProfile {
 
   @Column({ type: 'text', nullable: true })
   bio: string;
+  @Column({ type: 'date', nullable: true })
+  experience_start_date: Date;
 
   // Quan hệ 1-1 với User
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })

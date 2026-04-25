@@ -21,5 +21,5 @@ export const Colors = {
   bg_tag_orange: "#fff1e6",
   text_tag_orange: "#e67e22",
   stars: "#f1c40f", 
-
+  text_secondary: "#7f8c8d", // Màu chữ phụ
 };
