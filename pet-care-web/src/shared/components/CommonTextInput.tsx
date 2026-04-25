@@ -43,6 +43,7 @@ const CommonTextInput: React.FC<Props> = ({
         alignItems: "center",
         borderRadius: 5,
         height: 45,
+         paddingLeft: 12, 
         border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
         backgroundColor: backgroundColor || "transparent",
         ...containerStyle,
