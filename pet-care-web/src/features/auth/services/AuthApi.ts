@@ -4,6 +4,7 @@ export interface SignUpPayload {
   email: string;
   password: string;
   full_name: string;
+  role: 'VET' | 'ADMIN' | 'USER';
 }
 
 export interface ApiResponse<T> {

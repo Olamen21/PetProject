@@ -45,6 +45,7 @@ const LoginPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
         full_name: formData.userName,
+          role: "VET",
       });
 
       if (res.status === 201) {

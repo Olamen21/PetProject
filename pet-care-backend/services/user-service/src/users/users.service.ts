@@ -15,6 +15,7 @@ export class UsersService {
   async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
+      relations: ['doctorProfile'],
     });
     if (!user) {
       throw new NotFoundException(`Không tìm thấy người dùng có ID ${id}`);

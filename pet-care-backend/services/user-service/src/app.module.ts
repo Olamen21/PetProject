@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { User } from './users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { DoctorProfile } from './users/entities/doctor-profile.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -13,12 +14,12 @@ import { UsersModule } from './users/users.module';
       username: 'postgres',
       password: '123',
       database: 'pet_care_auth',
-      entities: [User],
+      entities: [User, DoctorProfile],
       synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, DoctorProfile]),
     UsersModule,
   ],
   controllers: [AppController],

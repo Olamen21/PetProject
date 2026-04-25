@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from './auth/entities/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DoctorProfile } from './auth/entities/doctor-profile.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -13,12 +14,12 @@ import { AppService } from './app.service';
       username: 'postgres',
       password: '123',
       database: 'pet_care_auth',
-      entities: [User],
+      entities: [User, DoctorProfile],
       synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, DoctorProfile]),
 
     JwtModule.register({
       secret: 'SECRET_KEY_CUA_THUY',
