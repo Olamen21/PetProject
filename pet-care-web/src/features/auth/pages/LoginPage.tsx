@@ -49,6 +49,10 @@ const LoginPage: React.FC = () => {
 
       if (res.status === 201) {
         setMessage({ type: "success", text: "Đăng nhập thành công!" });
+        localStorage.setItem("token", res.data.access_token);
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       } else {
         setMessage({ type: "error", text: res.message || "Đăng nhập thất bại!" });
       }

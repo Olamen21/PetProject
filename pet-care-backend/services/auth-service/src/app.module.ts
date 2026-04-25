@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { User } from './entities/user.entity';
+import { User } from './auth/entities/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,14 +19,13 @@ import { AppService } from './app.service';
       retryDelay: 3000,
     }),
     TypeOrmModule.forFeature([User]),
-    
 
     JwtModule.register({
       secret: 'SECRET_KEY_CUA_THUY',
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  controllers: [AppController], 
-  providers: [AppService], 
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

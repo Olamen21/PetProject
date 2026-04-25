@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   BeforeInsert,
+  OneToOne,
 } from 'typeorm';
 import { Role } from '../../roles/role.enum';
 import * as bcrypt from 'bcrypt';
@@ -51,4 +52,5 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
+
 }

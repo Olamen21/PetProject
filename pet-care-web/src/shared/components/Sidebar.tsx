@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -13,9 +12,11 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const user = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -79,10 +80,10 @@ const Sidebar: React.FC = () => {
       marginTop: "16px",
       marginBottom: "16px",
       color: Colors.text,
-      border: `1px solid ${Colors.border}`, 
+      border: `1px solid ${Colors.border}`,
     },
     divider: {
-      borderTop: `1px solid ${Colors.border}`, 
+      borderTop: `1px solid ${Colors.border}`,
       margin: "16px 0",
     },
 
@@ -123,7 +124,6 @@ const Sidebar: React.FC = () => {
     },
   };
 
-
   const navItemStyle = (active: boolean): React.CSSProperties => ({
     display: "flex",
     alignItems: "center",
@@ -137,7 +137,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside style={baseStyles.sidebar}>
-  
       <div style={baseStyles.logo}>
         {" "}
         <img src={logo} alt="logo" style={{ width: 80, height: 80 }} />
@@ -149,22 +148,27 @@ const Sidebar: React.FC = () => {
       <div style={baseStyles.divider}></div>
       {/* DOCTOR INFO */}
       <div style={baseStyles.doctorBox}>
-        <div style={baseStyles.doctorRow}>
-          <img
-                src="https://www.shutterstock.com/image-photo/portrait-asian-female-doctor-wearing-260nw-2502070973.jpg"
-                alt="avatar"
-                style={baseStyles.avatar}
-              />
+        {user ? (
+          <div style={baseStyles.doctorRow}>
+            {user.avatar ? (
+              <img src={user.avatar} alt="avatar" style={baseStyles.avatar} />
+            ) : (
+              <div style={baseStyles.avatar}>
+                {user.full_name?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )}
 
-          <div>
-            <div style={baseStyles.doctorName}>BS. Tran Thi Huong</div>
-
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={baseStyles.doctorRole}>Veterinarian</span>
-              <span style={baseStyles.status}></span>
+            <div>
+              <div>{user.full_name}</div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div>{user.role}</div>
+                <span style={baseStyles.status}></span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div>Loading...</div> // hoặc placeholder
+        )}
       </div>
       <div style={baseStyles.divider}></div>
 

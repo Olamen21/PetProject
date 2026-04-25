@@ -6,8 +6,11 @@ import ProfileStats from "../components/ProfileStats";
 
 import ProfileCard from "../components/ProfileHeader";
 import ProfileDetails from "../components/ProfileDetails";
+import { useAuth } from "../../../context/AuthContext";
 
 function ProfilePage() {
+  const user = useAuth();
+
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
       display: "flex",
@@ -46,8 +49,8 @@ function ProfilePage() {
           <div style={styles.banner}></div>
 
           <ProfileCard
-            name="BS. Tran Thi Huong"
-            role="Veterinarian — Internal Medicine & Diagnostic Imaging"
+            name={user?.full_name || "Tên người dùng"}
+            role={user?.role || "Vai trò"}
             imageUrl="https://www.shutterstock.com/image-photo/portrait-asian-female-doctor-wearing-260nw-2502070973.jpg"
             onEdit={() => navigation.navigate("/edit-profile")}
           />

@@ -3,10 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  BeforeInsert,
 } from 'typeorm';
 import { Role } from '../roles/role.enum';
-import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {
@@ -16,13 +14,8 @@ export class User {
   @Column({ unique: true })
   email!: string;
 
-  @Column({ select: false })
+  @Column()
   password_hash!: string;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password_hash = await bcrypt.hash(this.password_hash, 10);
-  }
 
   @Column({ nullable: true })
   full_name!: string;

@@ -6,6 +6,7 @@ import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
 import { User } from './entities/user.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
   ApiTags,
   ApiOperation,
@@ -23,18 +24,23 @@ interface RequestWithUser extends Request {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiOperation({ summary: 'Lấy thông tin cá nhân của User hiện tại' })
   @ApiResponse({ status: 200, description: 'Thành công', type: User })
-  getProfile(@Req() req: RequestWithUser) {
+  async getProfile(@Req() req: any) {
     if (!req.user) {
       return {
-        message:
-          'Chưa có token nên chưa xác định được user, hãy đăng nhập để lấy token và thử lại',
-        example_id: 'Dán một cái UUID từ database vào đây',
+        success: false,
+        message: 'không tìm thấy User từ Token này!',
       };
     }
-    return this.usersService.findOne(req.user.id);
+
+    const userId = req.user.id || req.user.sub;
+
+    console.log('ID sẽ dùng để tìm trong DB:', userId);
+
+    return this.usersService.findOne(userId);
   }
 
   @Patch('profile')

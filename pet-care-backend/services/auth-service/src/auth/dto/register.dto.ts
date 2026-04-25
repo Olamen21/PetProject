@@ -9,4 +9,6 @@ export class RegisterDto {
 
   @ApiProperty({ example: 'Huỳnh Thanh Thúy', description: 'Họ và tên' })
   full_name: string;
+  @ApiProperty({ example: 'VET_2026', description: 'Mã xác thực bác sĩ' })
+  adminKey: string;
 }

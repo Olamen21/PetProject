@@ -14,7 +14,7 @@ export interface ApiResponse<T> {
 
 // Hàm đăng ký
 export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
-    const API_URL = import.meta.env.VITE_API_URL
+    const API_URL = import.meta.env.VITE_API_URL_AUTH;
   try {
     const res = await axios.post(`${API_URL}/auth/register`, payload);
     return {
@@ -23,6 +23,7 @@ export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> 
       data: res.data,
     };
   } catch (error: any) {
+    console.error("SignUp error:", error); 
     return {
       status: error.response?.status || 500,
       message: error.response?.data?.message || "Có lỗi xảy ra",
@@ -32,7 +33,7 @@ export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> 
 
 // Hàm đăng nhập
 export const login = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
-    const API_URL = import.meta.env.VITE_API_URL
+    const API_URL = import.meta.env.VITE_API_URL_AUTH;
   try {
     const res = await axios.post(`${API_URL}/auth/login`, payload);
     return {
@@ -41,6 +42,7 @@ export const login = async (payload: SignUpPayload): Promise<ApiResponse<any>> =
       data: res.data,
     };
   } catch (error: any) {
+    console.error("Login error:", error);
     return {
       status: error.response?.status || 500,
       message: error.response?.data?.message || "Có lỗi xảy ra",
