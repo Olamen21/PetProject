@@ -1,18 +1,36 @@
-
 import React from "react";
 import { Colors } from "../../../constants/Colors";
 
-const ProfileStats: React.FC = () => {
+interface ProfileStatsProps {
+  tags: string[];
+  experience_start_date?: string;
+}
+
+const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date }) => {
+  const colorStyles = [styles.tagGreen, styles.tagBlue, styles.tagOrange];
+
+  const calculateYears = (startDate) => {
+    if (!startDate) return 0;
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffInMs = now.getTime() - start.getTime();
+    const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
+    return Math.floor(diffInYears);
+  };
+
+
   return (
     <div style={styles.section}>
       {/* TAGS */}
       <div style={styles.tagContainer}>
-        <div style={{ ...styles.tag, ...styles.tagGreen }}>
-          Internal Medicine
-        </div>
-        <div style={{ ...styles.tag, ...styles.tagGreen }}>Dogs & Cats</div>
-        <div style={{ ...styles.tag, ...styles.tagBlue }}>Ultrasound</div>
-        <div style={{ ...styles.tag, ...styles.tagOrange }}>Dermatology</div>
+        {tags.map((label, index) => {
+          const colorStyle = colorStyles[index % colorStyles.length];
+          return (
+            <div key={index} style={{ ...styles.tag, ...colorStyle }}>
+              {label}
+            </div>
+          );
+        })}
       </div>
 
       {/* RATING */}
@@ -34,7 +52,7 @@ const ProfileStats: React.FC = () => {
         </div>
 
         <div style={styles.statBox}>
-          <div style={styles.statNumber}>8</div>
+          <div style={styles.statNumber}>{calculateYears(experience_start_date)}</div>
           <div style={styles.statLabel}>Years of Experience</div>
         </div>
       </div>
@@ -45,10 +63,9 @@ const ProfileStats: React.FC = () => {
 export default ProfileStats;
 
 const styles: { [key: string]: React.CSSProperties } = {
-    section: {
-      padding: "0 24px 20px 24px",
-    },
-
+  section: {
+    padding: "0 24px 20px 24px",
+  },
   tagContainer: {
     display: "flex",
     flexWrap: "wrap",
@@ -61,7 +78,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "13px",
     fontWeight: 500,
   },
-
   tagGreen: {
     background: Colors.bg_tag_green,
     color: Colors.text_tag_green,

@@ -1,12 +1,11 @@
-
 import Sidebar from "../../../shared/components/Sidebar";
 
 import { Colors } from "../../../constants/Colors";
 import ProfileStats from "../components/ProfileStats";
 
 import ProfileCard from "../components/ProfileHeader";
-import ProfileDetails from "../components/ProfileDetails";
 import { useAuth } from "../../../context/AuthContext";
+import ProfileDetail from "../components/ProfileDetails";
 
 function ProfilePage() {
   const user = useAuth();
@@ -38,6 +37,27 @@ function ProfilePage() {
         Colors.secondary +
         ")",
     },
+    avatarImage: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    border: "4px solid " + Colors.white,
+    marginTop: "-60px",
+    objectFit: "cover",
+  },
+  avatarFallback: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    background: Colors.secondary,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    fontSize: "18px",
+    color: Colors.white,
+    marginTop: "-60px", 
+  },
   };
 
   return (
@@ -51,12 +71,35 @@ function ProfilePage() {
           <ProfileCard
             name={user?.full_name || "Tên người dùng"}
             role={user?.role || "Vai trò"}
-            imageUrl="https://www.shutterstock.com/image-photo/portrait-asian-female-doctor-wearing-260nw-2502070973.jpg"
+            bio={user?.bio || "Chưa có thông tin cá nhân nào được cập nhật."}
+            avatar={
+              user.avatar ? (
+                <img src={user.avatar} alt="avatar" style={styles.avatarImage} />
+              ) : (
+                <div style={styles.avatarFallback}>
+                  {user.full_name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )
+            }
             onEdit={() => navigation.navigate("/edit-profile")}
           />
 
-          <ProfileStats />
-          <ProfileDetails />
+          <ProfileStats
+            tags={user?.tags || ["chưa có tag nào"]}
+            experience_start_date={user?.experience_start_date}
+          />
+
+          <ProfileDetail
+            fullName={user?.full_name || "Tên người dùng"}
+            email={user?.email || "email"}
+            dob={user?.dob || "dd/mm/yyyy"}
+            phone={user?.phone || "(123) 456-7890"}
+            clinicRoom={user?.clinic_room || "chưa có phòng khám nào"}
+            address={user?.address || "không có địa chỉ nào"}
+            degree={user?.degree || "chưa có bằng cấp nào"}
+            experienceStart={user?.experience_start_date || "dd/mm/yyyy"}
+          />
+
           {/* <ProfileSchedule /> */}
         </div>
       </main>

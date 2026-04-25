@@ -1,25 +1,27 @@
-
 import React from "react";
 import { FaPen } from "react-icons/fa";
 import { Colors } from "../../../constants/Colors";
 import CommonButton from "../../../shared/components/CommonButton";
+
 interface ProfileHeaderProps {
   name: string;
   role: string;
-  imageUrl: string;
+  bio?: string; // thêm bio
+  avatar: React.ReactNode; 
   onEdit: () => void;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   name,
   role,
-  imageUrl,
+  bio,
+  avatar,
   onEdit,
 }) => {
   return (
     <div style={styles.content}>
       <div style={styles.left}>
-        <img src={imageUrl} alt="avatar" style={styles.avatar} />
+        {avatar}
 
         <div>
           <div style={styles.nameRow}>
@@ -29,6 +31,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <div style={styles.subRow}>
             <span>{role}</span>
           </div>
+
+          {bio && (
+            <div style={styles.bioRow}>
+              <span>{bio}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -63,14 +71,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "flex-start",
     gap: "16px",
   },
-  avatar: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "50%",
-    border: "4px solid " + Colors.white,
-    marginTop: "-60px",
-    objectFit: "cover",
-  },
+  
   name: {
     fontSize: "24px",
     fontWeight: 700,
@@ -89,5 +90,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: Colors.text,
     fontSize: "14px",
     marginTop: "4px",
+  },
+  bioRow: {
+    marginTop: "6px",
+    color: Colors.text_secondary,
+    fontSize: "13px",
+    lineHeight: "1.4",
   },
 };
