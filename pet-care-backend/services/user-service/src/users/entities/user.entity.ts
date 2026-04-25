@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../roles/role.enum';
 import * as bcrypt from 'bcrypt';
+import { DoctorProfile } from './doctor-profile.entity';
 
 @Entity('users')
 export class User {
@@ -52,5 +53,6 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
-
+@OneToOne(() => DoctorProfile, (profile) => profile.user)
+  doctorProfile: DoctorProfile;
 }

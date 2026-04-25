@@ -1,0 +1,31 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './user.entity';
+
+@Entity('doctor_profiles')
+export class DoctorProfile {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'simple-array', nullable: true })
+  tags: string[];
+
+  @Column({ nullable: true })
+  degree: string;
+
+  @Column({ nullable: true })
+  clinic_room: string;
+
+  @Column({ type: 'text', nullable: true })
+  bio: string;
+
+  // Quan hệ 1-1 với User
+  @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' }) // Tạo cột user_id làm khóa ngoại
+  user: User;
+}

@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { DoctorProfile } from './entities/doctor-profile.entity';
 
 @Module({
   imports: [
@@ -16,12 +17,12 @@ import { JwtStrategy } from '../auth/jwt.strategy';
       username: 'postgres',
       password: '123',
       database: 'pet_care_auth',
-      entities: [User],
+      entities: [User, DoctorProfile],
       synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, DoctorProfile]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'SECRET_KEY_CUA_THUY',
