@@ -6,7 +6,6 @@ import ProfileStats from "../components/ProfileStats";
 
 import ProfileCard from "../components/ProfileHeader";
 import ProfileDetails from "../components/ProfileDetails";
-import ProfileSchedule from "../components/ProfileSchedule";
 
 function ProfilePage() {
   const styles: { [key: string]: React.CSSProperties } = {
@@ -50,12 +49,12 @@ function ProfilePage() {
             name="BS. Tran Thi Huong"
             role="Veterinarian — Internal Medicine & Diagnostic Imaging"
             imageUrl="https://www.shutterstock.com/image-photo/portrait-asian-female-doctor-wearing-260nw-2502070973.jpg"
-            onEdit={() => console.log("Edit profile clicked")}
+            onEdit={() => navigation.navigate("/edit-profile")}
           />
 
           <ProfileStats />
           <ProfileDetails />
-          <ProfileSchedule />
+          {/* <ProfileSchedule /> */}
         </div>
       </main>
     </div>
