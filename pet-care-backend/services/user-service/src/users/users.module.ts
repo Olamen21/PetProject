@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { DoctorProfile } from './entities/doctor-profile.entity';
+import { CloudinaryService } from './cloudinary.service';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { DoctorProfile } from './entities/doctor-profile.entity';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, JwtStrategy],
+  providers: [UsersService, JwtStrategy, CloudinaryService],
   exports: [UsersService],
 })
 export class UsersModule {}

@@ -18,13 +18,8 @@ export class User {
   @Column({ unique: true })
   email!: string;
 
-  @Column({ select: false })
+  @Column()
   password_hash!: string;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password_hash = await bcrypt.hash(this.password_hash, 10);
-  }
 
   @Column({ nullable: true })
   full_name!: string;
@@ -35,9 +30,8 @@ export class User {
   @Column({ nullable: true })
   address!: string;
 
-  @Column({ nullable: true })
-  date_of_birth!: Date;
-
+  @Column({ type: 'date', nullable: true })
+  date_of_birth!: Date | null;
   @Column({ nullable: true })
   avatar_url!: string;
 
@@ -53,6 +47,6 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
-@OneToOne(() => DoctorProfile, (profile) => profile.user)
+  @OneToOne(() => DoctorProfile, (profile) => profile.user, { cascade: true })
   doctorProfile: DoctorProfile;
 }

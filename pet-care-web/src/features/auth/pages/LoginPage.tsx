@@ -16,7 +16,10 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -28,16 +31,19 @@ const LoginPage: React.FC = () => {
     }));
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(formData.email.trim() === "" || formData.password.trim() === "" || formData.userName.trim() === "") {
+    if (
+      formData.email.trim() === "" ||
+      formData.password.trim() === "" ||
+      formData.userName.trim() === ""
+    ) {
       setMessage({ type: "error", text: "Vui lòng nhập đầy đủ thông tin!" });
       return;
     }
 
-     try {
+    try {
       setLoading(true);
       setMessage(null);
 
@@ -45,72 +51,97 @@ const LoginPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
         full_name: formData.userName,
-          role: "VET",
       });
 
       if (res.status === 201) {
-        setMessage({ type: "success", text: "Đăng nhập thành công!" });
-        localStorage.setItem("token", res.data.access_token);
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
+        const { access_token, user } = res.data;
+        if (user.role === "ADMIN" || user.role === "VET") {
+          setMessage({ type: "success", text: "Đăng nhập thành công!" });
+          localStorage.setItem("token", access_token);
+          localStorage.setItem("user_role", user.role);
+
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1000);
+        } else {
+          setMessage({
+            type: "error",
+            text: "Bạn không có quyền truy cập vào trang quản lý!",
+          });
+          navigate("/login");
+        }
       } else {
-        setMessage({ type: "error", text: res.message || "Đăng nhập thất bại!" });
+        setMessage({
+          type: "error",
+          text: res.message || "Đăng nhập thất bại!",
+        });
       }
     } catch (err: any) {
-      setMessage({ type: "error", text: err.message || "Có lỗi xảy ra, vui lòng thử lại!" });
+      setMessage({
+        type: "error",
+        text: err.message || "Có lỗi xảy ra, vui lòng thử lại!",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
     <div style={styles.container}>
+      {/* logo */}
+      <div style={styles.logo}>
+        <img
+          src={logo}
+          alt="logo"
+          style={{ width: 100, height: 100, marginBottom: 20 }}
+        />
+      </div>
 
-        {/* logo */}
-        <div style={styles.logo}>
-            <img 
-                src= {logo}
-                alt="logo"
-                style={{width: 100, height: 100, marginBottom: 20}}
-            />
+      {/* img intro + form */}
+      <div style={styles.content}>
+        <div style={styles.formBox}>
+          <h2 style={styles.heading}>Login</h2>
+          <LoginForm
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            loading={loading}
+          />
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
+          <p
+            style={{
+              color: Colors.gray,
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+          >
+            Don’t have an account?
+            <span style={styles.loginLink} onClick={() => navigate("/signup")}>
+              Sign up
+            </span>
+          </p>
+          <Divider text="Or login with" />
+          <CommonButton
+            Icon={FcGoogle}
+            backgroundColor={Colors.white}
+            onClick={() => {}}
+            bordered
+            borderColor={Colors.secondary}
+            textColor={Colors.text}
+            style={{ width: "100%" }}
+          />
         </div>
-
-        {/* img intro + form */}
-        <div style={styles.content}>
-            <div style={styles.formBox}>
-                <h2 style={styles.heading}>Login</h2>
-                <LoginForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} loading={loading} />
-                {message && <CommonMessage type={message.type} message={message.text} />}
-                <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
-                   Don’t have an account?
-                   <span 
-                      style={styles.loginLink} 
-                      onClick={() => navigate("/signup")}
-                    >
-                      Sign up
-                    </span>
-                </p>
-                <Divider text="Or login with" />
-                <CommonButton
-                  Icon={FcGoogle}
-                  backgroundColor= {Colors.white}
-                  onClick={() => {}}
-                  bordered
-                  borderColor={Colors.secondary}
-                  textColor={Colors.text}
-                  style={{width: "100%"}}
-                />
-            </div>
-            <div style={styles.RightBox}>
-                <img 
-                    src= {signUpBackGround}
-                    alt="Sign Up Background"
-                    style={styles.image}
-                />
-            </div>
+        <div style={styles.RightBox}>
+          <img
+            src={signUpBackGround}
+            alt="Sign Up Background"
+            style={styles.image}
+          />
         </div>
+      </div>
     </div>
   );
 };
@@ -150,24 +181,23 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "350px",
   },
   heading: {
-    fontSize: '30px',
-    fontWeight: 'bold',
-    color: '#3B4953',
+    fontSize: "30px",
+    fontWeight: "bold",
+    color: "#3B4953",
   },
   loginLink: {
     color: Colors.primary,
     fontWeight: "600",
     textDecoration: "none",
     marginLeft: "5px",
-    cursor: "pointer" 
+    cursor: "pointer",
   },
-   RightBox: {
+  RightBox: {
     flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
-
 };
 
 export default LoginPage;

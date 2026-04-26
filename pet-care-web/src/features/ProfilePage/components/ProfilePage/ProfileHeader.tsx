@@ -6,7 +6,7 @@ import CommonButton from "../../../../shared/components/CommonButton";
 interface ProfileHeaderProps {
   name: string;
   role: string;
-  bio?: string; // thêm bio
+  bio?: string; 
   avatar: React.ReactNode; 
   onEdit: () => void;
 }

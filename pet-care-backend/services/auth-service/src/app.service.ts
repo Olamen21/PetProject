@@ -27,18 +27,27 @@ export class AppService {
       throw new Error('User đã tồn tại');
     }
 
-    if (!dto.password) {
-      throw new Error('Password không được để trống');
-    }
-    console.log('DTO nhận được:', dto);
-
-    const hashedPassword = await this.hashPassword(dto.password);
+    const hashedPassword = await this.hashPassword(dto.password!);
 
     const newUser = new User();
     newUser.email = dto.email;
     newUser.full_name = dto.full_name;
     newUser.password_hash = hashedPassword;
-    return this.userRepository.save(newUser);
+
+    const savedUser = await this.userRepository.save(newUser);
+
+    const payload = {
+      sub: savedUser.id,
+      email: savedUser.email,
+      role: savedUser.role,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload);
+
+    return {
+      user: savedUser,
+      access_token: access_token,
+    };
   }
 
   async login(dto: { email: string; password: string }) {
@@ -61,6 +70,12 @@ export class AppService {
     return {
       message: 'Login thành công!',
       access_token: await this.jwtService.signAsync(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        full_name: user.full_name,
+      },
     };
   }
 }

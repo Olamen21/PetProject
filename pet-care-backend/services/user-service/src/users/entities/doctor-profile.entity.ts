@@ -24,10 +24,12 @@ export class DoctorProfile {
   @Column({ type: 'text', nullable: true })
   bio: string;
   @Column({ type: 'date', nullable: true })
-  experience_start_date: Date;
+  experience_start_date!: Date | null;
 
-  // Quan hệ 1-1 với User
+  @Column({ nullable: true })
+  certificate_url: string;
+
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' }) // Tạo cột user_id làm khóa ngoại
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
