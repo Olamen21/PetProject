@@ -9,10 +9,11 @@ import {
   UploadedFile,
   UseInterceptors,
   Post,
+  UnauthorizedException,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-user.dto';
-import { Request } from 'express';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
@@ -25,9 +26,9 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+
 import { CloudinaryService } from './cloudinary.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 interface RequestWithUser extends Request {
   user: { id: number; email: string; role: Role };
@@ -62,11 +63,19 @@ export class UsersController {
   }
 
   @Patch('profile')
-  @ApiOperation({ summary: 'Cập nhật hồ sơ cá nhân' })
-  updateProfile(
-    @Req() req: RequestWithUser,
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @Request() req,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
+    console.log('User từ Request:', req.user);
+
+    if (!req.user || !req.user.id) {
+      throw new UnauthorizedException(
+        'Không tìm thấy thông tin user trong token',
+      );
+    }
+
     return this.usersService.updateProfile(req.user.id, updateProfileDto);
   }
 
@@ -96,5 +105,15 @@ export class UsersController {
     const imageUrl = await this.cloudinaryService.uploadFile(file);
 
     return this.usersService.applyToBeVet(req.user.id, body, imageUrl);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password')
+  async changePassword(
+    @Request() req,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    await this.usersService.changePassword(req.user.id, changePasswordDto);
+    return { message: 'Đổi mật khẩu thành công!' };
   }
 }

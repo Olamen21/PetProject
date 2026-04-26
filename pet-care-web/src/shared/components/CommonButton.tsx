@@ -22,7 +22,7 @@ const CommonButton: React.FC<Props> = ({
   onClick,
   Icon,
   iconSize = 24,
-  backgroundColor = Colors.primary, 
+  backgroundColor = Colors.primary,
   textColor = Colors.text,
   iconColor = Colors.white,
   style,
@@ -33,39 +33,43 @@ const CommonButton: React.FC<Props> = ({
 }) => {
   return (
     <button
-        onClick={onClick}
-        style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "14px 20px",
-            borderRadius: 12,
-            backgroundColor: backgroundColor || "transparent",
-            border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
-            cursor: "pointer",
-            ...style,
-            transition: "0.2s"
-        }}
+      onClick={onClick}
+      onMouseOver={(e) => (e.currentTarget.style.opacity = "0.8")}
+      onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "14px 20px",
+        borderRadius: 12,
+        backgroundColor: backgroundColor || "transparent",
+        border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
+        cursor: "pointer",
+        ...style,
+        transition: "0.2s",
+      }}
     >
       {Icon && (
-        <Icon 
-            size={iconSize}
-            color={bordered ? borderColor : iconColor}
-            style={{ marginRight: 8 }}
+        <Icon
+          size={iconSize}
+          color={bordered ? textColor : iconColor}
+          style={{ marginRight: 8, flexShrink: 0 }}
         />
       )}
-      <span 
+
+      <span
         style={{
-            fontSize: 16,
-            fontWeight: 600,
-            color: bordered ? borderColor : textColor,
-            ...textStyle
+          fontSize: 16,
+          fontWeight: 600,
+
+          color: textColor,
+          ...textStyle,
         }}
       >
         {title}
       </span>
     </button>
   );
-}
+};
 
 export default CommonButton;

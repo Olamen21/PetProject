@@ -3,14 +3,17 @@ import CommonButton from "../../../../shared/components/CommonButton";
 import { Colors } from "../../../../constants/Colors";
 
 function EditProfileSpecialties({ form, setForm, newTag, setNewTag }) {
+  const currentTags = Array.isArray(form.tags) ? form.tags : [];
+
   const addTag = () => {
     if (!newTag.trim()) return;
-    setForm({ ...form, tags: [...form.tags, newTag.trim()] });
+    // Thêm vào mảng
+    setForm({ ...form, tags: [...currentTags, newTag.trim()] });
     setNewTag("");
   };
 
   const removeTag = (index: number) => {
-    const updated = form.tags.filter((_, i) => i !== index);
+    const updated = currentTags.filter((_, i) => i !== index);
     setForm({ ...form, tags: updated });
   };
 
@@ -19,12 +22,12 @@ function EditProfileSpecialties({ form, setForm, newTag, setNewTag }) {
       <div style={styles.sectionTitle}>Specialties</div>
 
       <div style={styles.tagContainer}>
-        {form.tags.map((tag, index) => (
+        {currentTags.map((tag, index) => (
           <div key={index} style={styles.tag}>
             {tag}
             <span
               onClick={() => removeTag(index)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", marginLeft: 5 }}
             >
               ✕
             </span>

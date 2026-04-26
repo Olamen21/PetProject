@@ -1,14 +1,15 @@
 import React from "react";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaLock } from "react-icons/fa";
 import { Colors } from "../../../../constants/Colors";
 import CommonButton from "../../../../shared/components/CommonButton";
 
 interface ProfileHeaderProps {
   name: string;
   role: string;
-  bio?: string; 
-  avatar: React.ReactNode; 
-  onEdit: () => void;
+  bio?: string;
+  avatar: React.ReactNode;
+  onEditProfile?: () => void; 
+  onChangePassword?: () => void;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
@@ -16,7 +17,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   role,
   bio,
   avatar,
-  onEdit,
+  onEditProfile,
+  onChangePassword,
 }) => {
   return (
     <div style={styles.content}>
@@ -39,20 +41,37 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           )}
         </div>
       </div>
+      <div style={styles.button}>
+        <CommonButton
+          title="Change Password"
+          onClick={onChangePassword}
+          Icon={FaLock}
+          iconSize={14}
+          backgroundColor={Colors.white} 
+          borderColor={Colors.black} 
+          textColor={Colors.red} 
+          bordered={true} 
+          style={{
+            width: "200px",
+            padding: "8px 12px",
+          }}
+           textStyle={{ fontSize: 14 }}
+        />
 
-      <CommonButton
-        title="Edit Profile"
-        onClick={onEdit}
-        Icon={FaPen}
-        iconSize={14}
-        backgroundColor={Colors.primary}
-        textColor={Colors.white}
-        style={{
-          width: "150px",
-          padding: "8px 12px",
-        }}
-        textStyle={{ fontSize: 14 }}
-      />
+        <CommonButton
+          title="Edit Profile"
+          onClick={onEditProfile}
+          Icon={FaPen}
+          iconSize={14}
+          backgroundColor={Colors.primary}
+          textColor={Colors.white}
+          style={{
+            width: "150px",
+            padding: "8px 12px",
+          }}
+          textStyle={{ fontSize: 14 }}
+        />
+      </div>
     </div>
   );
 };
@@ -71,7 +90,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "flex-start",
     gap: "16px",
   },
-  
+
   name: {
     fontSize: "24px",
     fontWeight: 700,
@@ -96,5 +115,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: Colors.text_secondary,
     fontSize: "13px",
     lineHeight: "1.4",
+  },
+  button: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
   },
 };

@@ -7,7 +7,8 @@ import { useAuth } from "../../../context/AuthContext";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader";
 
 function ProfilePage() {
-  const user = useAuth();
+  const { user } = useAuth();
+  console.log("Dữ liệu User hiện tại:", user);
 
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
@@ -37,26 +38,26 @@ function ProfilePage() {
         ")",
     },
     avatarImage: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "50%",
-    border: "4px solid " + Colors.white,
-    marginTop: "-60px",
-    objectFit: "cover",
-  },
-  avatarFallback: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "50%",
-    background: Colors.secondary,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "bold",
-    fontSize: "18px",
-    color: Colors.white,
-    marginTop: "-60px", 
-  },
+      width: "80px",
+      height: "80px",
+      borderRadius: "50%",
+      border: "4px solid " + Colors.white,
+      marginTop: "-60px",
+      objectFit: "cover",
+    },
+    avatarFallback: {
+      width: "80px",
+      height: "80px",
+      borderRadius: "50%",
+      background: Colors.secondary,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: "bold",
+      fontSize: "18px",
+      color: Colors.white,
+      marginTop: "-60px",
+    },
   };
 
   return (
@@ -72,20 +73,31 @@ function ProfilePage() {
             role={user?.role || "Vai trò"}
             bio={user?.bio || "Chưa có thông tin cá nhân nào được cập nhật."}
             avatar={
-              user?.avatar ? (
-                <img src={user.avatar} alt="avatar" style={styles.avatarImage} />
+              user?.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt="avatar"
+                  style={styles.avatarImage}
+                />
               ) : (
                 <div style={styles.avatarFallback}>
                   {user?.full_name?.charAt(0).toUpperCase() || "U"}
                 </div>
               )
             }
-            onEdit={() => navigation.navigate("/edit-profile")}
+            onEditProfile={() => navigation.navigate("/edit-profile")}
+            onChangePassword={() => navigation.navigate("/change-password")}
           />
 
           <ProfileStats
-            tags={user?.tags || ["chưa có tag nào"]}
-            experience_start_date={user?.experience_start_date}
+            tags={
+              typeof user?.doctorProfile?.tags === "string"
+                ? user.doctorProfile.tags.split(",").map((tag) => tag.trim())
+                : Array.isArray(user?.doctorProfile?.tags)
+                  ? user.doctorProfile.tags
+                  : []
+            }
+            experience_start_date={user?.doctorProfile?.experience_start_date}
           />
 
           <ProfileDetail
@@ -93,10 +105,14 @@ function ProfilePage() {
             email={user?.email || "email"}
             dob={user?.date_of_birth || "dd/mm/yyyy"}
             phone={user?.phone || "(123) 456-7890"}
-            clinicRoom={user?.doctorProfile?.clinic_room || "Chưa có phòng khám"}
+            clinicRoom={
+              user?.doctorProfile?.clinic_room || "Chưa có phòng khám"
+            }
             address={user?.address || "không có địa chỉ nào"}
             degree={user?.doctorProfile?.degree || "Chưa cập nhật bằng cấp"}
-            experienceStart={user?.doctorProfile?.experience_start_date || "dd/mm/yyyy"}
+            experienceStart={
+              user?.doctorProfile?.experience_start_date || "dd/mm/yyyy"
+            }
           />
 
           {/* <ProfileSchedule /> */}

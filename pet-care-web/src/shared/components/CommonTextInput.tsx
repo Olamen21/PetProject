@@ -3,6 +3,7 @@ import type { IconType } from "react-icons";
 import { Colors } from "../../constants/Colors";
 
 type Props = {
+  label?: string; // Tên của ô nhập liệu (ví dụ: Mật khẩu)
   Icon?: IconType;
   iconSize?: number;
   iconColor?: string;
@@ -13,6 +14,7 @@ type Props = {
   rightIcon?: React.ReactNode;
   containerStyle?: React.CSSProperties;
   inputStyle?: React.CSSProperties;
+  labelStyle?: React.CSSProperties; // Thêm style cho label nếu cần
   backgroundColor?: string;
   bordered?: boolean;
   borderColor?: string;
@@ -20,6 +22,7 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const CommonTextInput: React.FC<Props> = ({
+  label,
   Icon,
   iconSize = 22, 
   iconColor = Colors.secondary, 
@@ -30,6 +33,7 @@ const CommonTextInput: React.FC<Props> = ({
   rightIcon,
   containerStyle,
   inputStyle,
+  labelStyle,
   backgroundColor = Colors.white, 
   bordered = true, 
   borderColor = Colors.gray, 
@@ -37,43 +41,64 @@ const CommonTextInput: React.FC<Props> = ({
   ...rest
 }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        borderRadius: 5,
-        height: 45,
-         paddingLeft: 12, 
-        border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
-        backgroundColor: backgroundColor || "transparent",
-        ...containerStyle,
-      }}
-    >
-      {Icon && (
-        <Icon
-          size={iconSize}
-          color={iconColor}
-          style={{ marginRight: 10 }}
-        />
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+      
+
+      {label && (
+        <label 
+          style={{ 
+            fontSize: "14px", 
+            fontWeight: "600", 
+            color: Colors.text,
+            textAlign: "left", 
+            ...labelStyle 
+          }}
+        >
+          {label}
+        </label>
       )}
-      <input
-        placeholder={placeholder}
-        value={value}
-        onChange={onChangeText}
-        type={secureTextEntry ? "password" : "text"}
+
+    
+      <div
         style={{
-          flex: 1,
-          fontSize: 13,
-          color: Colors.text,
-          fontWeight: "500",
-          ...inputStyle,
-          border: "none",
-          padding: "0 10px",
-          outline: "none",
+          display: "flex",
+          alignItems: "center",
+          borderRadius: 8, 
+          height: 48,      
+          paddingLeft: 12, 
+          border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",
+          backgroundColor: backgroundColor || "transparent",
+          transition: "border-color 0.2s", 
+          ...containerStyle,
         }}
-        {...rest}
-      />
-      {rightIcon}
+      >
+        {Icon && (
+          <Icon
+            size={iconSize}
+            color={iconColor}
+            style={{ marginRight: 10, flexShrink: 0 }}
+          />
+        )}
+        <input
+          placeholder={placeholder}
+          value={value}
+          onChange={onChangeText}
+          type={secureTextEntry ? "password" : "text"}
+          style={{
+            flex: 1,
+            fontSize: "14px",
+            color: Colors.text,
+            fontWeight: "500",
+            border: "none",
+            padding: "0 10px",
+            outline: "none",
+            backgroundColor: "transparent",
+            ...inputStyle,
+          }}
+          {...rest}
+        />
+        {rightIcon && <div style={{ paddingRight: 12 }}>{rightIcon}</div>}
+      </div>
     </div>
   );
 }

@@ -24,4 +24,7 @@ export const Colors = {
   text_tag_warning: "#f39c12",
   stars: "#f1c40f", 
   text_secondary: "#7f8c8d", // Màu chữ phụ
+  primary_light: "#a3c9b8", 
+  red: "#ff1900",
+  black:"#000000"
 };
