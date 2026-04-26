@@ -19,15 +19,16 @@ const SignUpUploadPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userFromAuth = useAuth();
-  
 
   useEffect(() => {
     if (userFromAuth?.role === "PENDING_VET") {
-      alert("The doctor’s profile has been submitted! Please wait for the Admin’s approval.");
+      alert(
+        "The doctor’s profile has been submitted! Please wait for the Admin’s approval.",
+      );
       navigate("/login");
     }
     if (userFromAuth?.role === "VET") {
-      navigate("/vet-dashboard"); 
+      navigate("/vet-dashboard");
     }
   }, [userFromAuth]);
 
@@ -59,7 +60,45 @@ const SignUpUploadPage: React.FC = () => {
 
     const token = localStorage.getItem("token");
     const API_URL_USER = import.meta.env.VITE_API_URL_USER;
- 
+    if (formData.date_of_birth) {
+      const selectedYear = new Date(formData.date_of_birth).getFullYear();
+      const currentYear = new Date().getFullYear();
+
+      if (selectedYear <= 1900 || selectedYear >= currentYear) {
+        alert(
+          `Năm sinh phải lớn hơn 1900 và nhỏ hơn năm hiện tại (${currentYear})`,
+        );
+        return;
+      }
+    } else {
+      alert("Không được để trống ngày sinh");
+      return;
+    }
+
+    if (formData.experience_start_date) {
+      const birthYear = new Date(formData.date_of_birth).getFullYear();
+      const expStartYear = new Date(formData.experience_start_date).getFullYear(); 
+      const currentYear = new Date().getFullYear(); 
+
+      if (expStartYear >= currentYear) {
+        alert(
+          `Năm bắt đầu làm việc phải nhỏ hơn năm hiện tại (${currentYear})!`,
+        );
+        return;
+      }
+
+      if (expStartYear <= birthYear) {
+        alert("Năm bắt đầu làm việc phải lớn hơn năm sinh!");
+        return;
+      }
+
+      if (expStartYear - birthYear < 18) {
+        console.warn("Năm không hợp lệ");
+      }
+    } else {
+      alert("Không để trống ngày bắt đầu làm việc!");
+      return;
+    }
     const data = new FormData();
     data.append("phone", formData.phone);
     data.append("address", formData.address);

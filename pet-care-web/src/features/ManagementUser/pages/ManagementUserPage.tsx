@@ -22,17 +22,14 @@ const ManagementUserPage: React.FC = () => {
   const userFromAuth = useAuth();
 
 useEffect(() => {
-    // 1. Nếu Context chưa load xong user, cứ để nó đợi
     if (!userFromAuth) return;
 
-    // 2. Nếu đã load xong user nhưng KHÔNG PHẢI ADMIN thì báo lỗi luôn
     if (userFromAuth.role !== "ADMIN") {
       setError("Bạn không có quyền truy cập trang này.");
       setLoading(false);
       return;
     }
 
-    // 3. Nếu là ADMIN, tiến hành gọi API
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -48,13 +45,12 @@ useEffect(() => {
         console.error("Lỗi fetch users:", err);
         setError(err.response?.data?.message || "Không thể tải danh sách.");
       } finally {
-        // QUAN TRỌNG: Dù thành công hay thất bại cũng phải tắt loading
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, [userFromAuth]); // Theo dõi sự thay đổi của userFromAuth
+  }, [userFromAuth]); 
 
   const filteredUsers = users.filter(
     (u) =>

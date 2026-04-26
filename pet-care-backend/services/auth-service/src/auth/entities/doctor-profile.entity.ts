@@ -24,8 +24,7 @@ export class DoctorProfile {
   @Column({ type: 'text', nullable: true })
   bio: string;
 
-  // Quan hệ 1-1 với User
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' }) // Tạo cột user_id làm khóa ngoại
+  @JoinColumn({ name: 'user_id' }) 
   user: User;
 }

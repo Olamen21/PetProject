@@ -75,12 +75,12 @@ const UserRow: React.FC<Props> = ({ user }) => {
 
     try {
       await axios.patch(
-        `${API_URL_USER}/users/${user.id}/assign-role`, // API riêng biệt
-        { role: "VET" }, // Hoặc role gì đó Thúy muốn duyệt
+        `${API_URL_USER}/users/${user.id}/assign-role`, 
+        { role: "VET" }, 
         { headers: { Authorization: `Bearer ${token}` } },
       );
       alert("Phê duyệt thành công!");
-      window.location.reload(); // Load lại để thấy role mới
+      window.location.reload(); 
     } catch (error) {
       alert("Có lỗi xảy ra khi phê duyệt");
     }

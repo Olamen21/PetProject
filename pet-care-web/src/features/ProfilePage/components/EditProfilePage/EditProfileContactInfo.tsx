@@ -6,12 +6,6 @@ function EditProfileContactInfo({ form, handleChange }) {
       <div style={styles.sectionTitle}>Contact Info</div>
 
       <div style={styles.grid}>
-        <CommonTextInput
-          Icon={FiMail}
-          placeholder="Email"
-          value={form.email}
-          onChangeText={(e) => handleChange("email", e.target.value)}
-        />
 
         <CommonTextInput
           Icon={FiPhone}
@@ -29,17 +23,17 @@ function EditProfileContactInfo({ form, handleChange }) {
         />
 
         <CommonTextInput
-          Icon={FiMapPin}
+          Icon={FiHome}
           placeholder="Address"
           value={form.address}
           onChangeText={(e) => handleChange("address", e.target.value)}
         />
 
         <CommonTextInput
-          placeholder="City"
-              Icon={FiHome}
-          value={form.city}
-          onChangeText={(e) => handleChange("city", e.target.value)}
+          placeholder="Clinic Room"
+              Icon={FiMapPin}
+          value={form.clinicRoom}
+          onChangeText={(e) => handleChange("clinicRoom", e.target.value)}
         />
       </div>
     </div>

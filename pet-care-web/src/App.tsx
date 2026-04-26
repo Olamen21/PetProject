@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ManagementUserPage from "./features/ManagementUser/pages/ManagementUserPage";
 import SignUpUploadPage from "./features/auth/pages/SignUpUploadPage";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
+import ChangePasswordPage from "./features/ProfilePage/pages/ChangePasswordPage";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             }
           />
           <Route path="/signup-upload" element={<SignUpUploadPage />} />
+          <Route path="/change-password" element={<ChangePasswordPage/>}/>
         </Routes>
       </Router>
     </AuthProvider>

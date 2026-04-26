@@ -56,7 +56,7 @@ const MENU_CONFIG = [
     path: "/diagnosis",
     icon: <FaStethoscope />,
     roles: ["VET"],
-  }, 
+  },
 
   { title: "ACCOUNT", isTitle: true },
   {
@@ -74,8 +74,8 @@ const MENU_CONFIG = [
 ];
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const user = useAuth();
 
+  const { user } = useAuth();
   const isActive = (path: string) => location.pathname === path;
 
   const baseStyles: { [key: string]: React.CSSProperties } = {
@@ -208,8 +208,8 @@ const Sidebar: React.FC = () => {
       <div style={baseStyles.doctorBox}>
         {user ? (
           <div style={baseStyles.doctorRow}>
-            {user.avatar ? (
-              <img src={user.avatar} alt="avatar" style={baseStyles.avatar} />
+            {user.avatar_url ? (
+              <img src={user.avatar_url} alt="avatar" style={baseStyles.avatar} />
             ) : (
               <div style={baseStyles.avatar}>
                 {user.full_name?.charAt(0).toUpperCase() || "U"}
