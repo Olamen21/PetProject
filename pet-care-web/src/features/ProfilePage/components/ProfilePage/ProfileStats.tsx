@@ -1,5 +1,5 @@
 import React from "react";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../../constants/Colors";
 
 interface ProfileStatsProps {
   tags: string[];

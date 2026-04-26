@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPen } from "react-icons/fa";
-import { Colors } from "../../../constants/Colors";
-import CommonButton from "../../../shared/components/CommonButton";
+import { Colors } from "../../../../constants/Colors";
+import CommonButton from "../../../../shared/components/CommonButton";
 
 interface ProfileHeaderProps {
   name: string;

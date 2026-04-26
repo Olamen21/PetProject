@@ -5,7 +5,7 @@ import { Roles } from './auth/decorators/roles.decorator';
 import { Role } from './auth/role.enum';
 
 @Controller('admin')
-export class AdminController {
+export class AppController {
   @Get('dashboard')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)

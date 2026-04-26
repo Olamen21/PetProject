@@ -6,6 +6,7 @@ import ProfilePage from './features/ProfilePage/pages/ProfilePage';
 import ForgotPasswordPage from './features/auth/pages/ForgotPasswordPage';
 import EditProfilePage from './features/ProfilePage/pages/EditProfilePage';
 import { AuthProvider } from "./context/AuthContext";
+import ManagementUserPage from './features/ManagementUser/pages/ManagementUserPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
+          <Route path="/admin/management-user" element={<ManagementUserPage />} /> 
         </Routes>
       </Router>
     </AuthProvider>

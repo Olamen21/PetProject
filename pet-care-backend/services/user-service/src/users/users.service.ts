@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateProfileDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from '../roles/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -33,11 +34,18 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
   async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
+  }
+  async changeRole(id: number, newRole: Role): Promise<User> {
+    const user = await this.findOne(id);
+    user.role = newRole;
+
+    return this.usersRepository.save(user);
   }
 }

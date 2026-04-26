@@ -1,11 +1,9 @@
 import Sidebar from "../../../shared/components/Sidebar";
 
 import { Colors } from "../../../constants/Colors";
-import ProfileStats from "../components/ProfileStats";
-
-import ProfileCard from "../components/ProfileHeader";
+import ProfileStats from "../components/ProfilePage/ProfileStats";
+import ProfileDetail from "../components/ProfilePage/ProfileDetails";
 import { useAuth } from "../../../context/AuthContext";
-import ProfileDetail from "../components/ProfileDetails";
 
 function ProfilePage() {
   const user = useAuth();

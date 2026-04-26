@@ -1,6 +1,6 @@
-import CommonTextInput from "../../../shared/components/CommonTextInput";
-import CommonButton from "../../../shared/components/CommonButton";
-import { Colors } from "../../../constants/Colors";
+import CommonTextInput from "../../../../shared/components/CommonTextInput";
+import CommonButton from "../../../../shared/components/CommonButton";
+import { Colors } from "../../../../constants/Colors";
 
 function EditProfileSpecialties({ form, setForm, newTag, setNewTag }) {
   const addTag = () => {
