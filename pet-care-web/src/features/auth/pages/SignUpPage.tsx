@@ -17,11 +17,13 @@ const SignUpPage: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
-  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  // Kiểm tra email hợp lệ
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -30,10 +32,10 @@ const SignUpPage: React.FC = () => {
   const validateUsername = (username: string) => {
     return username.trim() !== "";
   };
-  
-  // Kiểm tra password
+
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
 
@@ -44,7 +46,6 @@ const SignUpPage: React.FC = () => {
       [name]: value,
     }));
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +61,10 @@ const SignUpPage: React.FC = () => {
     }
 
     if (!validatePassword(formData.password)) {
-      setMessage({ type: "error", text: "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
+      setMessage({
+        type: "error",
+        text: "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
+      });
       return;
     }
 
@@ -78,70 +82,83 @@ const SignUpPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
         full_name: formData.userName,
-        role: "VET",
       });
 
       if (res.status === 201) {
+        const { access_token, user } = res.data;
+        localStorage.setItem("token", access_token);
+        // localStorage.setItem("user_role", user.role);
         setMessage({ type: "success", text: "Đăng ký thành công!" });
-        navigate("/login")
-
+        navigate("/signup-upload");
       } else {
         setMessage({ type: "error", text: res.message || "Đăng ký thất bại!" });
       }
     } catch (err: any) {
-      setMessage({ type: "error", text: err.message || "Có lỗi xảy ra, vui lòng thử lại!" });
+      setMessage({
+        type: "error",
+        text: err.message || "Có lỗi xảy ra, vui lòng thử lại!",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
     <div style={styles.container}>
+      {/* logo */}
+      <div style={styles.logo}>
+        <img
+          src={logo}
+          alt="logo"
+          style={{ width: 100, height: 100, marginBottom: 20 }}
+        />
+      </div>
 
-        {/* logo */}
-        <div style={styles.logo}>
-            <img 
-                src= {logo}
-                alt="logo"
-                style={{width: 100, height: 100, marginBottom: 20}}
-            />
+      {/* img intro + form */}
+      <div style={styles.content}>
+        <div style={styles.leftBox}>
+          <img
+            src={signUpBackGround}
+            alt="Sign Up Background"
+            style={styles.image}
+          />
         </div>
-
-        {/* img intro + form */}
-        <div style={styles.content}>
-            <div style={styles.leftBox}>
-                <img 
-                    src= {signUpBackGround}
-                    alt="Sign Up Background"
-                    style={styles.image}
-                />
-            </div>
-            <div style={styles.formBox}>
-                <h2 style={styles.heading}>Sign up</h2>
-                <SignUpForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} loading={loading} />
-                {message && <CommonMessage type={message.type} message={message.text} />}
-                <p style={{ color: Colors.gray, display: "flex", justifyContent: "center", marginTop: 10 }}>
-                  Already have an account? 
-                   <span 
-                      style={styles.loginLink} 
-                      onClick={() => navigate("/login")}
-                    >
-                      Login
-                    </span>
-                </p>
-                <Divider text="Or Sign up with" />
-                <CommonButton
-                  Icon={FcGoogle}
-                  backgroundColor= {Colors.white}
-                  onClick={() => {}}
-                  bordered
-                  borderColor={Colors.secondary}
-                  textColor={Colors.text}
-                  style={{width: "100%"}}
-                />
-            </div>
+        <div style={styles.formBox}>
+          <h2 style={styles.heading}>Sign up</h2>
+          <SignUpForm
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            loading={loading}
+          />
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
+          <p
+            style={{
+              color: Colors.gray,
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 10,
+            }}
+          >
+            Already have an account?
+            <span style={styles.loginLink} onClick={() => navigate("/login")}>
+              Login
+            </span>
+          </p>
+          <Divider text="Or Sign up with" />
+          <CommonButton
+            Icon={FcGoogle}
+            backgroundColor={Colors.white}
+            onClick={() => {}}
+            bordered
+            borderColor={Colors.secondary}
+            textColor={Colors.text}
+            style={{ width: "100%" }}
+          />
         </div>
+      </div>
     </div>
   );
 };
@@ -187,18 +204,17 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "350px",
   },
   heading: {
-    fontSize: '30px',
-    fontWeight: 'bold',
-    color: '#3B4953',
+    fontSize: "30px",
+    fontWeight: "bold",
+    color: "#3B4953",
   },
   loginLink: {
     color: Colors.primary,
     fontWeight: "600",
     textDecoration: "none",
     marginLeft: "5px",
-    cursor: "pointer" 
+    cursor: "pointer",
   },
-
 };
 
 export default SignUpPage;

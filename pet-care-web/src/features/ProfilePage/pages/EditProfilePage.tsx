@@ -31,8 +31,6 @@ function EditProfilePage() {
     setForm({ ...form, [key]: value });
   };
 
- 
-
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
       display: "flex",
@@ -57,14 +55,18 @@ function EditProfilePage() {
       <Sidebar />
 
       <main style={styles.main}>
-        
-        <EditProfileBasicInfo form={form} handleChange={handleChange} setForm={setForm} />
-        <EditProfileSpecialties form={form} setForm={setForm} newTag={newTag} setNewTag={setNewTag} />
+        <EditProfileBasicInfo
+          form={form}
+          handleChange={handleChange}
+          setForm={setForm}
+        />
+        <EditProfileSpecialties
+          form={form}
+          setForm={setForm}
+          newTag={newTag}
+          setNewTag={setNewTag}
+        />
         <EditProfileContactInfo form={form} handleChange={handleChange} />
-
-
-     
-       
 
         {/* 🔹 BUTTON */}
         <div style={styles.footer}>

@@ -6,6 +6,9 @@ import {
   Req,
   UseGuards,
   Param,
+  UploadedFile,
+  UseInterceptors,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-user.dto';
@@ -21,6 +24,10 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { CloudinaryService } from './cloudinary.service';
 
 interface RequestWithUser extends Request {
   user: { id: number; email: string; role: Role };
@@ -30,7 +37,10 @@ interface RequestWithUser extends Request {
 @ApiBearerAuth('token')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -73,5 +83,18 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async assignRole(@Param('id') id: number, @Body('role') role: Role) {
     return this.usersService.changeRole(id, role);
+  }
+
+  @Post('apply-vet')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async applyVet(
+    @Req() req,
+    @Body() body,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const imageUrl = await this.cloudinaryService.uploadFile(file);
+
+    return this.usersService.applyToBeVet(req.user.id, body, imageUrl);
   }
 }

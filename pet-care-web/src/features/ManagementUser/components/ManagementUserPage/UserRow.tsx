@@ -26,13 +26,17 @@ const UserRow: React.FC<Props> = ({ user }) => {
         ? Colors.bg_tag_orange
         : user.role === "VET"
           ? Colors.bg_tag_green
-          : Colors.bg_tag_blue,
+          : user.role === "PENDING_VET"
+            ? Colors.bg_tag_warning
+            : Colors.bg_tag_blue,
     color:
       user.role === "ADMIN"
         ? Colors.text_tag_orange
-        : user.role === "VET"
-          ? Colors.text_tag_green
-          : Colors.text_tag_blue,
+        : user.role === "PENDING_VET"
+          ? Colors.text_tag_warning
+          : user.role === "VET"
+            ? Colors.text_tag_green
+            : Colors.text_tag_blue,
   };
 
   const statusStyle = {

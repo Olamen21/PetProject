@@ -56,7 +56,7 @@ const MENU_CONFIG = [
     path: "/diagnosis",
     icon: <FaStethoscope />,
     roles: ["VET"],
-  }, // Chỉ Vet thấy
+  }, 
 
   { title: "ACCOUNT", isTitle: true },
   {
@@ -225,16 +225,14 @@ const Sidebar: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div>Loading...</div> // hoặc placeholder
+          <div>Loading...</div>
         )}
       </div>
       <div style={baseStyles.divider}></div>
 
       {MENU_CONFIG.map((item, index) => {
-        // 1. Kiểm tra xem Role của user có quyền xem mục này không
         if (item.roles && !item.roles.includes(user?.role)) return null;
 
-        // 2. Nếu là tiêu đề (GENERAL, CLINICAL...)
         if (item.isTitle) {
           return (
             <div key={index} style={baseStyles.sectionTitle}>
@@ -243,7 +241,6 @@ const Sidebar: React.FC = () => {
           );
         }
 
-        // 3. Nếu là link menu bình thường
         return (
           <Link
             key={index}

@@ -4,7 +4,6 @@ export interface SignUpPayload {
   email: string;
   password: string;
   full_name: string;
-  role: 'VET' | 'ADMIN' | 'USER';
 }
 
 export interface ApiResponse<T> {
@@ -13,7 +12,6 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
-// Hàm đăng ký
 export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
     const API_URL = import.meta.env.VITE_API_URL_AUTH;
   try {
@@ -32,7 +30,6 @@ export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> 
   }
 };
 
-// Hàm đăng nhập
 export const login = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
     const API_URL = import.meta.env.VITE_API_URL_AUTH;
   try {
