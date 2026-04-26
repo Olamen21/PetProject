@@ -5,9 +5,9 @@ import CommonTextInput from "../../../shared/components/CommonTextInput";
 
 import { FiUser, FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import { useState } from "react";
-import EditProfileContactInfo from "../components/EditProfileContactInfo";
-import EditProfileSpecialties from "../components/EditProfileSpecialties";
-import EditProfileBasicInfo from "../components/EditProfileBasicInfo";
+import EditProfileSpecialties from "../components/EditProfilePage/EditProfileSpecialties";
+import EditProfileContactInfo from "../components/EditProfilePage/EditProfileContactInfo";
+import EditProfileBasicInfo from "../components/EditProfilePage/EditProfileBasicInfo";
 
 function EditProfilePage() {
   const [form, setForm] = useState({

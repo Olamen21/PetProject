@@ -1,6 +1,5 @@
-import CommonTextInput from "../../../shared/components/CommonTextInput";
-import { FiMail, FiPhone, FiMapPin, FiCalendar, FiHome } from "react-icons/fi";import { Colors } from "../../../constants/Colors";
-
+import { FiMail, FiPhone, FiMapPin, FiCalendar, FiHome } from "react-icons/fi";import { Colors } from "../../../../constants/Colors";
+import CommonTextInput from "../../../../shared/components/CommonTextInput";
 function EditProfileContactInfo({ form, handleChange }) {
   return (
     <div style={styles.sectionCard}>

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../../constants/Colors";
 
 const ProfileSchedule: React.FC = () => {
   return (

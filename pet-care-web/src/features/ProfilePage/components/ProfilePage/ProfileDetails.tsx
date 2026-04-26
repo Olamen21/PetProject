@@ -9,7 +9,7 @@ import {
   FiCreditCard,
   FiClock,
 } from "react-icons/fi";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../../constants/Colors";
 
 interface ProfileDetailProps {
   fullName: string;

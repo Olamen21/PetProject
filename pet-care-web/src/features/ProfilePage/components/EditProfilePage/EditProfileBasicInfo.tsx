@@ -1,6 +1,6 @@
-import CommonTextInput from "../../../shared/components/CommonTextInput";
+import CommonTextInput from "../../../../shared/components/CommonTextInput";
 import { FiUser } from "react-icons/fi";
-import { Colors } from "../../../constants/Colors";
+import { Colors } from "../../../../constants/Colors";
 
 function EditProfileBasicInfo({ form, handleChange, setForm }) {
   return (

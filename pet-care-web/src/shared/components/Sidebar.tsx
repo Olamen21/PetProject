@@ -4,16 +4,74 @@ import {
   FaHome,
   FaCalendarAlt,
   FaDog,
-  FaComments,
   FaStethoscope,
-  FaSyringe,
   FaUser,
   FaCog,
+  FaUsers,
+  FaChartBar,
 } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
 import { useAuth } from "../../context/AuthContext";
 
+const MENU_CONFIG = [
+  { title: "GENERAL", isTitle: true },
+  {
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: <FaHome />,
+    roles: ["VET", "ADMIN"],
+  },
+  {
+    title: "Appointments",
+    path: "/appointments",
+    icon: <FaCalendarAlt />,
+    roles: ["VET", "ADMIN"],
+  },
+  {
+    title: "Pet Profiles",
+    path: "/pets",
+    icon: <FaDog />,
+    roles: ["VET", "ADMIN"],
+  },
+
+  // Chỉ Admin thấy những mục này
+  { title: "MANAGEMENT", isTitle: true, roles: ["ADMIN"] },
+  {
+    title: "All Users",
+    path: "/admin/management-user",
+    icon: <FaUsers />,
+    roles: ["ADMIN"],
+  },
+  {
+    title: "Revenue",
+    path: "/admin/revenue",
+    icon: <FaChartBar />,
+    roles: ["ADMIN"],
+  },
+
+  { title: "CLINICAL", isTitle: true, roles: ["VET", "ADMIN"] },
+  {
+    title: "Diagnosis",
+    path: "/diagnosis",
+    icon: <FaStethoscope />,
+    roles: ["VET"],
+  }, // Chỉ Vet thấy
+
+  { title: "ACCOUNT", isTitle: true },
+  {
+    title: "My Profile",
+    path: "/profile",
+    icon: <FaUser />,
+    roles: ["VET", "ADMIN"],
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: <FaCog />,
+    roles: ["VET", "ADMIN"],
+  },
+];
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const user = useAuth();
@@ -172,115 +230,38 @@ const Sidebar: React.FC = () => {
       </div>
       <div style={baseStyles.divider}></div>
 
-      {/* CHÍNH */}
-      <div style={baseStyles.sectionTitle}>GENERAL</div>
-      <Link
-        to="/dashboard"
-        style={{
-          ...navItemStyle(isActive("/dashboard")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaHome /> Dashboard
-        </span>
-      </Link>
+      {MENU_CONFIG.map((item, index) => {
+        // 1. Kiểm tra xem Role của user có quyền xem mục này không
+        if (item.roles && !item.roles.includes(user?.role)) return null;
 
-      <Link
-        to="/appointments"
-        style={{
-          ...navItemStyle(isActive("/appointments")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaCalendarAlt /> Appointments
-        </span>
-      </Link>
+        // 2. Nếu là tiêu đề (GENERAL, CLINICAL...)
+        if (item.isTitle) {
+          return (
+            <div key={index} style={baseStyles.sectionTitle}>
+              {item.title}
+            </div>
+          );
+        }
 
-      <Link
-        to="/pets"
-        style={{
-          ...navItemStyle(isActive("/pets")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaDog /> Pet Profiles
-        </span>
-      </Link>
-
-      <Link
-        to="/consult"
-        style={{
-          ...navItemStyle(isActive("/consult")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaComments /> Online Consultation
-        </span>
-      </Link>
-
-      <div style={baseStyles.sectionTitle}>CLINICAL</div>
-      {/* CLINICAL */}
-      <Link
-        to="/diagnosis"
-        style={{
-          ...navItemStyle(isActive("/diagnosis")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaStethoscope /> Diagnosis & Prescriptions
-        </span>
-      </Link>
-      <Link
-        to="/vaccines"
-        style={{
-          ...navItemStyle(isActive("/vaccines")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaSyringe /> Vaccine & Tests
-        </span>
-      </Link>
-
-      {/* TÀI KHOẢN */}
-      <div style={baseStyles.sectionTitle}>ACCOUNT</div>
-
-      <Link
-        to="/profile"
-        style={{
-          ...navItemStyle(isActive("/profile")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaUser /> My Profile
-        </span>
-      </Link>
-
-      <Link
-        to="/settings"
-        style={{
-          ...navItemStyle(isActive("/settings")),
-          textDecoration: "none",
-          color: Colors.text,
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <FaCog /> Settings
-        </span>
-      </Link>
+        // 3. Nếu là link menu bình thường
+        return (
+          <Link
+            key={index}
+            to={item.path}
+            style={{
+              ...navItemStyle(isActive(item.path)),
+              textDecoration: "none",
+              color: Colors.text,
+            }}
+          >
+            <span
+              style={{ display: "flex", alignItems: "center", gap: "10px" }}
+            >
+              {item.icon} {item.title}
+            </span>
+          </Link>
+        );
+      })}
     </aside>
   );
 };

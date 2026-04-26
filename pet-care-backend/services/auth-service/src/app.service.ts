@@ -5,7 +5,6 @@ import { User } from './auth/entities/user.entity';
 import { RegisterDto } from './auth/dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Role } from './auth/roles/role.enum';
 
 @Injectable()
 export class AppService {
@@ -39,13 +38,6 @@ export class AppService {
     newUser.email = dto.email;
     newUser.full_name = dto.full_name;
     newUser.password_hash = hashedPassword;
-    if (dto.role === 'VET') {
-      newUser.role = Role.VET;
-    } else if (dto.role === 'ADMIN') {
-      newUser.role = Role.ADMIN;
-    } else {
-      newUser.role = Role.USER;
-    }
     return this.userRepository.save(newUser);
   }
 

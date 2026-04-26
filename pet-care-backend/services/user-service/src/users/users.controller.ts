@@ -1,4 +1,12 @@
-import { Controller, Get, Body, Patch, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Req,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-user.dto';
 import { Request } from 'express';
@@ -54,9 +62,16 @@ export class UsersController {
 
   @Get('all-users')
   @Roles(Role.ADMIN)
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Lấy danh sách tất cả người dùng (Chỉ Admin)' })
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Patch(':id/assign-role')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async assignRole(@Param('id') id: number, @Body('role') role: Role) {
+    return this.usersService.changeRole(id, role);
   }
 }
