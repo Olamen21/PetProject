@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -6,11 +6,13 @@ import {
   ViewStyle,
   TextStyle,
   TextInputProps,
+  Text,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
 
 type Props = {
+  label?: string;
   icon?: keyof typeof Ionicons.glyphMap;
   iconSize?: number;
   iconColor?: string;
@@ -28,9 +30,10 @@ type Props = {
 } & TextInputProps;
 
 export default function CommonTextInput({
+  label,
   icon,
-  iconSize = 22, 
-  iconColor = Colors.secondary, 
+  iconSize = 22,
+  iconColor = Colors.secondary,
   placeholder,
   value,
   onChangeText,
@@ -38,60 +41,76 @@ export default function CommonTextInput({
   rightIcon,
   containerStyle,
   inputStyle,
-  backgroundColor = Colors.white, 
-  bordered = true, 
-  borderColor = Colors.gray, 
+  backgroundColor = Colors.white,
+  bordered = true,
+  borderColor = Colors.gray,
   borderWidth = 1.5,
   ...rest
 }: Props) {
+  const [focused, setFocused] = useState(false);
+
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor },
-        bordered && { borderWidth, borderColor },
-        bordered && value !== "" && { borderColor: Colors.primary },
-        containerStyle,
-      ]}
-    >
-      {icon && (
-        <Ionicons
-          name={icon}
-          size={iconSize}
-          color={value !== "" ? Colors.primary : iconColor}
-          style={styles.icon}
+    <View style={{ marginBottom: 20 }}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <View
+        style={[
+          styles.container,
+          { backgroundColor },
+          bordered && { borderWidth, borderColor },
+          focused && { borderColor: Colors.primary, shadowColor: Colors.primary },
+          containerStyle,
+        ]}
+      >
+        {icon && (
+          <Ionicons
+            name={icon}
+            size={iconSize}
+            color={value !== "" || focused ? Colors.primary : iconColor}
+            style={styles.icon}
+          />
+        )}
+        <TextInput
+          style={[styles.input, inputStyle]}
+          placeholder={placeholder}
+          placeholderTextColor="#99A1AF"
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+          underlineColorAndroid="transparent"
+          selectionColor={Colors.primary}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          {...rest}
         />
-      )}
-      <TextInput
-        style={[styles.input, inputStyle]}
-        placeholder={placeholder}
-        placeholderTextColor="#99A1AF" 
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-        underlineColorAndroid="transparent"
-        selectionColor={Colors.primary} 
-        {...rest}
-      />
-      {rightIcon}
+        {rightIcon}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontSize: 14,
+    color: Colors.subtitleColor,
+    marginBottom: 6,
+    fontWeight: "600",
+  },
   container: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 12,
-    marginBottom: 16,
+    borderRadius: 16,
     paddingHorizontal: 15,
     height: 56,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   icon: { marginRight: 10 },
-  input: { 
-    flex: 1, 
-    fontSize: 16, 
-    color: Colors.text, 
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: Colors.text,
     fontWeight: "500",
   },
 });

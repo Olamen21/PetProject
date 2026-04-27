@@ -38,6 +38,7 @@ export default function LoginScreen() {
   
         await login({email: email, password: password, full_name: username});
         setMessage({ type: "success", text: "Đăng nhập thành công!" });
+        router.replace("/(tabs)/ProfileScreen")
       } catch (err: any) {
         const errorMsg = err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
         setMessage({ type: "error", text: errorMsg });
