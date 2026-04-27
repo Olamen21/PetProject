@@ -17,14 +17,15 @@ interface User {
 const ManagementUserPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const userFromAuth = useAuth();
+  const { user } = useAuth();
 
-useEffect(() => {
-    if (!userFromAuth) return;
+  useEffect(() => {
+    if (!user) return;
+    console.log("user: " + user);
 
-    if (userFromAuth.role !== "ADMIN") {
+    if (user.role !== "ADMIN") {
       setError("Bạn không có quyền truy cập trang này.");
       setLoading(false);
       return;
@@ -50,7 +51,7 @@ useEffect(() => {
     };
 
     fetchUsers();
-  }, [userFromAuth]); 
+  }, [user]);
 
   const filteredUsers = users.filter(
     (u) =>

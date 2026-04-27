@@ -24,7 +24,7 @@ export class DoctorProfile {
   @Column({ type: 'text', nullable: true })
   bio?: string;
   @Column({ type: 'date', nullable: true })
-  experience_start_date!: Date | null;
+  experience_start_date!: Date;
 
   @Column({ nullable: true })
   certificate_url?: string;

@@ -29,7 +29,7 @@ export class User {
   address!: string;
 
   @Column({ type: 'date', nullable: true })
-  date_of_birth!: Date | null;
+  date_of_birth!: Date;
   @Column({ nullable: true })
   avatar_url!: string;
 
