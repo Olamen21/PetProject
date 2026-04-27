@@ -47,5 +47,5 @@ export class User {
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
   @OneToOne(() => DoctorProfile, (profile) => profile.user)
-  doctorProfile: DoctorProfile;
+  doctorProfile!: DoctorProfile;
 }

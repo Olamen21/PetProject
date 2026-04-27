@@ -69,6 +69,7 @@ function EditProfilePage() {
   };
 
   const handleUpdate = async () => {
+    console.log("Dữ liệu ngày sinh chuẩn bị gửi:", form.dob);
     try {
       const phoneRegex = /^09\d{8}$/;
       if (!phoneRegex.test(form.phone)) {

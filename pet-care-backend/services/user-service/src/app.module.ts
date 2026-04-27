@@ -9,7 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Để tất cả các Module khác (như UsersModule) đều dùng được .env
+      isGlobal: true,
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({

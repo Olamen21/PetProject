@@ -76,6 +76,14 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const { user } = useAuth();
+
+  React.useEffect(() => {
+    if (user) {
+      console.log("Sidebar nhận thấy thông tin user đã cập nhật:", user.full_name);
+     
+    }
+  }, [user]); 
+  
   const isActive = (path: string) => location.pathname === path;
 
   const baseStyles: { [key: string]: React.CSSProperties } = {

@@ -10,21 +10,26 @@ import { User } from './user.entity';
 @Entity('doctor_profiles')
 export class DoctorProfile {
   @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ type: 'simple-array', nullable: true })
-  tags: string[];
+  id?: number;
 
   @Column({ nullable: true })
-  degree: string;
+  tags?: string;
 
   @Column({ nullable: true })
-  clinic_room: string;
+  degree?: string;
+
+  @Column({ nullable: true })
+  clinic_room?: string;
 
   @Column({ type: 'text', nullable: true })
-  bio: string;
+  bio?: string;
+  @Column({ type: 'date', nullable: true })
+  experience_start_date!: Date | null;
+
+  @Column({ nullable: true })
+  certificate_url?: string;
 
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' }) 
-  user: User;
+  @JoinColumn({ name: 'user_id' })
+  user?: User;
 }
