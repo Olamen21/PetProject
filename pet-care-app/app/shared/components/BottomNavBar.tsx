@@ -10,6 +10,8 @@ const NAV_ITEMS = [
   { key: "nutrition", label: "Nutrition", icon: "fast-food-outline", route: "/NutritionScreen" },
   { key: "health", label: "Vets", icon: "medkit-outline", route: "/MedicalRecordsAndVetsScreen" },
   { key: "calendar", label: "Reminder", icon: "calendar-outline", route: "/reminder" },
+    { key: "profile", label: "Profile", icon: "person-outline", route: "/ProfileScreen" },
+
 ];
 export default function BottomNavBar() {
   const router = useRouter();
