@@ -53,7 +53,7 @@ const CommonButton: React.FC<Props> = ({
         <Icon
           size={iconSize}
           color={bordered ? textColor : iconColor}
-          style={{ marginRight: 8, flexShrink: 0 }}
+          style={{ flexShrink: 0 }}
         />
       )}
 
@@ -61,7 +61,7 @@ const CommonButton: React.FC<Props> = ({
         style={{
           fontSize: 16,
           fontWeight: 600,
-
+          marginLeft: title ? 8 : 0,
           color: textColor,
           ...textStyle,
         }}

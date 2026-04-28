@@ -94,7 +94,7 @@ const Sidebar: React.FC = () => {
       padding: "16px",
       borderRight: `1px solid ${Colors.border}`,
       fontFamily: "sans-serif",
-      position: "fixed",
+     
       top: 0,
       left: 0,
     },
