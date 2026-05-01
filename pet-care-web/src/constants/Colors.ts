@@ -26,5 +26,6 @@ export const Colors = {
   text_secondary: "#7f8c8d", // Màu chữ phụ
   primary_light: "#a3c9b8", 
   red: "#ff1900",
-  black:"#000000"
+  black:"#000000",
+  pink_light: "#ffb6c1",
 };
