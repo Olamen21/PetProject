@@ -1,22 +1,24 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { RolesGuard } from './auth/guards/roles.guard';
+import { Controller, Get } from '@nestjs/common';
 import { Roles } from './auth/decorators/roles.decorator';
 import { Role } from './auth/role.enum';
+import { Public } from './auth/decorators/public.decorator';
 
-@Controller('admin')
+@Controller()
 export class AppController {
-  @Get('dashboard')
-  @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  getAdminData() {
-    return { message: 'Chào Admin, đây là dữ liệu mật!' };
+  @Public()
+  @Get('test-public')
+  testPublic() {
+    return 'Ai cũng vào được!';
   }
 
-  @Get('vet-zone')
-  @Roles(Role.VET, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  getVetData() {
-    return { message: 'Chào Bác sĩ!' };
+  @Get('test-jwt')
+  testJwt() {
+    return 'Có token mới cho vào';
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('test-admin')
+  testAdmin() {
+    return 'Chỉ admin mới được vào';
   }
 }
