@@ -34,11 +34,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             <span>{role}</span>
           </div>
 
-          {bio && (
+          {/* {bio && ( */}
             <div style={styles.bioRow}>
               <span>{bio}</span>
             </div>
-          )}
+          {/* )} */}
         </div>
       </div>
       <div style={styles.button}>

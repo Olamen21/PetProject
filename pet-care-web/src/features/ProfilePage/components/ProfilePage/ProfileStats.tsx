@@ -32,6 +32,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date
           );
         })}
       </div>
+      
 
       {/* RATING */}
       <div style={styles.ratingRow}>

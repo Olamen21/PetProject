@@ -141,7 +141,6 @@ function EditProfilePage() {
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
       display: "flex",
-      paddingLeft: 300,
       background: Colors.background,
     },
     main: {

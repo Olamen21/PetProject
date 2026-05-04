@@ -69,7 +69,7 @@ const ManagementUserPage: React.FC = () => {
     >
       <Sidebar />
 
-      <div style={{ flex: 1, padding: 30, marginLeft: 260 }}>
+      <div style={{ flex: 1, padding: 30}}>
         <div
           style={{
             background: Colors.white,
