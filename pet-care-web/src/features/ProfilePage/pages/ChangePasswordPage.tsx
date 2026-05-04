@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaLock, FaArrowLeft } from "react-icons/fa";
 import CommonMessage from "../../../shared/components/CommonMessage";
+import { changePassword } from "../services/profileService";
 
 function ChangePasswordPage() {
   const navigate = useNavigate();
@@ -64,17 +65,7 @@ function ChangePasswordPage() {
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const API_URL_USER = import.meta.env.VITE_API_URL_USER;
-
-      const res = await axios.patch(
-        `${API_URL_USER}/users/change-password`,
-        {
-          oldPassword: currentPassword,
-          newPassword: newPassword,
-        },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const res = await changePassword(currentPassword, newPassword);
 
       if (res.status === 200 || res.status === 201) {
         alert("Password changed successfully.");
@@ -82,7 +73,10 @@ function ChangePasswordPage() {
       }
     } catch (error: any) {
       console.error("Lỗi đổi mật khẩu:", error);
-      alert(error.response?.data?.message || "Password change failed.");
+       setMessage({
+        type: "error",
+        text: error.response?.data?.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -92,7 +86,6 @@ function ChangePasswordPage() {
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
       display: "flex",
-      paddingLeft: 300,
       background: Colors.background,
       minHeight: "100vh",
     },

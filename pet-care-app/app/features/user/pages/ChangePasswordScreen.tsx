@@ -5,7 +5,6 @@ import ChangePasswordHeader from "../components/ChangePasswordScreen/ChangePassw
 import ChangePasswordForm from "../components/ChangePasswordScreen/ChangePasswordForm";
 import CommonButton from "@/app/shared/components/CommonButton";
 import { router, useFocusEffect } from "expo-router";
-import api from "../../../../api/axiosInstance";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import { changePassword } from "../services/userService";
 

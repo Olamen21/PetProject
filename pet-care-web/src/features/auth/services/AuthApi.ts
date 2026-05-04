@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../../api/axiosInstance";
 
 export interface SignUpPayload {
   email: string;
@@ -6,44 +6,40 @@ export interface SignUpPayload {
   full_name: string;
 }
 
-export interface ApiResponse<T> {
-  status: number;
-  message: string;
-  data?: T;
-}
-
-export const signUp = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
-    const API_URL = import.meta.env.VITE_API_URL_AUTH;
-  try {
-    const res = await axios.post(`${API_URL}/auth/register`, payload);
-    return {
-      status: res.status,
-      message: "Đăng ký thành công",
-      data: res.data,
-    };
-  } catch (error: any) {
-    console.error("SignUp error:", error); 
-    return {
-      status: error.response?.status || 500,
-      message: error.response?.data?.message || "Có lỗi xảy ra",
-    };
+export const signUp = async (data: SignUpPayload) => {
+  const res = await api.post("/auth/register", data);
+   if (res.data?.access_token) {
+    localStorage.setItem("token", res.data.access_token);
   }
+  return res.data;
 };
 
-export const login = async (payload: SignUpPayload): Promise<ApiResponse<any>> => {
-    const API_URL = import.meta.env.VITE_API_URL_AUTH;
+export const login = async (data: Omit<SignUpPayload, 'full_name'> | SignUpPayload) => {
+  const res = await api.post("/auth/login", data);
+  
+  if (res.data?.access_token) {
+    localStorage.setItem("token", res.data.access_token);
+  }
+
+  return res.data;
+};
+
+export const applyVet = async (formDataPayload: FormData) => {
+  const res = await api.post("/users/apply-vet", formDataPayload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+
+export const logout = async () => {
   try {
-    const res = await axios.post(`${API_URL}/auth/login`, payload);
-    return {
-      status: res.status,
-      message: "Đăng nhập thành công",
-      data: res.data,
-    };
-  } catch (error: any) {
-    console.error("Login error:", error);
-    return {
-      status: error.response?.status || 500,
-      message: error.response?.data?.message || "Có lỗi xảy ra",
-    };
+    localStorage.removeItem("token");
+    
+    window.location.href = "/login";
+  } catch (error) {
+    console.error("Lỗi khi logout:", error);
   }
 };
