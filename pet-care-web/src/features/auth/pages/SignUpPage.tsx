@@ -51,52 +51,49 @@ const SignUpPage: React.FC = () => {
     e.preventDefault();
 
     if (!validateUsername(formData.userName)) {
-      setMessage({ type: "error", text: "Username không được để trống!" });
+      setMessage({ type: "error", text: "Username cannot be empty!" });
       return;
     }
-
     if (!validateEmail(formData.email)) {
-      setMessage({ type: "error", text: "Email không hợp lệ!" });
+      setMessage({ type: "error", text: "Invalid email address!" });
       return;
     }
-
     if (!validatePassword(formData.password)) {
       setMessage({
         type: "error",
-        text: "Password phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
+        text: "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters!",
       });
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
-      setMessage({ type: "error", text: "Mật khẩu xác nhận không khớp!" });
+      setMessage({ type: "error", text: "Passwords do not match!" });
       return;
     }
 
-    // gọi API
     try {
       setLoading(true);
       setMessage(null);
 
-      const res = await signUp({
+      const result = await signUp({
         email: formData.email,
         password: formData.password,
         full_name: formData.userName,
       });
 
-      if (res.status === 201) {
-        const { access_token, user } = res.data;
-        localStorage.setItem("token", access_token);
-        // localStorage.setItem("user_role", user.role);
-        setMessage({ type: "success", text: "Đăng ký thành công!" });
-        navigate("/signup-upload");
-      } else {
-        setMessage({ type: "error", text: res.message || "Đăng ký thất bại!" });
+      if (result) {
+        setMessage({ type: "success", text: "Sign up successful!" });
+        setTimeout(() => {
+          navigate("/signup-upload");
+        }, 1000);
       }
     } catch (err: any) {
+      console.error("SignUp error:", err);
+
+      const errorMsg =
+        err.response?.data?.message || "Sign up failed, please try again!";
       setMessage({
         type: "error",
-        text: err.message || "Có lỗi xảy ra, vui lòng thử lại!",
+        text: errorMsg,
       });
     } finally {
       setLoading(false);

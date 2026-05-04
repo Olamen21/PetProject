@@ -7,8 +7,8 @@ interface ProfileHeaderProps {
   name: string;
   role: string;
   bio?: string;
-  avatar: React.ReactNode;
-  onEditProfile?: () => void; 
+  avatar: string;
+  onEditProfile?: () => void;
   onChangePassword?: () => void;
 }
 
@@ -23,8 +23,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   return (
     <div style={styles.content}>
       <div style={styles.left}>
-        {avatar}
-
+        {avatar ? (
+          <img
+            src={avatar}
+            alt="Avatar Preview"
+            style={styles.avatarImage}
+          />
+        ) : (
+          <div style={styles.avatarFallback}>
+            {name?.charAt(0).toUpperCase() || "U"}
+          </div>
+        )}
         <div>
           <div style={styles.nameRow}>
             <div style={styles.name}>{name}</div>
@@ -35,9 +44,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </div>
 
           {/* {bio && ( */}
-            <div style={styles.bioRow}>
-              <span>{bio}</span>
-            </div>
+          <div style={styles.bioRow}>
+            <span>{bio}</span>
+          </div>
           {/* )} */}
         </div>
       </div>
@@ -47,15 +56,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           onClick={onChangePassword}
           Icon={FaLock}
           iconSize={14}
-          backgroundColor={Colors.white} 
-          borderColor={Colors.black} 
-          textColor={Colors.red} 
-          bordered={true} 
+          backgroundColor={Colors.white}
+          borderColor={Colors.black}
+          textColor={Colors.red}
+          bordered={true}
           style={{
             width: "200px",
             padding: "8px 12px",
           }}
-           textStyle={{ fontSize: 14 }}
+          textStyle={{ fontSize: 14 }}
         />
 
         <CommonButton
@@ -120,5 +129,24 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     alignItems: "center",
     gap: "10px",
+  },
+  avatarImage: {
+    width: "100px",
+    height: "100px",
+    borderRadius: "50%",
+    border: "4px solid " + Colors.white,
+    objectFit: "cover",
+  },
+  avatarFallback: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    background: Colors.secondary,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    fontSize: "18px",
+    color: Colors.white,
   },
 };

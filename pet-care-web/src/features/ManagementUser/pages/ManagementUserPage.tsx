@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Sidebar from "../../../shared/components/Sidebar";
 import { Colors } from "../../../constants/Colors";
 import UserHeader from "../components/ManagementUserPage/UserHeader";
 import UserTable from "../components/ManagementUserPage/UserTable";
-import { useAuth } from "../../../context/AuthContext";
+import { getProfile } from "../../../api/UserApi";
+import {getAllUser } from "../services/ManagementUser";
 
 interface User {
   id: number;
@@ -19,39 +19,34 @@ const ManagementUserPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    if (!user) return;
-    console.log("user: " + user);
-
-    if (user.role !== "ADMIN") {
-      setError("Bạn không có quyền truy cập trang này.");
-      setLoading(false);
-      return;
-    }
-
-    const fetchUsers = async () => {
+    const loadInitialData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const API_URL_USER = import.meta.env.VITE_API_URL_USER;
+        setLoading(true);
 
-        const res = await axios.get(`${API_URL_USER}/users/all-users`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const userData = await getProfile();
+        setUser(userData);
 
-        setUsers(res.data);
+        if (userData.role !== "ADMIN") {
+          setError("Bạn không có quyền truy cập trang này.");
+          return; 
+        }
+
+        const allUsers = await getAllUser();
+        setUsers(allUsers);
         setError(null);
       } catch (err: any) {
-        console.error("Lỗi fetch users:", err);
-        setError(err.response?.data?.message || "Không thể tải danh sách.");
+        console.error("Lỗi hệ thống:", err);
+        setError(err.response?.data?.message || "Không thể tải dữ liệu.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
-  }, [user]);
+    loadInitialData();
+  }, []);
 
   const filteredUsers = users.filter(
     (u) =>
@@ -69,7 +64,7 @@ const ManagementUserPage: React.FC = () => {
     >
       <Sidebar />
 
-      <div style={{ flex: 1, padding: 30}}>
+      <div style={{ flex: 1, padding: 30 }}>
         <div
           style={{
             background: Colors.white,

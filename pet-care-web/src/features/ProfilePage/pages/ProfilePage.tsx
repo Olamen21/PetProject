@@ -1,14 +1,33 @@
 import Sidebar from "../../../shared/components/Sidebar";
+import React, { useState, useEffect } from "react";
 
 import { Colors } from "../../../constants/Colors";
 import ProfileStats from "../components/ProfilePage/ProfileStats";
 import ProfileDetail from "../components/ProfilePage/ProfileDetails";
-import { useAuth } from "../../../context/AuthContext";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader";
+import { getProfile } from "../../../api/UserApi";
+
 
 function ProfilePage() {
-  const { user } = useAuth();
-  console.log("Dữ liệu User hiện tại:", user);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await getProfile();
+        setUser(data);
+      } catch (error) {
+        console.error("Lỗi khi lấy profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+
+    return () => {};
+  }, []);
 
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
@@ -68,22 +87,13 @@ function ProfilePage() {
           <div style={styles.banner}></div>
 
           <ProfileHeader
-            name={user?.full_name || "Tên người dùng"}
-            role={user?.role || "Vai trò"}
-            bio={user?.doctorProfile?.bio || "Chưa có thông tin cá nhân nào được cập nhật."}
-            avatar={
-              user?.avatar_url ? (
-                <img
-                  src={user.avatar_url}
-                  alt="avatar"
-                  style={styles.avatarImage}
-                />
-              ) : (
-                <div style={styles.avatarFallback}>
-                  {user?.full_name?.charAt(0).toUpperCase() || "U"}
-                </div>
-              )
+            name={user?.full_name || "User Name"}
+            role={user?.role || "Role"}
+            bio={
+              user?.doctorProfile?.bio ||
+              "No personal information has been updated yet."
             }
+            avatar={user?.avatar_url}
             onEditProfile={() => navigation.navigate("/edit-profile")}
             onChangePassword={() => navigation.navigate("/change-password")}
           />
@@ -100,15 +110,15 @@ function ProfilePage() {
           />
 
           <ProfileDetail
-            fullName={user?.full_name || "Tên người dùng"}
+            fullName={user?.full_name || "User Name"}
             email={user?.email || "email"}
             dob={user?.date_of_birth || "dd/mm/yyyy"}
             phone={user?.phone || "(123) 456-7890"}
             clinicRoom={
-              user?.doctorProfile?.clinic_room || "Chưa có phòng khám"
+              user?.doctorProfile?.clinic_room || "No clinic room available"
             }
-            address={user?.address || "không có địa chỉ nào"}
-            degree={user?.doctorProfile?.degree || "Chưa cập nhật bằng cấp"}
+            address={user?.address || "No address available"}
+            degree={user?.doctorProfile?.degree || "Degree not updated yet"}
             experienceStart={
               user?.doctorProfile?.experience_start_date || "dd/mm/yyyy"
             }

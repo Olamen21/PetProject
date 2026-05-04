@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   FaHome,
@@ -13,8 +13,7 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
-import { useAuth } from "../../context/AuthContext";
-
+import { getProfile } from "../../api/UserApi";
 const MENU_CONFIG = [
   { title: "GENERAL", isTitle: true },
   {
@@ -77,20 +76,30 @@ const MENU_CONFIG = [
     path: "/logout",
     icon: <FaSignOutAlt />,
     roles: ["VET", "ADMIN"],
-  }
+  },
 ];
 const Sidebar: React.FC = () => {
   const location = useLocation();
 
-  const { user } = useAuth();
+  const [user, setUser] = useState<any>(null);
 
   React.useEffect(() => {
-    if (user) {
-      console.log("Sidebar nhận thấy thông tin user đã cập nhật:", user.full_name);
-     
-    }
-  }, [user]); 
-  
+    const loadData = async () => {
+      try {
+        const data = await getProfile();
+        setUser(data);
+      } catch (error) {
+        console.error("Lỗi khi lấy profile:", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    loadData();
+
+    return () => {};
+  }, []);
+
   const isActive = (path: string) => location.pathname === path;
 
   const baseStyles: { [key: string]: React.CSSProperties } = {
@@ -101,7 +110,7 @@ const Sidebar: React.FC = () => {
       padding: "16px",
       borderRight: `1px solid ${Colors.border}`,
       fontFamily: "sans-serif",
-     
+
       top: 0,
       left: 0,
     },
@@ -224,7 +233,11 @@ const Sidebar: React.FC = () => {
         {user ? (
           <div style={baseStyles.doctorRow}>
             {user.avatar_url ? (
-              <img src={user.avatar_url} alt="avatar" style={baseStyles.avatar} />
+              <img
+                src={user.avatar_url}
+                alt="avatar"
+                style={baseStyles.avatar}
+              />
             ) : (
               <div style={baseStyles.avatar}>
                 {user.full_name?.charAt(0).toUpperCase() || "U"}

@@ -1,8 +1,7 @@
 import React from "react";
 import { FaTrashAlt, FaCheckCircle } from "react-icons/fa";
 import { Colors } from "../../../../constants/Colors";
-import axios from "../../../../api/axios";
-
+import { approveVet } from "../../services/ManagementUser";
 interface User {
   id: number;
   full_name: string;
@@ -69,20 +68,18 @@ const UserRow: React.FC<Props> = ({ user }) => {
     },
   };
 
-  const handleApprove = async () => {
-    const token = localStorage.getItem("token");
-    const API_URL_USER = import.meta.env.VITE_API_URL_USER;
-
+  const handleApprove = async (selectedUserId: string) => {
     try {
-      await axios.patch(
-        `${API_URL_USER}/users/${user.id}/assign-role`, 
-        { role: "VET" }, 
-        { headers: { Authorization: `Bearer ${token}` } },
+      await approveVet(selectedUserId);
+
+      alert("Approval successful!");
+
+      window.location.reload();
+    } catch (error: any) {
+      console.error("Lỗi approve:", error);
+      alert(
+        error.response?.data?.message || "An error occurred during approval",
       );
-      alert("Phê duyệt thành công!");
-      window.location.reload(); 
-    } catch (error) {
-      alert("Có lỗi xảy ra khi phê duyệt");
     }
   };
 
@@ -102,7 +99,7 @@ const UserRow: React.FC<Props> = ({ user }) => {
         {user.role === "PENDING_VET" && (
           <button
             style={{ ...styles.actionBtn, color: Colors.success }}
-            onClick={handleApprove}
+            onClick={() => handleApprove(user.id.toString())}
           >
             <FaCheckCircle />
           </button>

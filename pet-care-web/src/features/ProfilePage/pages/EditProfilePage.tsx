@@ -5,13 +5,21 @@ import React, { useEffect, useState } from "react";
 import EditProfileSpecialties from "../components/EditProfilePage/EditProfileSpecialties";
 import EditProfileContactInfo from "../components/EditProfilePage/EditProfileContactInfo";
 import EditProfileBasicInfo from "../components/EditProfilePage/EditProfileBasicInfo";
-import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {updateProfile } from "../services/profileService";
+import CommonMessage from "../../../shared/components/CommonMessage";
+import { getProfile } from "../../../api/UserApi";
+
 
 function EditProfilePage() {
-  const { user, setUser } = useAuth();
-  console.log("Dữ liệu User hiện tại:", user);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
 
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -26,30 +34,40 @@ function EditProfilePage() {
     clinicRoom: "",
   });
   useEffect(() => {
-    if (user) {
-      setForm({
-        name: user.full_name || "",
-        role: user.role || "",
-        bio: user.doctorProfile?.bio || "",
-        avatar: user.avatar_url || "https://link-anh-mac-dinh.jpg",
-        tags:
-          typeof user.doctorProfile?.tags === "string"
-            ? user.doctorProfile.tags
-                .split(",")
-                .map((t) => t.trim())
-                .filter((t) => t !== "")
-            : Array.isArray(user.doctorProfile?.tags)
-              ? user.doctorProfile.tags
-              : [],
-        phone: user.phone || "",
-        dob: user.date_of_birth
-          ? new Date(user.date_of_birth).toISOString().split("T")[0]
-          : "",
-        address: user.address || "",
-        clinicRoom: user.doctorProfile?.clinic_room || "",
-      });
-    }
-  }, [user]);
+    const loadData = async () => {
+      try {
+        const data = await getProfile();
+
+        setUser(data);
+
+        setForm({
+          name: data.full_name || "",
+          role: data.role || "",
+          bio: data.doctorProfile?.bio || "",
+          avatar: data.avatar_url || "https://link-anh-mac-dinh.jpg",
+          tags:
+            typeof data.doctorProfile?.tags === "string"
+              ? data.doctorProfile.tags
+                  .split(",")
+                  .map((t: string) => t.trim())
+                  .filter((t: string) => t !== "")
+              : Array.isArray(data.doctorProfile?.tags)
+                ? data.doctorProfile.tags
+                : [],
+          phone: data.phone || "",
+          dob: data.date_of_birth
+            ? new Date(data.date_of_birth).toISOString().split("T")[0]
+            : "",
+          address: data.address || "",
+          clinicRoom: data.doctorProfile?.clinic_room || "",
+        });
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin profile:", error);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const [newTag, setNewTag] = useState("");
 
@@ -69,11 +87,16 @@ function EditProfilePage() {
   };
 
   const handleUpdate = async () => {
-    console.log("Dữ liệu ngày sinh chuẩn bị gửi:", form.dob);
     try {
-      const phoneRegex = /^09\d{8}$/;
+      setLoading(true);
+      setMessage(null);
+
+      const phoneRegex = /^0\d{9}$/;
       if (!phoneRegex.test(form.phone)) {
-        alert("Số điện thoại phải có 10 chữ số và bắt đầu bằng 09");
+        setMessage({
+          type: "error",
+          text: "Phone number must have 10 digits and start with 0!",
+        });
         return;
       }
 
@@ -82,13 +105,16 @@ function EditProfilePage() {
         const currentYear = new Date().getFullYear();
 
         if (selectedYear <= 1900 || selectedYear >= currentYear) {
-          alert(
-            `Năm sinh phải lớn hơn 1900 và nhỏ hơn năm hiện tại (${currentYear})`,
-          );
+          setMessage({
+            type: "error",
+            text:
+              "Year of birth must be greater than 1900 and less than the current year" +
+              currentYear,
+          });
           return;
         }
       } else {
-        alert("Không được để trống ngày sinh nha");
+        setMessage({ type: "error", text: "Date of birth cannot be empty" });
         return;
       }
 
@@ -119,14 +145,9 @@ function EditProfilePage() {
         tags: Array.isArray(form.tags) ? form.tags.join(", ") : form.tags,
       };
 
-      const token = localStorage.getItem("token");
-      const API_URL_USER = import.meta.env.VITE_API_URL_USER;
+     const res = await updateProfile(updatePayload);
 
-      const res = await axios.patch(
-        `${API_URL_USER}/users/profile`,
-        updatePayload,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      
 
       if (res.status === 200 || res.status === 201) {
         alert("Cập nhật thành công");
@@ -174,6 +195,9 @@ function EditProfilePage() {
           setNewTag={setNewTag}
         />
         <EditProfileContactInfo form={form} handleChange={handleChange} />
+        {message && (
+          <CommonMessage type={message.type} message={message.text} />
+        )}
 
         {/* 🔹 BUTTON */}
         <div style={styles.footer}>

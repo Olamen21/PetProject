@@ -39,7 +39,10 @@ const LoginPage: React.FC = () => {
       formData.password.trim() === "" ||
       formData.userName.trim() === ""
     ) {
-      setMessage({ type: "error", text: "Vui lòng nhập đầy đủ thông tin!" });
+      setMessage({
+        type: "error",
+        text: "Please fill in all required fields!",
+      });
       return;
     }
 
@@ -47,17 +50,17 @@ const LoginPage: React.FC = () => {
       setLoading(true);
       setMessage(null);
 
-      const res = await login({
+      const result = await login({
         email: formData.email,
         password: formData.password,
         full_name: formData.userName,
       });
 
-      if (res.status === 201) {
-        const { access_token, user } = res.data;
+      if (result && result.user) {
+        const { user } = result;
+
         if (user.role === "ADMIN" || user.role === "VET") {
-          setMessage({ type: "success", text: "Đăng nhập thành công!" });
-          localStorage.setItem("token", access_token);
+          setMessage({ type: "success", text: "Login successful!" });
           localStorage.setItem("user_role", user.role);
 
           setTimeout(() => {
@@ -66,20 +69,21 @@ const LoginPage: React.FC = () => {
         } else {
           setMessage({
             type: "error",
-            text: "Bạn không có quyền truy cập vào trang quản lý!",
+            text: "You do not have permission to access the management page!",
           });
-          navigate("/login");
+          localStorage.removeItem("token");
         }
       } else {
         setMessage({
           type: "error",
-          text: res.message || "Đăng nhập thất bại!",
+          text: "Incorrect login information!",
         });
       }
     } catch (err: any) {
+      console.error("Login component error:", err);
       setMessage({
         type: "error",
-        text: err.message || "Có lỗi xảy ra, vui lòng thử lại!",
+        text: err.response?.data?.message || "Email or password is incorrect!",
       });
     } finally {
       setLoading(false);

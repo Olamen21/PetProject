@@ -13,12 +13,18 @@ import UploadHeader from "../components/SignUpUploadPage/UploadHeader";
 import UploadArea from "../components/SignUpUploadPage/UploadArea";
 import InputField from "../components/SignUpUploadPage/InputField";
 import { useAuth } from "../../../context/AuthContext";
+import CommonMessage from "../../../shared/components/CommonMessage";
+import { applyVet } from "../services/AuthApi";
 
 const SignUpUploadPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userFromAuth = useAuth();
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     if (userFromAuth?.role === "PENDING_VET") {
@@ -56,47 +62,68 @@ const SignUpUploadPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     const token = localStorage.getItem("token");
     const API_URL_USER = import.meta.env.VITE_API_URL_USER;
+    const phoneRegex = /^0\d{9}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setMessage({
+        type: "error",
+        text: "Phone number must have 10 digits and start with 0!",
+      });
+      return;
+    }
     if (formData.date_of_birth) {
       const selectedYear = new Date(formData.date_of_birth).getFullYear();
       const currentYear = new Date().getFullYear();
 
       if (selectedYear <= 1900 || selectedYear >= currentYear) {
-        alert(
-          `Năm sinh phải lớn hơn 1900 và nhỏ hơn năm hiện tại (${currentYear})`,
-        );
+        setMessage({
+          type: "error",
+          text:
+            "Year of birth must be greater than 1900 and less than the current year" +
+            currentYear,
+        });
+
         return;
       }
     } else {
-      alert("Không được để trống ngày sinh");
+      setMessage({ type: "error", text: "Date of birth cannot be empty" });
+
       return;
     }
 
     if (formData.experience_start_date) {
       const birthYear = new Date(formData.date_of_birth).getFullYear();
-      const expStartYear = new Date(formData.experience_start_date).getFullYear(); 
-      const currentYear = new Date().getFullYear(); 
+      const expStartYear = new Date(
+        formData.experience_start_date,
+      ).getFullYear();
+      const currentYear = new Date().getFullYear();
 
       if (expStartYear >= currentYear) {
-        alert(
-          `Năm bắt đầu làm việc phải nhỏ hơn năm hiện tại (${currentYear})!`,
-        );
+        setMessage({
+          type: "error",
+          text:
+            "Work start year must be less than the current year " + currentYear,
+        });
+
         return;
       }
 
       if (expStartYear <= birthYear) {
-        alert("Năm bắt đầu làm việc phải lớn hơn năm sinh!");
+        setMessage({
+          type: "error",
+          text: "Work start year must be greater than year of birth!",
+        });
+
         return;
       }
 
       if (expStartYear - birthYear < 18) {
-        console.warn("Năm không hợp lệ");
+        return setMessage({ type: "error", text: "Invalid year." });
       }
     } else {
-      alert("Không để trống ngày bắt đầu làm việc!");
+      setMessage({ type: "error", text: "Work start date cannot be empty!" });
       return;
     }
     const data = new FormData();
@@ -111,12 +138,9 @@ const SignUpUploadPage: React.FC = () => {
     }
 
     try {
-      await axios.post(`${API_URL_USER}/users/apply-vet`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setLoading(true);
+      await applyVet(data);
+
       alert(
         "The doctor’s profile has been submitted! Please wait for the Admin’s approval.",
       );
@@ -217,6 +241,9 @@ const SignUpUploadPage: React.FC = () => {
             imagePreview={imagePreview}
             handleFileChange={handleFileChange}
           />
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
 
           <button style={styles.submitBtn} type="submit" disabled={loading}>
             {loading ? "Submitting profile..." : "Submit Profile"}
