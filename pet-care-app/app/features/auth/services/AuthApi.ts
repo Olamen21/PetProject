@@ -1,5 +1,6 @@
-import { removeToken, saveToken } from "./AuthStorage";
+import { router } from "expo-router";
 import api from "./Api";
+import { removeToken, saveToken } from "./AuthStorage";
 
 export const signUp = async (data: { email: string; full_name: string; password: string }) => {
   const res = await api.post(`/auth/register`, data);
@@ -8,9 +9,8 @@ export const signUp = async (data: { email: string; full_name: string; password:
 
 export const login = async (data: { email: string; password: string; full_name: string }) => {
   const res = await api.post(`/auth/login`, data);
-
-   if (res.data?.token) {
-    await saveToken(res.data.token);
+   if (res.data?.access_token) {
+    await saveToken(res.data.access_token);
   }
 
   return res.data;
@@ -18,5 +18,10 @@ export const login = async (data: { email: string; password: string; full_name: 
  
 
 export const logout = async () => {
-  await removeToken();
+  try {
+    await removeToken(); 
+    router.replace("./LoginScreen"); 
+  } catch (error) {
+    console.error("Lỗi khi logout:", error);
+  }
 };

@@ -4,6 +4,7 @@ import { Text, TouchableRipple } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/app/constants/Colors";
 import { router } from "expo-router";
+import { logout } from "@/app/features/auth/services/AuthApi";
 
 const MenuCard = () => (
   <View style={styles.card}>
@@ -27,7 +28,7 @@ const MenuCard = () => (
 
     <View style={styles.divider} />
 
-    <TouchableRipple onPress={() => {}}>
+    <TouchableRipple onPress={logout}>
       <View style={styles.menuItem}>
         <MaterialCommunityIcons name="logout" size={22} color={Colors.error} />
         <Text style={[styles.menuText, { color: Colors.error }]}>Logout</Text>

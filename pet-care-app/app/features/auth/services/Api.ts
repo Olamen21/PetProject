@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getToken } from "./AuthStorage";
+import { getToken, removeToken } from "./AuthStorage";
+import { router } from "expo-router";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL_AUTH;
 
@@ -14,5 +15,16 @@ api.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await removeToken();
+      router.replace("./LoginScreen");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
