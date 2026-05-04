@@ -10,11 +10,12 @@ import ManagementUserPage from "./features/ManagementUser/pages/ManagementUserPa
 import SignUpUploadPage from "./features/auth/pages/SignUpUploadPage";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 import ChangePasswordPage from "./features/ProfilePage/pages/ChangePasswordPage";
+import Logout from "./shared/components/Logout";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -39,9 +40,10 @@ function App() {
           />
           <Route path="/signup-upload" element={<SignUpUploadPage />} />
           <Route path="/change-password" element={<ChangePasswordPage/>}/>
-        </Routes>
-      </Router>
-    </AuthProvider>
+          <Route path="/logout" element={<Logout/>} />
+      </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 

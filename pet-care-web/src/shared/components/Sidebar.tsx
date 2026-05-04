@@ -9,6 +9,7 @@ import {
   FaCog,
   FaUsers,
   FaChartBar,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
@@ -71,6 +72,12 @@ const MENU_CONFIG = [
     icon: <FaCog />,
     roles: ["VET", "ADMIN"],
   },
+  {
+    title: "Log out",
+    path: "/logout",
+    icon: <FaSignOutAlt />,
+    roles: ["VET", "ADMIN"],
+  }
 ];
 const Sidebar: React.FC = () => {
   const location = useLocation();
