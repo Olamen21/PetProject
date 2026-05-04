@@ -1,9 +1,9 @@
 
 export const Colors = {
-  primary: "#5A7863",    // Xanh lá đậm
-  secondary: "#90AB8B",  // Xanh lá nhạt
-  background: "#EBF4DD", // Xanh kem nhạt
-  text: "#3B4953",       // Xám đậm
+  primary: "#5A7863",    
+  secondary: "#90AB8B",  
+  background: "#EBF4DD", 
+  text: "#3B4953",    
   white: "#FFFFFF",
   error: "#E74C3C",
   success: "#5A7863",

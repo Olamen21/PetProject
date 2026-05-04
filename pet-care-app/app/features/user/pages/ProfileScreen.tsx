@@ -1,26 +1,55 @@
-import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react"; // 1. Thêm useState, useEffect
+import { View, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import { Colors } from "@/app/constants/Colors";
-import ProfileHeader from '../components/ProfileScreen/ProfileHeader'
-import InfoCard from '../components/ProfileScreen/InfoCard'
-import MenuCard from '../components/ProfileScreen/MenuCard'
+import ProfileHeader from "../components/ProfileScreen/ProfileHeader";
+import InfoCard from "../components/ProfileScreen/InfoCard";
+import MenuCard from "../components/ProfileScreen/MenuCard";
+import { getProfile } from "../services/userService";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+
 const ProfileScreen = () => {
-  const user = {
-    full_name: "Thuy",
-    email: "thuy@example.com",
-    dob: "2004-05-28",
-    phone: "0912 345 678",
-    address: "Da Nang, Vietnam",
-    avatar_url: "https://i.pinimg.com/736x/57/3c/9d/573c9d69a03dc06e6cd4b1939aa5d023.jpg",
-  };
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfile = async () => {
+        try {
+          const data = await getProfile();
+          setUser(data);
+        } catch (error) {
+          console.error("Lỗi khi lấy profile:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProfile();
+
+      return () => {};
+    }, []),
+  );
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ProfileHeader user={user} />
-        <InfoCard user={user} />
-        <MenuCard />
+        {user && (
+          <>
+            <ProfileHeader user={user} />
+            <InfoCard user={user} />
+            <MenuCard />
+          </>
+        )}
       </ScrollView>
       <BottomNavBar />
     </View>

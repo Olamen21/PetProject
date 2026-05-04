@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import api from "./Api";
+import api from "../../../../api/axiosInstance";
 import { removeToken, saveToken } from "./AuthStorage";
 
 export const signUp = async (data: { email: string; full_name: string; password: string }) => {

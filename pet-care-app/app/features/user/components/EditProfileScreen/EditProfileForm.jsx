@@ -2,46 +2,40 @@ import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { Colors } from "@/app/constants/Colors";
+import CommonTextInput from "@/app/shared/components/CommonTextInput";
+import CommonDateTimePicker from "@/app/shared/components/CommonDateTimePicker";
 
 const EditProfileForm = ({ form, onChange }) => (
+  
   <View style={styles.card}>
-    <Text style={styles.label}>Full Name</Text>
-    <TextInput
+    <CommonTextInput
+      label="Full Name"
+      placeholder="Full Name"
       value={form.full_name}
       onChangeText={(text) => onChange("full_name", text)}
-      style={styles.input}
+      icon="person-outline"
     />
-
-    <Text style={styles.label}>Email</Text>
-    <TextInput
-      value={form.email}
-      onChangeText={(text) => onChange("email", text)}
-      style={styles.input}
-      keyboardType="email-address"
-    />
-
-    <Text style={styles.label}>Phone</Text>
-    <TextInput
+    <CommonTextInput
+      label="Phone"
+      placeholder="090...."
       value={form.phone}
       onChangeText={(text) => onChange("phone", text)}
-      style={styles.input}
-      keyboardType="phone-pad"
+      icon="call-outline"
     />
-
-    <Text style={styles.label}>Address</Text>
-    <TextInput
+    <CommonTextInput
+      label="Address"
+      placeholder="Address"
       value={form.address}
       onChangeText={(text) => onChange("address", text)}
-      style={styles.input}
+      icon="location-outline"
     />
 
-    <Text style={styles.label}>Date of Birth</Text>
-    <TextInput
-      value={form.dob}
-      onChangeText={(text) => onChange("dob", text)}
-      style={styles.input}
-      placeholder="YYYY-MM-DD"
-    />
+    <CommonDateTimePicker
+  label="Date of Birth"
+  value={form.dob}
+  onChange={(date) => onChange("dob", date)}
+/>
+
   </View>
 );
 

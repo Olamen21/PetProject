@@ -8,15 +8,15 @@ const InfoCard = ({ user }) => (
   <View style={styles.card}>
     <View style={styles.row}>
       <MaterialCommunityIcons name="map-marker" size={22} color={Colors.primary} />
-      <Text style={styles.infoText}>{user.address}</Text>
+      <Text style={styles.infoText}>{user.address || "Chưa có địa chỉ"}</Text>
     </View>
     <View style={styles.row}>
       <MaterialCommunityIcons name="phone" size={22} color={Colors.primary} />
-      <Text style={styles.infoText}>{user.phone}</Text>
+      <Text style={styles.infoText}>{user.phone || "Chưa có số điện thoại"}</Text>
     </View>
     <View style={styles.row}>
       <MaterialCommunityIcons name="calendar" size={22} color={Colors.primary} />
-      <Text style={styles.infoText}>{user.dob}</Text>
+      <Text style={styles.infoText}>{user.date_of_birth || "Chưa có ngày sinh"}</Text>
     </View>
   </View>
 );

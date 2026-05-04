@@ -13,7 +13,6 @@ function ProfilePage() {
   const styles: { [key: string]: React.CSSProperties } = {
     container: {
       display: "flex",
-      paddingLeft: 300,
       background: Colors.background,
     },
     main: {
@@ -71,7 +70,7 @@ function ProfilePage() {
           <ProfileHeader
             name={user?.full_name || "Tên người dùng"}
             role={user?.role || "Vai trò"}
-            bio={user?.bio || "Chưa có thông tin cá nhân nào được cập nhật."}
+            bio={user?.doctorProfile?.bio || "Chưa có thông tin cá nhân nào được cập nhật."}
             avatar={
               user?.avatar_url ? (
                 <img
