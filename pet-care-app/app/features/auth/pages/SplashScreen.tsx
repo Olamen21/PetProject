@@ -1,16 +1,41 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { getToken, removeToken } from "../services/AuthStorage";
+import {jwtDecode} from "jwt-decode";
+import CommonMessage from "@/app/shared/components/CommonMessage";
 
 export default function SplashScreen() {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace("./IntroScreen");
-    }, 3000);
-    return () => clearTimeout(timer);
+    const checkAuth = async () => {
+      const token = await getToken();
+
+      if(!token) {
+        setTimeout(() => {
+          router.replace("./IntroScreen");
+        }, 3000);
+        return;
+      }
+      try {
+        const decoded: {exp: number} = jwtDecode(token);
+        if(Date.now() >= decoded.exp *1000) {
+          await removeToken();
+          router.replace("./LoginScreen");
+        } else {
+          router.replace("./ProfileScreen");
+        }
+      } catch (error) {
+        setErrorMessage("Token không hợp lệ: " + error);
+        await removeToken();
+        router.replace("./LoginScreen");
+      }
+    };
+
+    checkAuth();
   }, [router]);
 
   return (
@@ -26,6 +51,7 @@ export default function SplashScreen() {
         color="#5A7863"
         style={{ marginTop: 20 }}
       />
+      {errorMessage && <CommonMessage type="error" message={errorMessage} />}
     </View>
   );
 }
