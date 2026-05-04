@@ -3,22 +3,27 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Avatar, Text } from "react-native-paper";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/app/constants/Colors";
+import * as ImagePicker from 'expo-image-picker';
 
-const EditProfileHeader = ({ avatarUrl, onBack }) => (
-  <View style={styles.header}>
-    <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-      <Ionicons name="arrow-back" size={24} color={Colors.white} />
-    </TouchableOpacity>
+const EditProfileHeader = ({ avatarUrl, onBack, onPickImage }) => {
 
-    <View style={{ alignItems: "center" }}>
-      <Avatar.Image size={100} source={{ uri: avatarUrl }} />
-      <TouchableOpacity style={styles.changeAvatarBtn}>
+
+  return (
+    <View style={styles.header}>
+      <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+        <Ionicons name="arrow-back" size={24} color={Colors.white} />
+      </TouchableOpacity>
+
+      <View style={{ alignItems: "center" }}>
+        <Avatar.Image size={100} source={{ uri: avatarUrl }} />
+       <TouchableOpacity style={styles.changeAvatarBtn} onPress={onPickImage}>
         <Feather name="camera" size={16} color={Colors.white} />
         <Text style={styles.changeAvatarText}>Change</Text>
       </TouchableOpacity>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 export default EditProfileHeader;
 

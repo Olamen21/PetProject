@@ -11,10 +11,11 @@ import EditProfileForm from "../components/EditProfileScreen/EditProfileForm";
 import CommonButton from "@/app/shared/components/CommonButton";
 import { Colors } from "@/app/constants/Colors";
 import { router } from "expo-router";
-import api from "../../../../api/axiosInstance";
 import { getProfile, updateProfile } from "../services/userService";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import { useFocusEffect } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 const EditProfileScreen = () => {
   const [form, setForm] = useState({
     full_name: "",
@@ -29,6 +30,7 @@ const EditProfileScreen = () => {
     type: "error" | "success" | "warning" | "info";
     text: string;
   } | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -60,6 +62,25 @@ const EditProfileScreen = () => {
 
   const handleChange = (key, value) => {
     setForm({ ...form, [key]: value });
+  };
+  const handlePickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission Denied", "We need access to your photos!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8, 
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      setForm({ ...form, avatar_url: result.assets[0].uri }); 
+    }
   };
 
   const handleUpdate = async () => {
@@ -97,18 +118,45 @@ const EditProfileScreen = () => {
 
     try {
       setLoading(true);
+      let finalAvatarUrl = form.avatar_url;
+
+      if (selectedImage) {
+        const formData = new FormData();
+
+        const filename = selectedImage.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename || "");
+        const type = match ? `image/${match[1]}` : `image`;
+
+        formData.append("file", {
+          uri: selectedImage,
+          name: filename,
+          type: type,
+        });
+
+        formData.append(
+          "upload_preset",
+          process.env.EXPO_PUBLIC_CLOUDINARY_PRESET!, 
+        );
+        const cloudRes = await axios.post(
+          `https://api.cloudinary.com/v1_1/${process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        finalAvatarUrl = cloudRes.data.secure_url;
+      }
 
       const updatePayload = {
         full_name: form.full_name,
         phone: form.phone,
         address: form.address,
         date_of_birth: form.dob,
-        avatar_url: form.avatar_url,
+        avatar_url: finalAvatarUrl,
       };
 
       const res = await updateProfile(updatePayload);
+
       if (res.status === 200 || res.status === 201) {
-        Alert.alert("Success", "Profile updated successfully!", [
+        Alert.alert("Success", "Cập nhật thành công", [
           {
             text: "OK",
             onPress: () => router.replace("/(tabs)/ProfileScreen"),
@@ -117,10 +165,7 @@ const EditProfileScreen = () => {
       }
     } catch (error) {
       console.error("Lỗi cập nhật:", error);
-      setMessage({
-        type: "warning",
-        text: "An error occurred while updating the profile",
-      });
+      setMessage({ type: "error", text: "Có lỗi xảy ra khi cập nhật" });
     } finally {
       setLoading(false);
     }
@@ -136,6 +181,7 @@ const EditProfileScreen = () => {
         <EditProfileHeader
           avatarUrl={form.avatar_url || "https://via.placeholder.com/150"}
           onBack={handleCancel}
+          onPickImage={handlePickImage}
         />
 
         <EditProfileForm form={form} onChange={handleChange} />
