@@ -10,6 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - postgres_data:/var/lib/postgresql/data
 
   auth-service:
@@ -31,7 +32,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - auth-service
-      
+
   user-service:
     build: ./services/user-service
     env_file:
@@ -43,7 +44,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
-  
+
   pet-service:
     build: ./services/pet-service
     env_file:
