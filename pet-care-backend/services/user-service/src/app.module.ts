@@ -24,7 +24,6 @@ import { ConfigModule } from '@nestjs/config';
       retryAttempts: 10,
       retryDelay: 3000,
     }),
-    TypeOrmModule.forFeature([User, DoctorProfile]),
     UsersModule,
   ],
   controllers: [AppController],

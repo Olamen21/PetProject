@@ -11,18 +11,6 @@ import { CloudinaryService } from './cloudinary.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'postgresdb',
-      port: 5432,
-      username: 'postgres',
-      password: '123',
-      database: 'pet_care_auth',
-      entities: [User, DoctorProfile],
-      synchronize: true,
-      retryAttempts: 10,
-      retryDelay: 3000,
-    }),
     TypeOrmModule.forFeature([User, DoctorProfile]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -32,6 +20,6 @@ import { CloudinaryService } from './cloudinary.service';
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy, CloudinaryService],
-  exports: [UsersService],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}
