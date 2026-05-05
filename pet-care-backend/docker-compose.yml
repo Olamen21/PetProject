@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: pet_care_auth
+      # POSTGRES_DB: pet_care
     ports:
       - "5432:5432"
     volumes:
@@ -40,6 +40,18 @@ services:
       - "3002:3002"
     volumes:
       - ./services/user-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+  
+  pet-service:
+    build: ./services/pet-service
+    env_file:
+      - .env
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./services/pet-service:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
