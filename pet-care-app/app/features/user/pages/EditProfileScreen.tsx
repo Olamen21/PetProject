@@ -84,92 +84,85 @@ const EditProfileScreen = () => {
   };
 
   const handleUpdate = async () => {
+  try {
+    setLoading(true);
+    setMessage(null);
+
+    // Kiểm tra số điện thoại
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(form.phone)) {
       setMessage({
-        type: "warning",
-        text: "Phone number must contain 10 digits and start with 0",
+        type: "error",
+        text: "Phone number must have 10 digits and start with 0!",
       });
-
       return;
     }
 
+    // Kiểm tra ngày sinh
     if (form.dob) {
       const selectedYear = new Date(form.dob).getFullYear();
       const currentYear = new Date().getFullYear();
       if (selectedYear <= 1900 || selectedYear >= currentYear) {
         setMessage({
-          type: "warning",
+          type: "error",
           text:
             "Year of birth must be greater than 1900 and less than " +
             currentYear,
         });
-
         return;
       }
     } else {
-      setMessage({
-        type: "warning",
-        text: "Date of birth cannot be empty",
-      });
-
+      setMessage({ type: "error", text: "Date of birth cannot be empty" });
       return;
     }
 
-    try {
-      setLoading(true);
-      let finalAvatarUrl = form.avatar_url;
+    // Chuẩn bị FormData giống web
+    const data = new FormData();
+    data.append("full_name", form.full_name);
+    data.append("phone", form.phone);
+    data.append("address", form.address);
+    data.append("date_of_birth", form.dob);
 
-      if (selectedImage) {
-        const formData = new FormData();
+    // Nếu có ảnh mới chọn từ RN (ImagePicker)
+    if (selectedImage) {
+      const filename = selectedImage.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename || "");
+      const type = match ? `image/${match[1]}` : `image`;
 
-        const filename = selectedImage.split("/").pop();
-        const match = /\.(\w+)$/.exec(filename || "");
-        const type = match ? `image/${match[1]}` : `image`;
-
-        formData.append("file", {
-          uri: selectedImage,
-          name: filename,
-          type: type,
-        });
-
-        formData.append(
-          "upload_preset",
-          process.env.EXPO_PUBLIC_CLOUDINARY_PRESET!, 
-        );
-        const cloudRes = await axios.post(
-          `https://api.cloudinary.com/v1_1/${process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-        finalAvatarUrl = cloudRes.data.secure_url;
-      }
-
-      const updatePayload = {
-        full_name: form.full_name,
-        phone: form.phone,
-        address: form.address,
-        date_of_birth: form.dob,
-        avatar_url: finalAvatarUrl,
-      };
-
-      const res = await updateProfile(updatePayload);
-
-      if (res.status === 200 || res.status === 201) {
-        Alert.alert("Success", "Cập nhật thành công", [
-          {
-            text: "OK",
-            onPress: () => router.replace("/(tabs)/ProfileScreen"),
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Lỗi cập nhật:", error);
-      setMessage({ type: "error", text: "Có lỗi xảy ra khi cập nhật" });
-    } finally {
-      setLoading(false);
+      data.append("file", {
+        uri: selectedImage,
+        name: filename,
+        type: type,
+      } as any);
     }
-  };
+
+    // Các field khác
+    data.append("bio", form.bio || "");
+    data.append("clinic_room", form.clinicRoom || "");
+    data.append(
+      "tags",
+      Array.isArray(form.tags) ? form.tags.join(", ") : form.tags || "",
+    );
+
+    // Gửi request
+    const res = await updateProfile(data);
+
+    if (res.status === 200 || res.status === 201) {
+      Alert.alert("Success", "Cập nhật thành công", [
+        {
+          text: "OK",
+          onPress: () => router.replace("/(tabs)/ProfileScreen"),
+        },
+      ]);
+    }
+  } catch (error) {
+    console.error("Lỗi cập nhật:", error);
+    setMessage({ type: "error", text: "Có lỗi xảy ra khi cập nhật" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleCancel = () => {
     router.replace("/(tabs)/ProfileScreen");

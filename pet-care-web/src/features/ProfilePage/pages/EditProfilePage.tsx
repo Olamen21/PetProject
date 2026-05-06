@@ -6,11 +6,10 @@ import EditProfileSpecialties from "../components/EditProfilePage/EditProfileSpe
 import EditProfileContactInfo from "../components/EditProfilePage/EditProfileContactInfo";
 import EditProfileBasicInfo from "../components/EditProfilePage/EditProfileBasicInfo";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import {updateProfile } from "../services/profileService";
+import { data, useNavigate } from "react-router-dom";
+import { updateProfile } from "../services/profileService";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { getProfile } from "../../../api/UserApi";
-
 
 function EditProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -26,7 +25,7 @@ function EditProfilePage() {
     name: "",
     role: "",
     bio: "",
-    avatar: "",
+    avatar: null as File | null,
     tags: [],
     phone: "",
     dob: "",
@@ -118,36 +117,24 @@ function EditProfilePage() {
         return;
       }
 
-      let finalAvatarUrl = form.avatar;
+      const data = new FormData();
+      data.append("full_name", form.name);
+      data.append("phone", form.phone);
+      data.append("address", form.address);
+      data.append("date_of_birth", form.dob);
       if (form.avatarFile) {
-        const formData = new FormData();
-        formData.append("file", form.avatarFile);
-        formData.append(
-          "upload_preset",
-          import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        );
-
-        const cloudRes = await axios.post(
-          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
-          formData,
-        );
-        finalAvatarUrl = cloudRes.data.secure_url;
+        data.append("file", form.avatarFile);
       }
+      data.append("bio", form.bio);
+      data.append("clinic_room", form.clinicRoom);
+      data.append(
+        "tags",
+        Array.isArray(form.tags) ? form.tags.join(", ") : form.tags,
+      );
 
-      const updatePayload = {
-        full_name: form.name,
-        phone: form.phone,
-        address: form.address,
-        date_of_birth: form.dob,
-        avatar_url: finalAvatarUrl,
-        bio: form.bio,
-        clinic_room: form.clinicRoom,
-        tags: Array.isArray(form.tags) ? form.tags.join(", ") : form.tags,
-      };
-
-     const res = await updateProfile(updatePayload);
-
-      
+      console.log(form.avatarFile);
+      console.log(form.dob);
+      const res = await updateProfile(data);
 
       if (res.status === 200 || res.status === 201) {
         alert("Cập nhật thành công");

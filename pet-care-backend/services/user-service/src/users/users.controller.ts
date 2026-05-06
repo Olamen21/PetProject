@@ -13,7 +13,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateProfileDto } from './dto/update-user.dto';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
@@ -62,7 +61,6 @@ export class UsersController {
     // const userId = req.user.id || req.user.sub;
     const userId = req.user.id;
 
-
     console.log('ID sẽ dùng để tìm trong DB:', userId);
 
     return this.usersService.findOne(+userId);
@@ -70,19 +68,31 @@ export class UsersController {
 
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
   async updateProfile(
     @Request() req: AuthenticatedRequest,
-    @Body() updateProfileDto: UpdateProfileDto,
+    @Body() body,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
     console.log('User từ Request:', req.user);
+    console.log('--- NHẬN REQUEST ---');
+    console.log('Body:', body);
+    console.log('File:', file);
 
     if (!req.user || !req.user.id) {
       throw new UnauthorizedException(
         'Không tìm thấy thông tin user trong token',
       );
     }
+    console.log('File check:', file);
+    let imageUrl: string | undefined;
+    if (file) {
+      const imageUrlFromCloudinary =
+        await this.cloudinaryService.uploadFile(file);
+      imageUrl = imageUrlFromCloudinary;
+    }
 
-    return this.usersService.updateProfile(+req.user.id, updateProfileDto);
+    return this.usersService.updateProfile(+req.user.id, body, imageUrl);
   }
 
   @Get('all-users')
