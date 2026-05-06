@@ -71,7 +71,6 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
-  //hàm xử lý đơn đăng ký trở thành bác sĩ thú y (admin)
   async applyToBeVet(
     userId: number,
     updateData: any,
