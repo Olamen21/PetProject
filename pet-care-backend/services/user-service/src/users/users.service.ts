@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { Role } from '../roles/role.enum';
 import { DoctorProfile } from './entities/doctor-profile.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ApplyToBeVetDto } from './entities/apply-to-be-vet.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(DoctorProfile)
     private doctorProfileRepository: Repository<DoctorProfile>,
-  ) {}
+  ) { }
 
   //lấy thông tin người dùng theo ID
   async findOne(id: number): Promise<User> {
@@ -37,6 +38,7 @@ export class UsersService {
   async updateProfile(
     id: number,
     updateProfileDto: UpdateProfileDto,
+    fileUrl?: string,
   ): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
@@ -48,10 +50,12 @@ export class UsersService {
     if (updateProfileDto.full_name) user.full_name = updateProfileDto.full_name;
     if (updateProfileDto.phone) user.phone = updateProfileDto.phone;
     if (updateProfileDto.address) user.address = updateProfileDto.address;
-    if (updateProfileDto.date_of_birth)
-      user.date_of_birth = updateProfileDto.date_of_birth;
-    if (updateProfileDto.avatar_url)
-      user.avatar_url = updateProfileDto.avatar_url;
+    if (updateProfileDto.date_of_birth) {
+      user.date_of_birth = new Date(updateProfileDto.date_of_birth);
+    }
+    if (fileUrl) {
+      user.avatar_url = fileUrl;
+    }
 
     if (user.role === Role.VET) {
       if (!user.doctorProfile) {
@@ -62,7 +66,7 @@ export class UsersService {
         user.doctorProfile.clinic_room = updateProfileDto.clinic_room;
 
       if (updateProfileDto.tags) {
-        user.doctorProfile.tags = (updateProfileDto.tags as string)
+        user.doctorProfile.tags = updateProfileDto.tags
           .split(',')
           .map((tag) => tag.trim())
           .join(', '); // Chuyển ['A', 'B'] thành "A, B"
@@ -73,7 +77,7 @@ export class UsersService {
   }
   async applyToBeVet(
     userId: number,
-    updateData: any,
+    updateData: ApplyToBeVetDto,
     fileUrl?: string,
   ): Promise<User> {
     const user = await this.usersRepository.findOne({

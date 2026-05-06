@@ -1,45 +1,115 @@
+import { RolesGuard } from '../roles/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CloudinaryService } from './cloudinary.service';
 import {
   Controller,
   Get,
   Post,
   Body,
+  UploadedFile,
   Patch,
   Param,
   Delete,
+  UseGuards,
+  UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { PetsService } from './pets.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Pet } from './entities/pet.entity';
+import { CreatePetDto } from './dto/create-pet.dto';
+import { Role } from '../roles/role.enum';
+import { Roles } from '../roles/roles.decorator';
+import { Request } from 'express';
+import { UpdatePetDto } from './dto/update-pet.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email?: string;
+    name?: string;
+  };
+}
+
+@ApiTags('Pets')
+@ApiBearerAuth('token')
 @Controller('pets')
 export class PetsController {
-  constructor(private readonly petsService: PetsService) {}
+  constructor(
+    private readonly petsService: PetsService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
-  @Post()
-  create(@Body() createPetDto: any) {
-    return this.petsService.create(createPetDto);
+  @UseGuards(JwtAuthGuard)
+  @Get('pets')
+  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng của user hiện tại' })
+  async getMyPets(@Req() req: AuthenticatedRequest) {
+    const userId = req.user.id;
+
+    return this.petsService.findAllByOwner(+userId);
   }
 
-  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('all-pets')
+  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng (chỉ Admin)' })
   findAll() {
     return this.petsService.findAll();
   }
 
-  @Get('owner/:ownerId')
-  findByOwner(@Param('ownerId') ownerId: string) {
-    return this.petsService.findByOwner(+ownerId);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'lấy danh sách thú cưng theo user (chỉ Admin)' })
+  async findByOwner(@Param('userId') userId: string) {
+    return this.petsService.findAllByOwner(+userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petsService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  @Post('create-pet')
+  @ApiOperation({ summary: 'Tạo hồ sơ thú cưng mới' })
+  @ApiResponse({ status: 201, description: 'Thành công', type: Pet })
+  create(@Body() createPetDto: CreatePetDto, @Req() req: AuthenticatedRequest) {
+    const ownerId = req.user.id;
+    return this.petsService.create(createPetDto, +ownerId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePetDto: any) {
-    return this.petsService.update(+id, updatePetDto);
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Tìm thông tin hồ sơ của thú cưng' })
+  @Get(':petId')
+  findOne(@Param('petId') petId: string) {
+    return this.petsService.findOne(+petId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.petsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'xóa hồ sơ thú cưng' })
+  @Delete(':petId')
+  remove(@Param('petId') petId: string) {
+    return this.petsService.remove(+petId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Cập nhật hồ sơ thú cưng' })
+  @Patch(':petId')
+  async update(
+    @Param('petId') petId: string,
+    @Body() updatePetDto: UpdatePetDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    let imageUrl: string | undefined;
+    if (file) {
+      const imageUrlFromCloudinary =
+        await this.cloudinaryService.uploadFile(file);
+      imageUrl = imageUrlFromCloudinary;
+    }
+
+    return this.petsService.update(+petId, updatePetDto, imageUrl);
   }
 }

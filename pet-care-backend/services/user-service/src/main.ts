@@ -20,7 +20,7 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'JWT',
-        description: 'Nhập Token của Thúy vào đây',
+        description: 'Nhập Token của bạn vào đây',
         in: 'header',
       },
       'token',
