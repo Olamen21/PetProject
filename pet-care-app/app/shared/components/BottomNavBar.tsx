@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
 
 const NAV_ITEMS = [
- { key: "home", label: "Home", icon: "home-outline", route: "/home" },
+ { key: "home", label: "Home", icon: "home-outline", route: "/HomeScreen" },
   { key: "pet", label: "Pet profile", icon: "paw-outline", route: "/PetProfileScreen" },
   { key: "nutrition", label: "Nutrition", icon: "fast-food-outline", route: "/NutritionScreen" },
   { key: "health", label: "Vets", icon: "medkit-outline", route: "/MedicalRecordsAndVetsScreen" },
