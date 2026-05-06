@@ -26,7 +26,7 @@ export default function SplashScreen() {
           await removeToken();
           router.replace("./LoginScreen");
         } else {
-          router.replace("./ProfileScreen");
+          router.replace("./HomeScreen");
         }
       } catch (error) {
         setErrorMessage("Token không hợp lệ: " + error);
