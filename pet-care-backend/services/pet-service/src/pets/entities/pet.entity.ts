@@ -1,0 +1,39 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
+
+@Entity('pets')
+export class Pet {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  name!: string;
+
+  @Column()
+  species!: string;
+
+  @Column({ nullable: true })
+  breed!: string;
+
+  @Column()
+  gender!: string;
+
+  @Column({ type: 'date' })
+  date_of_birth!: Date;
+
+  @Column({ nullable: true })
+  weight!: number;
+
+  @Column()
+  owner_id!: number;
+
+  @Column({ nullable: true })
+  avatar_url!: string;
+
+  @CreateDateColumn()
+  created_at!: Date;
+}
