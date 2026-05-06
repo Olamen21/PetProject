@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreatePetDto } from './dto/create-pet.dto';
+import { Injectable, NotFoundException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
@@ -10,9 +11,19 @@ export class PetsService {
     private readonly petRepository: Repository<Pet>,
   ) {}
 
-  async create(data: Partial<Pet>): Promise<Pet> {
-    const newPet = this.petRepository.create(data);
+  async create(createPetDto: CreatePetDto, ownerId: number): Promise<Pet> {
+    const newPet = this.petRepository.create({
+      ...createPetDto,
+      owner_id: ownerId,
+    });
     return await this.petRepository.save(newPet);
+  }
+
+  async findAllByOwner(ownerId: number): Promise<Pet[]> {
+    return await this.petRepository.find({
+      where: { owner_id: ownerId },
+      order: { id: 'DESC' },
+    });
   }
 
   async findAll(): Promise<Pet[]> {
@@ -20,23 +31,34 @@ export class PetsService {
   }
 
   async findByOwner(ownerId: number): Promise<Pet[]> {
-    return await this.petRepository.find({ where: { owner_id: ownerId } });
+    return await this.petRepository.find({
+      where: { owner_id: ownerId },
+      order: { id: 'DESC' },
+    });
   }
 
-  async findOne(id: number): Promise<Pet> {
-    const pet = await this.petRepository.findOne({ where: { id } });
-    if (!pet) throw new NotFoundException(`Pet with ID ${id} not found`);
+  async findOne(petId: number): Promise<Pet> {
+    const pet = await this.petRepository.findOne({ where: { id: petId } });
+    if (!pet) throw new NotFoundException(`Pet with ID ${petId} not found`);
     return pet;
   }
 
-  async update(id: number, data: Partial<Pet>): Promise<Pet> {
-    await this.findOne(id);
-    await this.petRepository.update(id, data);
-    return this.findOne(id);
+  async update(
+    petId: number,
+    data: Partial<Pet>,
+    imageUrl?: string,
+  ): Promise<Pet> {
+    await this.findOne(petId);
+    const updateData = { ...data };
+    if (imageUrl) {
+      updateData.image = imageUrl;
+    }
+    await this.petRepository.update(petId, data);
+    return this.findOne(petId);
   }
 
-  async remove(id: number): Promise<void> {
-    const pet = await this.findOne(id);
+  async remove(petId: number): Promise<void> {
+    const pet = await this.findOne(petId);
     await this.petRepository.remove(pet);
   }
 }

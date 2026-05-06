@@ -5,14 +5,14 @@ export class RegisterDto {
     example: 'thuy@example.com',
     description: 'Email dùng để đăng ký',
   })
-  email: string;
+  email!: string;
 
   @ApiProperty({
     example: '123456',
     description: 'Mật khẩu (tối thiểu 6 ký tự)',
   })
-  password: string;
+  password!: string;
 
   @ApiProperty({ example: 'Huỳnh Thanh Thúy', description: 'Họ và tên' })
-  full_name: string;
+  full_name!: string;
 }

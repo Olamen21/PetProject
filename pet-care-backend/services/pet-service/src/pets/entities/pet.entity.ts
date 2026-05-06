@@ -22,7 +22,7 @@ export class Pet {
   @Column()
   gender!: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   date_of_birth!: Date;
 
   @Column({ nullable: true })
@@ -36,4 +36,7 @@ export class Pet {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  @Column({ nullable: true })
+  image!: string;
 }

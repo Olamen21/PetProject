@@ -30,8 +30,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from './cloudinary.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
-interface RequestWithUser extends Request {
-  user: { id: number; email: string; role: Role };
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email?: string;
+    name?: string;
+  };
 }
 
 @ApiTags('Users')
@@ -46,8 +50,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiOperation({ summary: 'Lấy thông tin cá nhân của User hiện tại' })
-  @ApiResponse({ status: 200, description: 'Thành công', type: User })
-  async getProfile(@Req() req: any) {
+  @ApiResponse({ status: 201, description: 'Thành công', type: User })
+  async getProfile(@Req() req: AuthenticatedRequest) {
     if (!req.user) {
       return {
         success: false,
@@ -55,17 +59,19 @@ export class UsersController {
       };
     }
 
-    const userId = req.user.id || req.user.sub;
+    // const userId = req.user.id || req.user.sub;
+    const userId = req.user.id;
+
 
     console.log('ID sẽ dùng để tìm trong DB:', userId);
 
-    return this.usersService.findOne(userId);
+    return this.usersService.findOne(+userId);
   }
 
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
   async updateProfile(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
     console.log('User từ Request:', req.user);
@@ -76,7 +82,7 @@ export class UsersController {
       );
     }
 
-    return this.usersService.updateProfile(req.user.id, updateProfileDto);
+    return this.usersService.updateProfile(+req.user.id, updateProfileDto);
   }
 
   @Get('all-users')
@@ -98,22 +104,22 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async applyVet(
-    @Req() req,
+    @Req() req: AuthenticatedRequest,
     @Body() body,
     @UploadedFile() file: Express.Multer.File,
   ) {
     const imageUrl = await this.cloudinaryService.uploadFile(file);
 
-    return this.usersService.applyToBeVet(req.user.id, body, imageUrl);
+    return this.usersService.applyToBeVet(+req.user.id, body, imageUrl);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('change-password')
   async changePassword(
-    @Request() req,
+    @Request() req: AuthenticatedRequest,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    await this.usersService.changePassword(req.user.id, changePasswordDto);
+    await this.usersService.changePassword(+req.user.id, changePasswordDto);
     return { message: 'Đổi mật khẩu thành công!' };
   }
 }

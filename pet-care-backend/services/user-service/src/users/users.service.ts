@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { Role } from '../roles/role.enum';
 import { DoctorProfile } from './entities/doctor-profile.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ApplyToBeVetDto } from './entities/apply-to-be-vet.dto';
 
 @Injectable()
 export class UsersService {
@@ -73,7 +74,7 @@ export class UsersService {
   }
   async applyToBeVet(
     userId: number,
-    updateData: any,
+    updateData: ApplyToBeVetDto,
     fileUrl?: string,
   ): Promise<User> {
     const user = await this.usersRepository.findOne({
