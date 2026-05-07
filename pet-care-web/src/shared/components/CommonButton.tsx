@@ -40,7 +40,7 @@ const CommonButton: React.FC<Props> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "14px 20px",
+        padding: "8px 20px",
         borderRadius: 12,
         backgroundColor: backgroundColor || "transparent",
         border: bordered ? `${borderWidth}px solid ${borderColor}` : "none",

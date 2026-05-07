@@ -1,13 +1,9 @@
 import React from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
 import { Colors } from "../../../constants/Colors";
 import type { Pet } from "../types/Pet";
 
-interface Props {
-  pet: Pet;
-}
-
-const PetRow: React.FC<Props> = ({pet}) => {
+const PetRow: React.FC<{ pet: Pet }> = ({ pet }) => {
   const roleStyle = {
     padding: "4px 12px",
     borderRadius: "20px",
@@ -56,7 +52,6 @@ const PetRow: React.FC<Props> = ({pet}) => {
       padding: "8px",
       borderRadius: "8px",
       cursor: "pointer",
-      marginRight: "6px",
       transition: "0.2s",
     },
   };
@@ -79,6 +74,14 @@ const PetRow: React.FC<Props> = ({pet}) => {
       <td style={styles.cell}>
         <button style={{ ...styles.actionBtn, color: Colors.error }}>
           <FaTrashAlt />
+        </button>
+      </td>
+      <td style={styles.cell}>
+        <button 
+          style={{ ...styles.actionBtn, color: Colors.info }}
+          onClick={() => navigation.navigate(`/edit-pet/${pet.id}`)}
+        >
+          <FaRegEdit />
         </button>
       </td>
     </tr>

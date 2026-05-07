@@ -3,12 +3,7 @@ import PetRow from "./PetRow";
 import { Colors } from "../../../constants/Colors"; 
 import type { Pet } from "../types/Pet";
 
-
-interface Props {
-  pets: Pet[];
-}
-
-const PetTable: React.FC<Props> = ({ pets }) => {
+const PetTable: React.FC<{ pets: Pet[] }> = ({ pets }) => {
     const styles: any = {
         table: {
             width: "100%",
