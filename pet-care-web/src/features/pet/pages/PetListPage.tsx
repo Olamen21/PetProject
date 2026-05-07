@@ -4,6 +4,7 @@ import Sidebar from "../../../shared/components/Sidebar";
 import PetHeader from "../components/PetHeader";
 import PetTable from "../components/PetTable";
 import type { Pet } from "../types/Pet";
+import { mockPets } from "./mockdata";
 
 const PetListPage: React.FC = () => {
     const [pets, setPets] = useState<Pet[]>([]);
@@ -12,33 +13,6 @@ const PetListPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const mockPets: Pet[] = [
-        {
-            id: 1,
-            image: "https://placedog.net/100/100?id=2",
-            name: "Milo",
-            species: "Cat",
-            gender: "Male",
-            breed: "British Shorthair",
-        },
-        {
-            id: 2,
-            image: "https://placedog.net/100/100?id=2",
-            name: "Bella",
-            species: "Dog",
-            gender: "Female",
-            breed: "Golden Retriever",
-        },
-        {
-            id: 3,
-            image: "https://placedog.net/100/100?id=2",
-            name: "Luna",
-            species: "Cat",
-            gender: "Female",
-            breed: "Siamese",
-        },
-        ];
-
         setPets(mockPets);
         setLoading(false);
     }, []);
