@@ -36,6 +36,17 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.use(
+    '/notifications',
+    createProxyMiddleware({
+      target: 'http://pet-service:3004',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/notifications/',
+      },
+    }),
+  );
   await app.listen(3000);
   console.log('Gateway is running on port 3000');
 }
