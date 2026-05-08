@@ -13,13 +13,13 @@ services:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - pet-network # Thêm mạng cho DB
+      - pet-network 
 
   redis:
     image: redis:alpine
     container_name: redis
     networks:
-      - pet-network # Thêm mạng cho Redis
+      - pet-network 
 
   auth-service:
     build: ./services/auth-service
@@ -31,7 +31,7 @@ services:
     depends_on:
       - postgresdb
     networks:
-      - pet-network # Thêm mạng cho Auth
+      - pet-network 
 
   api-gateway:
     build: ./services/api-gateway
@@ -43,7 +43,7 @@ services:
     depends_on:
       - auth-service
     networks:
-      - pet-network # Thêm mạng cho Gateway
+      - pet-network 
 
   user-service:
     build: ./services/user-service
@@ -57,7 +57,7 @@ services:
     depends_on:
       - postgresdb
     networks:
-      - pet-network # Thêm mạng cho User
+      - pet-network
 
   pet-service:
     build: ./services/pet-service
@@ -71,7 +71,7 @@ services:
     depends_on:
       - postgresdb
     networks:
-      - pet-network # Thêm mạng cho Pet
+      - pet-network 
 
   notification-service:
     build: ./services/notification-service
@@ -86,9 +86,8 @@ services:
       - postgresdb
       - redis
     networks:
-      - pet-network # Thêm mạng cho Notification
+      - pet-network 
 
-# --- KHAI BÁO MẠNG VÀ VOLUME ---
 networks:
   pet-network:
     driver: bridge

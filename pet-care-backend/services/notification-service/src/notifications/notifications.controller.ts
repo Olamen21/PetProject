@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { CreateNotificationDto } from './dto/create-notification.dto';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -14,11 +15,25 @@ export class NotificationsController {
   async testQueue() {
     const fakeUserId = 99;
     const title = 'Test Hàng Đợi';
-    const content = 'Chào Thúy, thông báo này đi qua Redis đó!';
+    const content = 'Chào bạn, thông báo này đi qua Redis đó!';
 
-    // Gọi hàm pushToQueue trong Service
     await this.notificationsService.pushToQueue(fakeUserId, title, content);
-
     return { message: 'Đã gửi lệnh vào hàng đợi thành công!' };
+  }
+
+  @Post('manual-reminder')
+  async createManualReminder(
+    @Body() createNotificationDto: CreateNotificationDto,
+  ) {
+    await this.notificationsService.pushToQueue(
+      createNotificationDto.userId,
+      createNotificationDto.title,
+      createNotificationDto.content,
+    );
+
+    return {
+      status: 'Success',
+      message: 'Nhắc nhở của bạn đã được ghi nhận và đang xử lý!',
+    };
   }
 }
