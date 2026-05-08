@@ -6,4 +6,10 @@ export interface Pet {
   gender: "Male" | "Female"; 
   photo?: string;      
   reproStatus?: string;
+  species: string,
+  height: number,
+  weight: number,
+  microchipID?: string,
+  neutered: boolean,
+  allergies?: string,
 }
