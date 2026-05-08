@@ -5,6 +5,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Notification } from './notifications/entities/notification.entity';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -23,6 +24,12 @@ import { Notification } from './notifications/entities/notification.entity';
       synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: 'redis',
+        port: 6379,
+      },
     }),
     NotificationsModule,
   ],
