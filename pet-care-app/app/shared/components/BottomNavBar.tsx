@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "expo-router";
 const NAV_ITEMS = [
  { key: "home", label: "Home", icon: "home-outline", route: "/HomeScreen" },
   { key: "pet", label: "Pet profile", icon: "paw-outline", route: "/PetProfileScreen" },
-  { key: "nutrition", label: "Nutrition", icon: "fast-food-outline", route: "/NutritionScreen" },
+  { key: "nutrition", label: "Nutrition", icon: "fast-food-outline", route: "/NutritionPage" },
   { key: "health", label: "Vets", icon: "medkit-outline", route: "/MedicalRecordsAndVetsScreen" },
   { key: "calendar", label: "Reminder", icon: "calendar-outline", route: "/reminder" },
     { key: "profile", label: "Profile", icon: "person-outline", route: "/ProfileScreen" },

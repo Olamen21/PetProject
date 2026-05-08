@@ -10,29 +10,12 @@ import TasksSection from "../components/TasksSection";
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import { useState } from "react";
 import { Pet } from "../types/Pet";
+import { mockPets } from "../data/mockdata";
 
 export default function PetProfileScreen() {
   const router = useRouter();
 
-  const pet = [{
-    id: 1,
-    name: "Tommy",
-    breed: "Beagle",
-    birthday: "23 Oct 2023",
-    gender: "Male" as const,
-    reproStatus: "Neutered",
-    photos: "",
-  },
-  {
-    id: 2,
-    name: "Kitty",
-    breed: "Siamese",
-    birthday: "14 May 2022",
-    gender: "Female" as const,
-    photos: "",
-    reproStatus: "Neutered",
-  },
-];
+  const pet = mockPets;
 
   const [selectedPet, setSelectedPet] = useState<Pet>(pet[0]);
 
@@ -51,7 +34,10 @@ export default function PetProfileScreen() {
         <InfoCards pet={selectedPet} />
         <CommonButton
           title="Complete your pet's profile"
-          onPress={() => router.replace("/(tabs)/EditPetProfileScreen")}
+          onPress={() => router.push({
+            pathname: "/(tabs)/EditPetProfileScreen",
+            params: { petId: selectedPet.id },
+          })}
           iconName="clipboard-outline"
           iconColor="#fff"
           backgroundColor="#5A7863"
