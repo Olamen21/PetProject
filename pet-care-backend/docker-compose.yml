@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   postgresdb:
     image: postgres:15-alpine
@@ -6,12 +7,19 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      # POSTGRES_DB: pet_care
     ports:
       - "5432:5432"
     volumes:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pet-network # Thêm mạng cho DB
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    networks:
+      - pet-network # Thêm mạng cho Redis
 
   auth-service:
     build: ./services/auth-service
@@ -22,6 +30,8 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
+    networks:
+      - pet-network # Thêm mạng cho Auth
 
   api-gateway:
     build: ./services/api-gateway
@@ -32,6 +42,8 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - auth-service
+    networks:
+      - pet-network # Thêm mạng cho Gateway
 
   user-service:
     build: ./services/user-service
@@ -44,6 +56,8 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
+    networks:
+      - pet-network # Thêm mạng cho User
 
   pet-service:
     build: ./services/pet-service
@@ -56,6 +70,8 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
+    networks:
+      - pet-network # Thêm mạng cho Pet
 
   notification-service:
     build: ./services/notification-service
@@ -68,5 +84,14 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - postgresdb
+      - redis
+    networks:
+      - pet-network # Thêm mạng cho Notification
+
+# --- KHAI BÁO MẠNG VÀ VOLUME ---
+networks:
+  pet-network:
+    driver: bridge
+
 volumes:
   postgres_data:
