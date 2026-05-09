@@ -63,8 +63,7 @@ const SignUpUploadPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-    const API_URL_USER = import.meta.env.VITE_API_URL_USER;
+   console.log(formData.date_of_birth);
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
       setMessage({

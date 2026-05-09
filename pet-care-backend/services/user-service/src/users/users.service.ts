@@ -34,7 +34,6 @@ export class UsersService {
     return user;
   }
 
-  //cập nhật thông tin người dùng
   async updateProfile(
     id: number,
     updateProfileDto: UpdateProfileDto,
@@ -69,7 +68,7 @@ export class UsersService {
         user.doctorProfile.tags = updateProfileDto.tags
           .split(',')
           .map((tag) => tag.trim())
-          .join(', '); // Chuyển ['A', 'B'] thành "A, B"
+          .join(', ');
       }
     }
 

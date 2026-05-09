@@ -1,13 +1,14 @@
 export interface Pet {
-  id: string;
-  image: string;
+  id?: string;
+  owner_id?: number;
   name: string;
   species: string;
   gender: string;
-  breed: string;
+  breed_id: number;
   height: number;
   weight: number;
   dob: string;
-  neutered_status: string;
+  neutered: string;
   allergies: string[];
+  avatar_url: string;
 }

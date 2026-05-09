@@ -3,7 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Breed } from './breed.entity';
 
 @Entity('pets')
 export class Pet {
@@ -16,8 +19,12 @@ export class Pet {
   @Column()
   species!: string;
 
-  @Column({ nullable: true })
-  breed!: string;
+  @ManyToOne(() => Breed, (breed) => breed.pets)
+  @JoinColumn({ name: 'breed_id' })
+  breed_relation!: Breed;
+
+  @Column()
+  breed_id!: number;
 
   @Column()
   gender!: string;
@@ -36,9 +43,6 @@ export class Pet {
 
   @CreateDateColumn()
   created_at!: Date;
-
-  @Column({ nullable: true })
-  image!: string;
 
   @Column({ nullable: true })
   neutered!: boolean;

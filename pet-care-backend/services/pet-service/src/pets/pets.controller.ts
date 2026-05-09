@@ -44,7 +44,7 @@ export class PetsController {
   constructor(
     private readonly petsService: PetsService,
     private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Get('pets')
@@ -56,22 +56,25 @@ export class PetsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.VET)
   @Get('all-pets')
-  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng (chỉ Admin)' })
+  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng (chỉ Admin và Vet)' })
   findAll() {
     return this.petsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.VET)
   @Get('user/:userId')
-  @ApiOperation({ summary: 'lấy danh sách thú cưng theo user (chỉ Admin)' })
+  @ApiOperation({
+    summary: 'lấy danh sách thú cưng theo user (chỉ Admin và Vet)',
+  })
   async findByOwner(@Param('userId') userId: string) {
     return this.petsService.findAllByOwner(+userId);
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Post('create-pet')
   @ApiOperation({ summary: 'Tạo hồ sơ thú cưng mới' })
   @ApiResponse({ status: 201, description: 'Thành công', type: Pet })
@@ -88,6 +91,7 @@ export class PetsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'xóa hồ sơ thú cưng' })
   @Delete(':petId')
   remove(@Param('petId') petId: string) {
@@ -95,6 +99,7 @@ export class PetsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Cập nhật hồ sơ thú cưng' })
   @Patch(':petId')

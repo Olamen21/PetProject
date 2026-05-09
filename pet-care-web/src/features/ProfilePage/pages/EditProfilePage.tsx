@@ -5,8 +5,7 @@ import React, { useEffect, useState } from "react";
 import EditProfileSpecialties from "../components/EditProfilePage/EditProfileSpecialties";
 import EditProfileContactInfo from "../components/EditProfilePage/EditProfileContactInfo";
 import EditProfileBasicInfo from "../components/EditProfilePage/EditProfileBasicInfo";
-import axios from "axios";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../services/profileService";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { getProfile } from "../../../api/UserApi";
@@ -86,6 +85,8 @@ function EditProfilePage() {
   };
 
   const handleUpdate = async () => {
+    console.log("DOB: " + form.dob);
+
     try {
       setLoading(true);
       setMessage(null);
