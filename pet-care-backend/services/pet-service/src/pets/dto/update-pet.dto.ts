@@ -35,6 +35,17 @@ export class UpdatePetDto {
     description: 'Thú cưng đã triệt sản chưa',
   })
   neutered!: boolean;
+  @ApiProperty({
+    example: '15',
+    description: 'Chiều cao của thú cưng (cm)',
+  })
+  height!: number;
+
+  @ApiProperty({
+    example: '4',
+    description: 'Cân nặng của thú cưng (kg)',
+  })
+  weight!: number;
 
   @ApiProperty({
     example: 'cà rốt',

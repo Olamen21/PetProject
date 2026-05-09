@@ -40,9 +40,12 @@ export class Pet {
   @Column({ nullable: true })
   image!: string;
 
-   @Column({ nullable: true })
+  @Column({ nullable: true })
   neutered!: boolean;
 
-   @Column({ nullable: true })
+  @Column({ nullable: true })
   allergies!: string;
+
+  @Column({ nullable: true })
+  height!: number;
 }
