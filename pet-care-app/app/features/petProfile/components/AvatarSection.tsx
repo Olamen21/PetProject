@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import PetAvatar from "./PetAvatar";
 import { router } from "expo-router";
@@ -7,18 +7,20 @@ import { Pet } from "../types/Pet";
 
 export default function AvatarSection({ pets, selectedPet, onSelectPet, }: {
   pets: Pet[];
-  selectedPet: Pet;
+  selectedPet: Pet | null;
   onSelectPet: (pet: Pet) => void;
  }) {
   return (
     <View style={styles.avatarSection}>
-     {pets.map((pet) => (
-      <TouchableOpacity key={pet.id} onPress={() => onSelectPet(pet)}>
-        <PetAvatar name={pet.name} avatarUri={pet.avatar_url} isSelected={selectedPet.id === pet.id}/>
-      </TouchableOpacity>
-     ))
-
-     }
+      {pets.length > 0 && selectedPet ? (
+        pets.map((pet) => (
+          <TouchableOpacity key={pet.id} onPress={() => onSelectPet(pet)}>
+            <PetAvatar name={pet.name} avatarUri={pet.avatar_url} isSelected={selectedPet.id === pet.id}/>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <View></View>
+      )}
 
       <TouchableOpacity style={styles.addPetButton} onPress={() => router.push("/(tabs)/AddPetScreen")}>
         <Feather name="plus" size={32} color="#A0AEC0" />
