@@ -7,6 +7,9 @@ import { CloudinaryService } from './cloudinary.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { Breed } from './entities/breed.entity';
+import { BreedController } from './breed.controller';
+import { BreedService } from './breed.service';
 
 @Module({
   imports: [
@@ -15,10 +18,10 @@ import { JwtStrategy } from '../auth/jwt.strategy';
       secret: 'SECRET_KEY_CUA_THUY',
       signOptions: { expiresIn: '1h' },
     }),
-    TypeOrmModule.forFeature([Pet]),
+    TypeOrmModule.forFeature([Pet, Breed]),
   ],
-  controllers: [PetsController],
-  providers: [PetsService, CloudinaryService, JwtStrategy],
-  exports: [PetsService, CloudinaryService],
+  controllers: [PetsController, BreedController],
+  providers: [PetsService, CloudinaryService, JwtStrategy, BreedService],
+  exports: [PetsService, CloudinaryService, BreedService],
 })
 export class PetsModule {}

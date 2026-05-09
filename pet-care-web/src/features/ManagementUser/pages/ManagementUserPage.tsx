@@ -4,7 +4,7 @@ import { Colors } from "../../../constants/Colors";
 import UserHeader from "../components/ManagementUserPage/UserHeader";
 import UserTable from "../components/ManagementUserPage/UserTable";
 import { getProfile } from "../../../api/UserApi";
-import {getAllUser } from "../services/ManagementUser";
+import {getAllUser } from "../../../api/UserApi";
 
 interface User {
   id: number;

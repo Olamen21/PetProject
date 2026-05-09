@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { PetsModule } from './pets/pets.module';
 import { Pet } from './pets/entities/pet.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Breed } from './pets/entities/breed.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: '123',
       database: 'pet_care_pets',
-      entities: [Pet],
+      entities: [Pet, Breed],
       synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,

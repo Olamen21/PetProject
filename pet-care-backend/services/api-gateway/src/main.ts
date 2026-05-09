@@ -38,6 +38,17 @@ async function bootstrap() {
   );
 
   app.use(
+    '/breeds',
+    createProxyMiddleware({
+      target: 'http://pet-service:3003',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/breeds/',
+      },
+    }),
+  );
+
+  app.use(
     '/notifications',
     createProxyMiddleware({
       target: 'http://pet-service:3004',

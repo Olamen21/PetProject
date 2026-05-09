@@ -20,7 +20,7 @@ import { ConfigModule } from '@nestjs/config';
       password: '123',
       database: 'pet_care_auth',
       entities: [User, DoctorProfile],
-      synchronize: true,
+      // synchronize: true,
       retryAttempts: 10,
       retryDelay: 3000,
     }),

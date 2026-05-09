@@ -1,9 +1,10 @@
 import type { Pet } from "../types/Pet";
 
+
 export const mockPets: Pet[] = [
     {
         id: "1",
-        image: "https://placedog.net/100/100?id=2",
+        owner: 'user1',
         name: "Milo",
         species: "cat",
         gender: "Male",
@@ -16,7 +17,7 @@ export const mockPets: Pet[] = [
     },
     {
         id: "2",
-        image: "https://placedog.net/100/100?id=2",
+         owner: 'user2',
         name: "Bella",
         species: "dog",
         gender: "Female",
@@ -29,7 +30,7 @@ export const mockPets: Pet[] = [
     },
     {
         id: "3",
-        image: "https://placedog.net/100/100?id=2",
+         owner: 'user3',
         name: "Luna",
         species: "cat",
         gender: "Female",

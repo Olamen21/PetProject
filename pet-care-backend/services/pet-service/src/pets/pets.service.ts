@@ -1,4 +1,3 @@
-import { CreatePetDto } from './dto/create-pet.dto';
 import { Injectable, NotFoundException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,12 +10,29 @@ export class PetsService {
     private readonly petRepository: Repository<Pet>,
   ) {}
 
-  async create(createPetDto: CreatePetDto, ownerId: number): Promise<Pet> {
+  async create(
+    createPetDto: Partial<Pet>,
+    ownerId: number,
+    imageUrl?: string,
+  ): Promise<Pet> {
+    const createData = { ...createPetDto };
+
+    if (imageUrl) {
+      createData.avatar_url = imageUrl;
+    }
+
+    if (typeof createData.neutered === 'string') {
+      createData.neutered = createData.neutered === 'true';
+    }
+
     const newPet = this.petRepository.create({
-      ...createPetDto,
+      ...createData,
       owner_id: ownerId,
     });
-    return await this.petRepository.save(newPet);
+
+    const savedPet = await this.petRepository.save(newPet);
+
+    return savedPet;
   }
 
   async findAllByOwner(ownerId: number): Promise<Pet[]> {
@@ -37,9 +53,12 @@ export class PetsService {
     });
   }
 
-  async findOne(petId: number): Promise<Pet> {
-    const pet = await this.petRepository.findOne({ where: { id: petId } });
-    if (!pet) throw new NotFoundException(`Pet with ID ${petId} not found`);
+  async findOne(id: number): Promise<Pet> {
+    const pet = await this.petRepository.findOne({
+      where: { id },
+      relations: ['breed_relation'],
+    });
+    if (!pet) throw new NotFoundException('Không tìm thấy thú cưng này');
     return pet;
   }
 
@@ -48,13 +67,27 @@ export class PetsService {
     data: Partial<Pet>,
     imageUrl?: string,
   ): Promise<Pet> {
-    await this.findOne(petId);
-    const updateData = { ...data };
+    const pet = await this.findOne(petId);
+
+    const updateData: any = { ...data };
+
     if (imageUrl) {
-      updateData.image = imageUrl;
+      updateData.avatar_url = imageUrl;
     }
-    await this.petRepository.update(petId, data);
-    return this.findOne(petId);
+
+    if (typeof updateData.neutered === 'string') {
+      updateData.neutered = updateData.neutered === 'true';
+    }
+
+    const updatedPet = await this.petRepository.preload({
+      id: petId,
+      ...updateData,
+    });
+
+    if (!updatedPet)
+      throw new NotFoundException('Không tìm thấy thú cưng để cập nhật');
+
+    return await this.petRepository.save(updatedPet);
   }
 
   async remove(petId: number): Promise<void> {

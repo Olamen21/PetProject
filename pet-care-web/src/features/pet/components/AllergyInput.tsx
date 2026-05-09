@@ -18,9 +18,10 @@ function AllergyInput({ form, setForm }: AllergyInputProps) {
         ...prev,
         allergies: [...prev.allergies, currentAllergy.trim()],
       }));
-      setCurrentAllergy(""); // reset input
+      setCurrentAllergy("");
     }
   };
+  // console.log(form.allergies);
 
   return (
     <div style={styles.container}>
@@ -39,15 +40,11 @@ function AllergyInput({ form, setForm }: AllergyInputProps) {
           <option value="Food" />
         </datalist>
 
-        <CommonButton
-            onClick={addAllergy}
-            Icon={FaPlus}
-            iconSize={16}
-        />
+        <CommonButton onClick={addAllergy} Icon={FaPlus} iconSize={16} />
       </div>
 
       <ul style={styles.list}>
-        {form.allergies.map((a, i) => (
+        {(form.allergies ?? []).map((a, i) => (
           <li key={i}>{a}</li>
         ))}
       </ul>
@@ -56,41 +53,41 @@ function AllergyInput({ form, setForm }: AllergyInputProps) {
 }
 
 const styles: { [key: string]: React.CSSProperties } = {
-    container: { 
-        display: "flex", 
-        flexDirection: "column", 
-        gap: "8px",
-        marginTop: 10,
-    },
-    title: { 
-        fontWeight: 600,
-        fontSize: 16,
-    },
-    input: {
-        flex: 1,
-        fontSize: "14px",
-        color: Colors.text,
-        fontWeight: "500",
-        padding: "0 10px",
-        outline: "none",
-        display: "flex",
-        alignItems: "center",
-        borderRadius: 8,
-        height: 48,
-        paddingLeft: 12,
-        paddingRight: 12,
-        borderColor: Colors.gray,
-        borderWidth: 1.5,
-        borderStyle: "solid",
-    },
-    list: { 
-        display: "flex", 
-        gap: "8px", 
-        listStyle: "none", 
-        padding: 0, 
-        margin: 5,
-        color: Colors.text_secondary 
-    }
-}
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    marginTop: 10,
+  },
+  title: {
+    fontWeight: 600,
+    fontSize: 16,
+  },
+  input: {
+    flex: 1,
+    fontSize: "14px",
+    color: Colors.text,
+    fontWeight: "500",
+    padding: "0 10px",
+    outline: "none",
+    display: "flex",
+    alignItems: "center",
+    borderRadius: 8,
+    height: 48,
+    paddingLeft: 12,
+    paddingRight: 12,
+    borderColor: Colors.gray,
+    borderWidth: 1.5,
+    borderStyle: "solid",
+  },
+  list: {
+    display: "flex",
+    gap: "8px",
+    listStyle: "none",
+    padding: 0,
+    margin: 5,
+    color: Colors.text_secondary,
+  },
+};
 
 export default AllergyInput;

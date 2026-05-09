@@ -22,7 +22,7 @@ const PetTable: React.FC<{ pets: Pet[] }> = ({ pets }) => {
       <thead>
         <tr>
           <th style={styles.headerCell}>ID</th>
-          <th style={styles.headerCell}>Image</th>
+          <th style={styles.headerCell}>Owner</th>
           <th style={styles.headerCell}>Name</th>
           <th style={styles.headerCell}>Breed</th>
           <th style={styles.headerCell}>Gender</th>
