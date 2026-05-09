@@ -1,6 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
+import { Pet } from "../types/Pet";
 
-export default function InfoCards({ pet }: { pet: any }) {
+interface InfoCardProps {
+  pet : Pet
+}
+
+export default function InfoCards({ pet }: InfoCardProps) {
   return (
     <>
       <View style={styles.infoCardsRow}>
@@ -10,17 +15,16 @@ export default function InfoCards({ pet }: { pet: any }) {
         </View>
         <View style={styles.infoCard}>
           <Text style={styles.infoLabel}>Born On</Text>
-          <Text style={styles.infoValue}>{pet.birthday}</Text>
+          <Text style={styles.infoValue}>{pet.date_of_birth}</Text>
         </View>
         <View style={styles.infoCard}>
           <Text style={styles.infoLabel}>Gender</Text>
           <Text style={styles.infoValue}>{pet.gender}</Text>
         </View>
       </View>
-
       <View style={styles.reproCard}>
         <Text style={styles.infoLabel}>Repro Status</Text>
-        <Text style={styles.infoValue}>{pet.reproStatus}</Text>
+        <Text style={styles.infoValue}>{pet.neutered ? "Neutered" : "None"}</Text>
       </View>
     </>
   );

@@ -145,34 +145,26 @@ export default function BasicInfoCard({
                 <View style={{ flex: 1 }}>
                 <Text style={styles.label}>Date of Birth*</Text>
                 <CommonSelector
-                    value={pet.birthday ? new Date(pet.birthday).toDateString() : ""}
+                    value={
+                        pet.date_of_birth 
+                            ? new Date(pet.date_of_birth).toLocaleDateString("en-GB") // dd/mm/yyyy
+                            : ""
+                    }
                     placeholder="Your pet's birthday"
                     onPress={() => setShowPicker(true)}
                 />
     
                 {showPicker && (
                     <DateTimePicker
-                        value={pet.birthday ? new Date(pet.birthday) : new Date()}
+                        value={pet.date_of_birth ? new Date(pet.date_of_birth) : new Date()}
                         mode="date"
                         display="default"
                         onChange={(event, date) => {
                             setShowPicker(false);
-                            if (date) setPet({...pet, birthday: date.toISOString()});
+                            if (date) setPet({...pet, date_of_birth: date.toISOString()});
                         }}
                     />
                 )}
-                </View>
-    
-                <View style={{ flex: 1 }}>
-                <Text style={styles.label}>Microchip ID</Text>
-                <CommonTextInput
-                    icon="hardware-chip-outline"
-                    placeholder="000000000"
-                    value={pet.microchipID ? pet.microchipID : ""}
-                    onChangeText={(text) => setPet({...pet, microchipID: text})}
-                    backgroundColor="#fff"
-                    bordered
-                />
                 </View>
             </View>
         </View>

@@ -14,7 +14,7 @@ export default function AvatarSection({ pets, selectedPet, onSelectPet, }: {
     <View style={styles.avatarSection}>
      {pets.map((pet) => (
       <TouchableOpacity key={pet.id} onPress={() => onSelectPet(pet)}>
-        <PetAvatar name={pet.name} avatarUri={pet.photo} isSelected={selectedPet.id === pet.id}/>
+        <PetAvatar name={pet.name} avatarUri={pet.avatar_url} isSelected={selectedPet.id === pet.id}/>
       </TouchableOpacity>
      ))
 
