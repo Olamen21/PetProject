@@ -26,7 +26,10 @@ export default function AddPetScreen() {
     if (isFormComplete) {
       router.replace({
         pathname: "/(tabs)/SelectBreedScreen",
-        params: { petType },
+        params: { 
+          petName,
+          petType 
+        },
       });
     } else {
       setShowError(true);

@@ -1,6 +1,6 @@
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 import AvatarSection from "../components/AvatarSection";
 import HealthSection from "../components/HealthSection";
@@ -8,16 +8,57 @@ import InfoCards from "../components/InfoCards";
 import PhotoCard from "../components/PhotoCard";
 import TasksSection from "../components/TasksSection";
 import HeaderBar from "@/app/shared/components/HeaderBar";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pet } from "../types/Pet";
-import { mockPets } from "../data/mockdata";
+import { getPetList } from "../services/PetApi";
+import * as ImagePicker from "expo-image-picker";
+import CommonMessage from "@/app/shared/components/CommonMessage";
 
 export default function PetProfileScreen() {
   const router = useRouter();
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+  const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
+  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
 
-  const pet = mockPets;
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchPets = async () => {
+        try {
+          const data = await getPetList();
+          setPets(data);
+          if (data.length > 0) {
+            setSelectedPet(data[0]);
+          }
+        } catch (error) {
+          console.error("Không thể tải pets:", error);
+        }
+      };
+      fetchPets();
+    }, [])
+  );
 
-  const [selectedPet, setSelectedPet] = useState<Pet>(pet[0]);
+  const handleAddPhoto = async () => {
+    // xin quyền truy cập thư viện ảnh
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      setMessage({ type: "error", text: "Bạn cần cấp quyền truy cập ảnh!" });
+      return;
+    }
+
+    // mở thư viện ảnh
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setPhotoUri(uri); 
+    }
+  };
+
+  if (!selectedPet) return null;
 
   return (
     <View style={styles.container}>
@@ -29,8 +70,11 @@ export default function PetProfileScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <AvatarSection pets={pet} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
-        <PhotoCard onAddPhoto={() => {}} />
+        <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+        {message && (
+          <CommonMessage type={message.type} message={message.text} />
+        )}
+        <PhotoCard onAddPhoto={handleAddPhoto} photoUri={photoUri} />
         <InfoCards pet={selectedPet} />
         <CommonButton
           title="Complete your pet's profile"

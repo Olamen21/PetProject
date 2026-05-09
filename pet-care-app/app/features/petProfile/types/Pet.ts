@@ -2,14 +2,12 @@ export interface Pet {
   id: number;              
   name: string;           
   breed: string;           
-  birthday: string;        
+  date_of_birth: string;        
   gender: "Male" | "Female"; 
-  photo?: string;      
-  reproStatus?: string;
+  avatar_url?: string;      
   species: string,
-  height: number,
+  height?: number,
   weight: number,
-  microchipID?: string,
-  neutered: boolean,
+  neutered?: boolean,
   allergies?: string,
 }

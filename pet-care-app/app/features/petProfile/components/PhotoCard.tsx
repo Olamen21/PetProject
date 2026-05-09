@@ -1,29 +1,43 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import CommonButton from "@/app/shared/components/CommonButton";
 
-export default function PhotoCard({ onAddPhoto }: { onAddPhoto: () => void }) {
+interface PhotoCardProps {
+  photoUri?: string; 
+  onAddPhoto: () => void;
+}
+
+export default function PhotoCard({ photoUri, onAddPhoto }: PhotoCardProps) {
   return (
     <View style={styles.photoCard}>
-      <View style={styles.photoIconContainer}>
-        <View style={styles.photoIcon}>
-          <Feather name="image" size={32} color="#5A7863" />
+      {photoUri ? (
+        <View style={styles.photoIconContainer}>
+          <Image source={{ uri: photoUri }} style={styles.petPhoto} />
         </View>
-        <View style={styles.photoBadge}>
-          <Feather name="info" size={14} color="#5A7863" />
-        </View>
-      </View>
-      <Text style={styles.photoText}>
-        No photos yet. Add some and create an album!
-      </Text>
-      <CommonButton
-        title="Add Photo"
-        onPress={onAddPhoto}
-        iconName="add"
-        iconColor="#fff"
-        backgroundColor="#5A7863"
-        textColor="#fff"
-      />
+      ) : (
+        <>
+          <View style={styles.photoIconContainer}>
+            <View style={styles.photoIcon}>
+              <Feather name="image" size={32} color="#5A7863" />
+            </View>
+            <View style={styles.photoBadge}>
+              <Feather name="info" size={14} color="#5A7863" />
+            </View>
+          </View>
+
+          <Text style={styles.photoText}>
+            No photos yet. Add some and create an album!
+          </Text>
+          <CommonButton
+            title="Add Photo"
+            onPress={onAddPhoto}
+            iconName="add"
+            iconColor="#fff"
+            backgroundColor="#5A7863"
+            textColor="#fff"
+          />
+        </>
+      )}
     </View>
   );
 }
@@ -40,6 +54,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   photoIconContainer: { position: "relative", marginBottom: 20 },
+  petPhoto: {
+    width: 120,
+    height: 120,
+    borderRadius: 8,
+    resizeMode: "cover",
+  },
+
   photoIcon: {
     width: 64,
     height: 64,
