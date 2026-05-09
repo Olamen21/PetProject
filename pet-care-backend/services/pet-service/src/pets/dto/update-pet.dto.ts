@@ -29,4 +29,16 @@ export class UpdatePetDto {
     description: 'Sinh nhật của thú cưng',
   })
   date_of_birth!: Date;
+
+  @ApiProperty({
+    example: 'false',
+    description: 'Thú cưng đã triệt sản chưa',
+  })
+  neutered!: boolean;
+
+  @ApiProperty({
+    example: 'cà rốt',
+    description: 'Thực phẩm dị ứng',
+  })
+  allergies?: string;
 }
