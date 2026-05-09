@@ -1,7 +1,7 @@
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
 import { useFocusEffect, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import AvatarSection from "../components/AvatarSection";
 import HealthSection from "../components/HealthSection";
 import InfoCards from "../components/InfoCards";
@@ -58,7 +58,41 @@ export default function PetProfileScreen() {
     }
   };
 
-  if (!selectedPet) return null;
+  if (!selectedPet) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <HeaderBar title="Bạn chưa có thú cưng nào" />
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}
+        >
+          <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
+          <CommonButton
+            title="Emergency"
+            onPress={() => {}}
+            iconName="call-outline"
+            iconColor="#FF6B6B"
+            backgroundColor="#ffffff"
+            textColor="#FF6B6B"
+            bordered
+            borderColor="#FF6B6B"
+            borderWidth={1.5}
+            style={styles.button}
+          />
+          <HealthSection />
+          <TasksSection />
+
+          <BottomNavBar />
+        </ScrollView>
+      </View>
+    );
+  }
+
 
   return (
     <View style={styles.container}>

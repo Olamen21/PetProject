@@ -72,6 +72,9 @@ export default function EditPetProfileScreen() {
         gender: selectedPet.gender,
         date_of_birth: selectedPet.date_of_birth,
         weight: selectedPet.weight,
+        height: selectedPet.height,
+        neutered: selectedPet.neutered,
+        allergies: selectedPet.allergies
       });
 
       setSelectedPet(updatePet);
