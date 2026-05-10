@@ -44,7 +44,7 @@ export class PetsController {
   constructor(
     private readonly petsService: PetsService,
     private readonly cloudinaryService: CloudinaryService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('pets')
@@ -75,12 +75,23 @@ export class PetsController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN, Role.USER)
+  @UseInterceptors(FileInterceptor('file'))
   @Post('create-pet')
   @ApiOperation({ summary: 'Tạo hồ sơ thú cưng mới' })
   @ApiResponse({ status: 201, description: 'Thành công', type: Pet })
-  create(@Body() createPetDto: CreatePetDto, @Req() req: AuthenticatedRequest) {
+  async create(
+    @Body() createPetDto: CreatePetDto,
+    @Req() req: AuthenticatedRequest,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
     const ownerId = req.user.id;
-    return this.petsService.create(createPetDto, +ownerId);
+    let imageUrl: string | undefined;
+    if (file) {
+      const imageUrlFromCloudinary =
+        await this.cloudinaryService.uploadFile(file);
+      imageUrl = imageUrlFromCloudinary;
+    }
+    return this.petsService.create(createPetDto, +ownerId, imageUrl);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -105,9 +116,13 @@ export class PetsController {
   @Patch(':petId')
   async update(
     @Param('petId') petId: string,
-    @Body() updatePetDto: UpdatePetDto,
+    @Body() body,
     @UploadedFile() file?: Express.Multer.File,
   ) {
+    //  console.log('User từ Request:', req.pet);
+    console.log('--- NHẬN REQUEST ---');
+    console.log('Body:', body);
+    console.log('File:', file);
     let imageUrl: string | undefined;
     if (file) {
       const imageUrlFromCloudinary =
@@ -115,6 +130,6 @@ export class PetsController {
       imageUrl = imageUrlFromCloudinary;
     }
 
-    return this.petsService.update(+petId, updatePetDto, imageUrl);
+    return this.petsService.update(+petId, body, imageUrl);
   }
 }

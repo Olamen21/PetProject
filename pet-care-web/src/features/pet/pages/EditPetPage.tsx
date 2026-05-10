@@ -60,17 +60,16 @@ function EditPetPage() {
 
   const handleSubmit = async () => {
     console.log("Đang tiến hành submit...");
+    console.log(form.avatar_url);
 
-  
     if (form.dob) {
       const currentYear = new Date().getFullYear();
       const selectedYear = new Date(form.dob).getFullYear();
 
       if (currentYear - selectedYear > 20) {
         alert("Ngày sinh không hợp lệ (Pet không thể thọ quá 20 tuổi)!");
-        return; 
+        return;
       }
-   
     }
     console.log(form.avatar_url);
 
@@ -82,8 +81,10 @@ function EditPetPage() {
       dataForm.append("gender", form.gender);
       dataForm.append("date_of_birth", form.dob);
       dataForm.append("weight", String(form.weight || 0));
-      dataForm.append("height", String(form.height || 0)); 
-      dataForm.append("avatar_url", form.avatar_url);
+      dataForm.append("height", String(form.height || 0));
+      if ((form as any).imageFile) {
+        dataForm.append("file", (form as any).imageFile);
+      }
 
       dataForm.append("neutered", String(form.neutered));
       console.log("Neutered: " + String(form.neutered));

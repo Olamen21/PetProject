@@ -3,6 +3,7 @@ import CommonSelector from "@/app/shared/components/CommonSelector";
 import { StyleSheet, Text, View } from "react-native";
 import { Pet } from "../types/Pet";
 import { useState } from "react";
+import AllergyInput from "./AllergyInput";
 
 interface HealthInfoCardProps {
     pet: Pet,
@@ -17,20 +18,7 @@ export default function HealthInfoCard({
     const [showNeuteredModel, setShowNeuteredModal] = useState(false);
     const [showAllergiesModel, setShowAllergiesModal] = useState(false);
     const neuteredList = ["Yes", "No"];
-    const allergiesList: string[] = [
-        "Chicken",
-        "Beef",
-        "Dairy",
-        "Eggs",
-        "Fish",
-        "Grains (Wheat, Corn, Rice)",
-        "Soy",
-        "Lamb",
-        "Pork",
-        "Peanuts",
-        "Shellfish",
-        "Other"
-    ];
+
 
 
     return (
@@ -50,22 +38,9 @@ export default function HealthInfoCard({
                     onSelect={(text) => setPet({ ...pet, neutered: text === "Yes" })}
                 />
             </View>
+            <AllergyInput pet={pet} setPet={setPet}/>
 
-            <View style={styles.column}>
-                <Text style={styles.label}>Allergies</Text>
-                <CommonSelector
-                    value={pet.allergies ? pet.allergies : ""}
-                    onPress={() => setShowAllergiesModal(true)}
-                />
-    
-                <CommonSelectModal
-                    visible={showAllergiesModel}
-                    onClose={() => setShowAllergiesModal(false)}
-                    options={allergiesList}
-                    selected={pet.allergies}
-                    onSelect={(text) => setPet({ ...pet, allergies: text})}
-                />
-            </View>
+           
         </View>
     )
 }

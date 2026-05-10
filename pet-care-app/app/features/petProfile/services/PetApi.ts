@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getToken } from "../../auth/services/AuthStorage";
 import { Pet } from "../types/Pet";
+import api from "../../../../api/axiosInstance";
 
 const API_PET_SERVICE = process.env.EXPO_PUBLIC_API_URL_PET_SERVICE; 
 
@@ -66,6 +67,25 @@ export const updatePetProfile = async (
     }
     throw error;
   }
+};
+export const updatePet = async (id: number, payload: FormData) => {
+  return await api.patch("pets/" + id, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+
+
+export const getAllBreed = async () => {
+  const res = await api.get('/breeds');
+  return res.data;
+}
+
+export const getProfile = async () => {
+  const res = await api.get(`/users/profile`); 
+  return res.data;
 };
 
 export default petApi;

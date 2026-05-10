@@ -63,4 +63,10 @@ export class CreatePetDto {
     description: 'Thực phẩm dị ứng',
   })
   allergies?: string;
+  @ApiProperty({
+    example: '',
+
+    description: '',
+  })
+  avatar_url?: string;
 }
