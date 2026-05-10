@@ -2,6 +2,8 @@ import { Injectable, NotFoundException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
+import { UpdatePetDto } from './dto/update-pet.dto';
+import { CreatePetDto } from './dto/create-pet.dto';
 
 @Injectable()
 export class PetsService {
@@ -11,22 +13,22 @@ export class PetsService {
   ) {}
 
   async create(
-    createPetDto: Partial<Pet>,
+    createPetDto: CreatePetDto,
     ownerId: number,
     imageUrl?: string,
   ): Promise<Pet> {
-    const createData = { ...createPetDto };
+    // const createData = { ...createPetDto };
 
     if (imageUrl) {
-      createData.avatar_url = imageUrl;
+      createPetDto.avatar_url = imageUrl;
     }
 
-    if (typeof createData.neutered === 'string') {
-      createData.neutered = createData.neutered === 'true';
+    if (typeof createPetDto.neutered === 'string') {
+      createPetDto.neutered = createPetDto.neutered === 'true';
     }
 
     const newPet = this.petRepository.create({
-      ...createData,
+      ...createPetDto,
       owner_id: ownerId,
     });
 
@@ -64,24 +66,24 @@ export class PetsService {
 
   async update(
     petId: number,
-    data: Partial<Pet>,
+    data: UpdatePetDto,
     imageUrl?: string,
   ): Promise<Pet> {
     const pet = await this.findOne(petId);
 
-    const updateData: any = { ...data };
+    // const updateData: any = { ...data };
 
     if (imageUrl) {
-      updateData.avatar_url = imageUrl;
+      data.avatar_url = imageUrl;
     }
 
-    if (typeof updateData.neutered === 'string') {
-      updateData.neutered = updateData.neutered === 'true';
+    if (typeof data.neutered === 'string') {
+      data.neutered = data.neutered === 'true';
     }
 
     const updatedPet = await this.petRepository.preload({
       id: petId,
-      ...updateData,
+      ...data,
     });
 
     if (!updatedPet)

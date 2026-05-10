@@ -21,6 +21,12 @@ export class UpdatePetDto {
     description: 'Giới tính của thú cưng',
   })
   gender!: string;
+  @ApiProperty({
+    example: '',
+
+    description: '',
+  })
+  avatar_url?: string;
 
   @ApiProperty({
     example: '2020-06-28',

@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CommonButton from "@/app/shared/components/CommonButton";
 import PetAvatar from "../components/PetAvatar";
 import React, { useEffect, useState } from "react";
@@ -12,20 +7,34 @@ import HeaderBar from "@/app/shared/components/HeaderBar";
 import BasicInfoCard from "../components/BasicInfoCard";
 import { Pet } from "../types/Pet";
 import HealthInfoCard from "../components/HealthInfoCard";
-import { getPetById, updatePetProfile } from "../services/PetApi";
+import * as FileSystem from "expo-file-system";
+import {
+  getPetById,
+  updatePetProfile,
+  getAllBreed,
+  updatePet,
+} from "../services/PetApi";
 import * as ImagePicker from "expo-image-picker";
 import CommonMessage from "@/app/shared/components/CommonMessage";
+import type { Breed } from "../types/Breed";
 
 export default function EditPetProfileScreen() {
   const { petId } = useLocalSearchParams<{ petId: string }>();
   const router = useRouter();
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
-  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [isNewAvatar, setIsNewAvatar] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
+  const [breeds, setBreeds] = useState<Breed[]>([]);
 
   useEffect(() => {
     const fetchPet = async () => {
       try {
+        const breedsData = await getAllBreed();
+        setBreeds(breedsData);
         if (!petId) return;
         const data = await getPetById(petId);
         setSelectedPet(data);
@@ -39,21 +48,14 @@ export default function EditPetProfileScreen() {
   }, [petId]);
 
   const handleChangeAvatar = async () => {
-    // xin quyền truy cập thư viện ảnh
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      setMessage({ type: "error", text: "Bạn cần cấp quyền truy cập ảnh!" });
-      return;
-    }
-
-    // mở thư viện ảnh
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setAvatarUri(result.assets[0].uri); // cập nhật ảnh mới
+      setAvatarUri(result.assets[0].uri);
+      setIsNewAvatar(true); // <--- ĐÁNH DẤU ĐÂY LÀ ẢNH MỚI
     }
   };
 
@@ -65,26 +67,51 @@ export default function EditPetProfileScreen() {
     try {
       if (!selectedPet) return;
 
-      const updatePet = await updatePetProfile(selectedPet.id, {
-        name: selectedPet.name,
-        species: selectedPet.species,
-        breed: selectedPet.breed,
-        gender: selectedPet.gender,
-        date_of_birth: selectedPet.date_of_birth,
-        weight: selectedPet.weight,
-        height: selectedPet.height,
-        neutered: selectedPet.neutered,
-        allergies: selectedPet.allergies
-      });
+      const allergiesValue = Array.isArray(selectedPet.allergies)
+        ? selectedPet.allergies.join(", ")
+        : selectedPet.allergies;
+      console.log("img: " + selectedPet.avatar_url);
 
-      setSelectedPet(updatePet);
-      setMessage({ type: "success", text: "Cập nhật hồ sơ thú cưng thành công!" });
+      // Tạo FormData
+      const formData = new FormData();
+      formData.append("name", selectedPet.name);
+      formData.append("species", selectedPet.species);
+      formData.append("breed_id", String(selectedPet.breed_id));
+      formData.append("gender", selectedPet.gender);
+      formData.append("date_of_birth", selectedPet.date_of_birth);
+      formData.append("weight", String(selectedPet.weight));
+      formData.append("height", String(selectedPet.height));
+      formData.append("neutered", String(selectedPet.neutered));
+      formData.append("allergies", allergiesValue ?? "");
+
+      if (avatarUri && isNewAvatar) {
+        const uriParts = avatarUri.split(".");
+        const fileExtension = uriParts[uriParts.length - 1].toLowerCase();
+
+        const fileToUpload = {
+          uri: avatarUri,
+          name: `avatar.${fileExtension}`, 
+          type: `image/${fileExtension === "jpg" ? "jpeg" : fileExtension}`, 
+        };
+
+        formData.append("file", fileToUpload as any);
+
+        console.log("Đã đóng gói file cho App:", fileToUpload);
+      }
+
+      const response = await updatePet(selectedPet.id, formData);
+      setIsNewAvatar(false);
+      setSelectedPet(response.data);
+      setMessage({
+        type: "success",
+        text: "Cập nhật hồ sơ thú cưng thành công!",
+      });
       router.push("/(tabs)/PetProfileScreen");
     } catch (error) {
       console.error("Không thể cập nhật pet:", error);
       setMessage({ type: "error", text: "Có lỗi xảy ra khi lưu thay đổi." });
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -98,18 +125,17 @@ export default function EditPetProfileScreen() {
           },
         ]}
       />
-    
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-
         {message && (
           <CommonMessage type={message.type} message={message.text} />
         )}
-        
+
         <PetAvatar
-          name= {selectedPet.name}
+          name={selectedPet.name}
           avatarUri={avatarUri || undefined}
           editable
           onChangeAvatar={handleChangeAvatar}
@@ -120,12 +146,10 @@ export default function EditPetProfileScreen() {
         <BasicInfoCard
           pet={selectedPet}
           setPet={setSelectedPet}
+          breeds={breeds}
         />
 
-        <HealthInfoCard 
-          pet={selectedPet}
-          setPet={setSelectedPet}
-        />
+        <HealthInfoCard pet={selectedPet} setPet={setSelectedPet} />
 
         <CommonButton
           title="Save Changes"

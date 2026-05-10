@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Pet } from "../types/Pet";
 import CommonButton from "../../../shared/components/CommonButton";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { Colors } from "../../../constants/Colors";
 
 type AllergyInputProps = {
@@ -16,12 +16,18 @@ function AllergyInput({ form, setForm }: AllergyInputProps) {
     if (currentAllergy.trim() !== "") {
       setForm((prev) => ({
         ...prev,
-        allergies: [...prev.allergies, currentAllergy.trim()],
+        allergies: [...(prev.allergies ?? []), currentAllergy.trim()],
       }));
       setCurrentAllergy("");
     }
   };
-  // console.log(form.allergies);
+
+  const removeAllergy = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      allergies: prev.allergies.filter((_, i) => i !== index),
+    }));
+  };
 
   return (
     <div style={styles.container}>
@@ -43,11 +49,17 @@ function AllergyInput({ form, setForm }: AllergyInputProps) {
         <CommonButton onClick={addAllergy} Icon={FaPlus} iconSize={16} />
       </div>
 
-      <ul style={styles.list}>
+      <div style={styles.list}>
         {(form.allergies ?? []).map((a, i) => (
-          <li key={i}>{a}</li>
+          <div key={i} style={styles.tag}>
+            <span style={styles.tagText}>{a}</span>
+            <FaTimes
+              style={styles.removeIcon}
+              onClick={() => removeAllergy(i)}
+            />
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
@@ -70,23 +82,33 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "500",
     padding: "0 10px",
     outline: "none",
-    display: "flex",
-    alignItems: "center",
     borderRadius: 8,
     height: 48,
-    paddingLeft: 12,
-    paddingRight: 12,
     borderColor: Colors.gray,
     borderWidth: 1.5,
     borderStyle: "solid",
   },
   list: {
     display: "flex",
+    flexWrap: "wrap",
     gap: "8px",
-    listStyle: "none",
-    padding: 0,
-    margin: 5,
-    color: Colors.text_secondary,
+    marginTop: 8,
+  },
+  tag: {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: Colors.secondary,
+    color: Colors.white,
+    padding: "6px 10px",
+    borderRadius: 16,
+    gap: "6px",
+  },
+  tagText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  removeIcon: {
+    cursor: "pointer",
   },
 };
 

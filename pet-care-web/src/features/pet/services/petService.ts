@@ -24,5 +24,9 @@ export const updatePet = async (payload: FormData, id: string) => {
 };
 
 export const createPet = async (payload: FormData) => {
-  return await api.post('/pets/create-pet', payload);
+  return await api.post('/pets/create-pet', payload,{
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }

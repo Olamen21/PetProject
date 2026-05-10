@@ -26,18 +26,24 @@ function PetBasicInfo({ form, setForm, breeds }: PetBasicInfoProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({
+          ...prev,
+          avatar_url: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+
+      setForm((prev: any) => ({
         ...prev,
-        avatar_url: reader.result as string, 
+        imageFile: file,
       }));
-    };
-    reader.readAsDataURL(file);
-  }
-};
+    }
+  };
 
   return (
     <div style={styles.sectionCard}>
@@ -48,7 +54,11 @@ function PetBasicInfo({ form, setForm, breeds }: PetBasicInfoProps) {
           onClick={() => fileInputRef.current?.click()}
         >
           {form.avatar_url ? (
-            <img src={form.avatar_url} alt="Avatar" style={styles.avatarImage} />
+            <img
+              src={form.avatar_url}
+              alt="Avatar"
+              style={styles.avatarImage}
+            />
           ) : (
             <>
               <FaCameraRetro size={24} />
