@@ -26,7 +26,6 @@ import { CreatePetDto } from './dto/create-pet.dto';
 import { Role } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
 import { Request } from 'express';
-import { UpdatePetDto } from './dto/update-pet.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 interface AuthenticatedRequest extends Request {

@@ -87,6 +87,21 @@ services:
       - redis
     networks:
       - pet-network 
+  
+  vaccine-service:
+    build: ./services/vaccine-service
+    env_file:
+      - .env
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./services/vaccine-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+      - redis
+    networks:
+      - pet-network 
 
 networks:
   pet-network:
