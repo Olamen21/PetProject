@@ -22,7 +22,7 @@ export class BreedController {
   constructor(private readonly breedService: BreedService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN || Role.VET)
+  @Roles(Role.ADMIN, Role.VET)
   @Post()
   async create(@Body() createBreedDto: CreateBreedDto) {
     return await this.breedService.create(createBreedDto);
