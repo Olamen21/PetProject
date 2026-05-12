@@ -46,6 +46,7 @@ export default function FilterMenu({
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 12,
+    paddingHorizontal: 15,
   },
   button: {
     paddingVertical: 8,

@@ -1,18 +1,18 @@
+import NutritionCard from "@/app/features/home/components/NutritionCard";
+import BottomNavBar from "@/app/shared/components/BottomNavBar";
+import CommonButton from "@/app/shared/components/CommonButton";
+import FilterMenu from "@/app/shared/components/FilterMenu";
+import { HeaderBar } from "@/app/shared/components/HeaderBar";
+import PetProfileCard from "@/app/shared/components/PetProfileCard";
+import { Ionicons } from "@expo/vector-icons";
 import {
+  ScrollView,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import { HeaderBar } from "@/app/shared/components/HeaderBar";
-import PetProfileCard from "@/app/features/home/components/PetProfileCard";
-import CommonButton from "@/app/shared/components/CommonButton";
-import { Ionicons } from "@expo/vector-icons";
-import FilterMenu from "@/app/shared/components/FilterMenu";
-import NutritionCard from "@/app/features/home/components/NutritionCard";
 import TipCard from "../components/TipCard";
-import BottomNavBar from "@/app/shared/components/BottomNavBar";
 
 export default function HomeScreen() {
   return (
