@@ -28,7 +28,7 @@ const PetProfileCard: React.FC<PetProfileCardProps> = ({
         <View style={styles.wrapperHeader}>
             <View style={styles.wrapperHeaderIcon}>
                 <Image
-                    source={require('../../../../assets/images/dogIcon.jpg')}
+                    source={require('../../../assets/images/dog_icon.png')}
                     style={styles.icon}
                     resizeMode="contain"
                 />

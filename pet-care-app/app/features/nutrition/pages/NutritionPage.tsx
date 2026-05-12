@@ -2,7 +2,6 @@ import { Colors } from "@/app/constants/Colors";
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import PetProfileCard from "../../home/components/PetProfileCard";
 
 export default function NutritionPage () {
     const [selected, setSelected] = useState<"mealLog" | "foodSuggestion">("mealLog");
