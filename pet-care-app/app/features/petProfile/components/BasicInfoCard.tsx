@@ -1,10 +1,10 @@
 import CommonSelectModal from "@/app/shared/components/CommonSelectModal";
 import CommonSelector from "@/app/shared/components/CommonSelector";
 import CommonTextInput from "@/app/shared/components/CommonTextInput";
-import { StyleSheet, Text, View } from "react-native";
-import { Pet } from "../types/Pet";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Pet } from "../../../shared/types/Pet";
 import type { Breed } from "../types/Breed";
 
 interface BasicInfoCardProps {

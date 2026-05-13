@@ -1,21 +1,19 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CommonButton from "@/app/shared/components/CommonButton";
-import PetAvatar from "../components/PetAvatar";
-import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
-import HeaderBar from "@/app/shared/components/HeaderBar";
-import BasicInfoCard from "../components/BasicInfoCard";
-import { Pet } from "../types/Pet";
-import HealthInfoCard from "../components/HealthInfoCard";
-import * as FileSystem from "expo-file-system";
-import {
-  getPetById,
-  updatePetProfile,
-  getAllBreed,
-  updatePet,
-} from "../services/PetApi";
-import * as ImagePicker from "expo-image-picker";
 import CommonMessage from "@/app/shared/components/CommonMessage";
+import HeaderBar from "@/app/shared/components/HeaderBar";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pet } from "../../../shared/types/Pet";
+import BasicInfoCard from "../components/BasicInfoCard";
+import HealthInfoCard from "../components/HealthInfoCard";
+import PetAvatar from "../components/PetAvatar";
+import {
+  getAllBreed,
+  getPetById,
+  updatePet
+} from "../services/PetApi";
 import type { Breed } from "../types/Breed";
 
 export default function EditPetProfileScreen() {

@@ -1,8 +1,8 @@
 import CommonSelectModal from "@/app/shared/components/CommonSelectModal";
 import CommonSelector from "@/app/shared/components/CommonSelector";
-import { StyleSheet, Text, View } from "react-native";
-import { Pet } from "../types/Pet";
 import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Pet } from "../../../shared/types/Pet";
 import AllergyInput from "./AllergyInput";
 
 interface HealthInfoCardProps {

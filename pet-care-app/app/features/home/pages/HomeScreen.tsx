@@ -1,10 +1,13 @@
 import NutritionCard from "@/app/features/home/components/NutritionCard";
+import AvatarSection from "@/app/shared/components/AvatarSection";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
 import FilterMenu from "@/app/shared/components/FilterMenu";
 import { HeaderBar } from "@/app/shared/components/HeaderBar";
-import PetProfileCard from "@/app/shared/components/PetProfileCard";
+import { getPetList } from "@/app/shared/services/CommonApi";
 import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -12,9 +15,52 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Pet } from "../../../shared/types/Pet";
+import { getProfile } from "../../user/services/userService";
 import TipCard from "../components/TipCard";
 
 export default function HomeScreen() {
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchPets = async () => {
+        try {
+          const data = await getPetList();
+          setPets(data);
+          if (data.length > 0) {
+            setSelectedPet(data[0]);
+          }
+        } catch (error) {
+          console.error("Không thể tải pets:", error);
+        }
+      };
+      fetchPets();
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfile = async () => {
+        try {
+          const data = await getProfile();
+          setUser(data);
+        } catch (error) {
+          console.error("Lỗi khi lấy profile:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProfile();
+
+      return () => {};
+    }, []),
+  );
+
   return (
     <View style={styles.container}>
       {/* Header Bar */}
@@ -28,17 +74,22 @@ export default function HomeScreen() {
             showDot: true,
           },
           { type: "ion", name: "notifications-outline", onPress: () => {} },
+          user?.avatar_url ?
           {
+            type: "image",
+            source: { uri: user.avatar_url },
+            onPress: () => {},
+          } : {
             type: "image",
             source: require("../../../../assets/images/avatarDefault.jpg"),
             onPress: () => {},
-          },
+          }
         ]}
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Pet Profile Card */}
-        <PetProfileCard name="Buddy" age="2 years" />
+        <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
 
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>

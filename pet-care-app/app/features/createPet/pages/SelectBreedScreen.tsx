@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CommonButton from "../../../shared/components/CommonButton";
 import CommonSelector from "@/app/shared/components/CommonSelector";
 import CommonSelectModal from "@/app/shared/components/CommonSelectModal";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import StepHeader from "../components/StepHeader";
+import { Breed } from "../../petProfile/types/Breed";
+import { getAllBreed } from "../../petProfile/services/PetApi";
 
 export default function SelectBreedScreen() {
   const { petName, petType } = useLocalSearchParams<{ 
@@ -14,20 +16,25 @@ export default function SelectBreedScreen() {
     petType: string 
   }>();
   const router = useRouter();
-
-  const [breed, setBreed] = useState("");
   const [showBreedModal, setShowBreedModal] = useState(false);
   const [showError, setShowError] = useState(false);
-  const breeds = [
-    "Golden Retriever",
-    "Labrador Retriever",
-    "Beagle",
-    "Pug",
-    "Cavalier King Charles Spaniel",
-    "Shih Tzu",
-    "French Bulldog",
-  ];
-  const isFormComplete = breed.trim() !== "" && petType !== null;
+  const [breeds, setBreeds] = useState<Breed[]>([]);
+  const [breedId, setBreedId] = useState<number | null>(null);
+  const [breedName, setBreedName] = useState("");
+  const isFormComplete = breedName.trim() !== "" && petType !== null;
+
+   useEffect(() => {
+    const fetchPet = async () => {
+      try {
+        const breedsData = await getAllBreed();
+        setBreeds(breedsData);
+      } catch (error) {
+        console.error("Không thể tải pet:", error);
+      }
+    };
+
+    fetchPet();
+  }, []);
 
   const handleContinue = () => {
     if (isFormComplete) {
@@ -36,7 +43,7 @@ export default function SelectBreedScreen() {
         params: { 
           petName,
           petType,
-          breed 
+          breedId 
         },
       });
     } else {
@@ -71,7 +78,7 @@ export default function SelectBreedScreen() {
         )}
         <Text style={styles.label}>Select breed</Text>
         <CommonSelector
-          value={breed}
+          value={breedName}
           placeholder="Enter your pet's breed"
           onPress={() => setShowBreedModal(true)}
         />
@@ -79,9 +86,13 @@ export default function SelectBreedScreen() {
         <CommonSelectModal
           visible={showBreedModal}
           onClose={() => setShowBreedModal(false)}
-          options={breeds}
-          selected={breed}
-          onSelect={setBreed}
+          options={breeds.map((b) => b.name)}
+          selected={breedName}
+          onSelect={(name) => {
+            setBreedName(name);
+            const breed = breeds.find(b => b.name === name);
+            setBreedId(breed?.id ?? null);
+          }}
           title="Select breed"
         />
         {showError && (
@@ -95,8 +106,8 @@ export default function SelectBreedScreen() {
       <CommonButton
         title="Continue"
         onPress={handleContinue}
-        backgroundColor={breed ? "#5A7863" : "#EBF4DD"}
-        textColor={breed ? "#fff" : "#000"}
+        backgroundColor={breedName ? "#5A7863" : "#EBF4DD"}
+        textColor={breedName ? "#fff" : "#000"}
         style={styles.button}
       />
     </View>
