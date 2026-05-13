@@ -15,6 +15,12 @@ export class CreateVaccineDto {
   vaccine_id!: number;
 
   @ApiProperty({
+    example: 1,
+    description: 'Mũi tiêm số mấy',
+  })
+  dose_number!: number;
+
+  @ApiProperty({
     example: '2024-06-15',
     description: 'Ngày hẹn tiêm (Định dạng YYYY-MM-DD)',
   })

@@ -2,9 +2,15 @@ import { Colors } from "@/app/constants/Colors";
 import CommonButton from "@/app/shared/components/CommonButton";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { Pet } from "../../../shared/types/Pet";
+
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function MedicalChoose () {
+export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
+  pets: Pet[];
+  selectedPet: Pet | null;
+   onSelectPet: (pet: Pet) => void;
+ }) {
     return (
         <View>
             <View style={styles.reminderCardHeader}>
@@ -23,7 +29,10 @@ export default function MedicalChoose () {
             <View style={styles.buttonContainer}>
                 <CommonButton
                     title="Vaccination"
-                    onPress={() => router.push("/(tabs)/VaccinationPage")}
+                    onPress={() => router.push({
+                        pathname: "/(tabs)/VaccinationPage",
+                        params: {petId: selectedPet?.id}
+                    })}
                     iconName="medkit-outline"
                     iconColor= {Colors.secondary}
                     backgroundColor= {Colors.white}

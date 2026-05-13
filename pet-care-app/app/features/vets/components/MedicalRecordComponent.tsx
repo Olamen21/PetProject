@@ -31,7 +31,7 @@ export default function MedicalRecordComponent () {
     return (
         <ScrollView style={{marginBottom: 100, marginTop: 20,}} showsVerticalScrollIndicator={false}>
             <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
-            <MedicalChoose />
+            <MedicalChoose pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet}/>
             <LastestRecordComponent />
         </ScrollView>
     )

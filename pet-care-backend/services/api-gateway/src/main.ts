@@ -69,6 +69,16 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(
+    '/vaccine-category',
+    createProxyMiddleware({
+      target: 'http://vaccine-service:3005',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/vaccine-category/',
+      },
+    }),
+  );
   await app.listen(3000);
   console.log('Gateway is running on port 3000');
 }
