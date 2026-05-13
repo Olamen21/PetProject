@@ -1,7 +1,7 @@
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import PetAvatar from "./PetAvatar";
 import { router } from "expo-router";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import PetAvatar from "../../features/petProfile/components/PetAvatar";
 import { Pet } from "../types/Pet";
 
 

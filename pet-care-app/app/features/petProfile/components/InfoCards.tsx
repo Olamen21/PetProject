@@ -1,17 +1,21 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Pet } from "../types/Pet";
+import { StyleSheet, Text, View } from "react-native";
+import { Pet } from "../../../shared/types/Pet";
+import { Breed } from "../types/Breed";
 
 interface InfoCardProps {
-  pet : Pet
+  pet : Pet;
+  breeds: Breed[];
 }
 
-export default function InfoCards({ pet }: InfoCardProps) {
+export default function InfoCards({ pet, breeds }: InfoCardProps) {
+  const breedName = breeds.find(b => b.id === pet.breed_id)?.name ?? "Unknown";
+
   return (
     <>
       <View style={styles.infoCardsRow}>
         <View style={styles.infoCard}>
           <Text style={styles.infoLabel}>Breed</Text>
-          <Text style={styles.infoValue}>{pet.breed}</Text>
+          <Text style={styles.infoValue}>{breedName}</Text>
         </View>
         <View style={styles.infoCard}>
           <Text style={styles.infoLabel}>Born On</Text>

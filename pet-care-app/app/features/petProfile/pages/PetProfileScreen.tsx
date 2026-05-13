@@ -1,18 +1,20 @@
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
+import CommonMessage from "@/app/shared/components/CommonMessage";
+import HeaderBar from "@/app/shared/components/HeaderBar";
+import { getPetList } from "@/app/shared/services/CommonApi";
+import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import AvatarSection from "../components/AvatarSection";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import AvatarSection from "../../../shared/components/AvatarSection";
+import { Pet } from "../../../shared/types/Pet";
 import HealthSection from "../components/HealthSection";
 import InfoCards from "../components/InfoCards";
 import PhotoCard from "../components/PhotoCard";
 import TasksSection from "../components/TasksSection";
-import HeaderBar from "@/app/shared/components/HeaderBar";
-import React, { useEffect, useState } from "react";
-import { Pet } from "../types/Pet";
-import { getPetList } from "../services/PetApi";
-import * as ImagePicker from "expo-image-picker";
-import CommonMessage from "@/app/shared/components/CommonMessage";
+import { getAllBreed } from "../services/PetApi";
+import { Breed } from "../types/Breed";
 
 export default function PetProfileScreen() {
   const router = useRouter();
@@ -20,12 +22,15 @@ export default function PetProfileScreen() {
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [breeds, setBreeds] = useState<Breed[]>([]);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchPets = async () => {
         try {
           const data = await getPetList();
+          const breeds = await getAllBreed();
+          setBreeds(breeds);
           setPets(data);
           if (data.length > 0) {
             setSelectedPet(data[0]);
@@ -108,8 +113,8 @@ export default function PetProfileScreen() {
         {message && (
           <CommonMessage type={message.type} message={message.text} />
         )}
-        <PhotoCard onAddPhoto={handleAddPhoto} photoUri={photoUri} />
-        <InfoCards pet={selectedPet} />
+        <PhotoCard onAddPhoto={handleAddPhoto} photoUri={selectedPet.avatar_url ? selectedPet.avatar_url : photoUri} />
+        <InfoCards pet={selectedPet} breeds={breeds}/>
         <CommonButton
           title="Complete your pet's profile"
           onPress={() => router.push({

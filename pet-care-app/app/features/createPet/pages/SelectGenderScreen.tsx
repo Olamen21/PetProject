@@ -9,10 +9,10 @@ import CommonMessage from "@/app/shared/components/CommonMessage";
 import StepHeader from "../components/StepHeader";
 
 export default function SelectGenderScreen() {
-  const { petName, petType, breed } = useLocalSearchParams<{ 
+  const { petName, petType, breedId } = useLocalSearchParams<{ 
       petName: string,
       petType: string,
-      breed: string 
+      breedId: string 
   }>();
   const router = useRouter();
 
@@ -30,7 +30,7 @@ export default function SelectGenderScreen() {
         params: { 
           petName,
           petType,
-          breed, 
+          breedId, 
           gender 
         },
       });

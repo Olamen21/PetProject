@@ -10,10 +10,10 @@ import StepHeader from "../components/StepHeader";
 import { createPet } from "../../petProfile/services/PetApi";
 
 export default function SelectBirthdayScreen() {
-  const { petName, petType, breed, gender } = useLocalSearchParams<{ 
+  const { petName, petType, breedId, gender } = useLocalSearchParams<{ 
         petName: string,
         petType: string,
-        breed: string,
+        breedId: string,
         gender: string, 
     }>();
   const router = useRouter();
@@ -27,7 +27,7 @@ export default function SelectBirthdayScreen() {
       const newPet = await createPet({
         name: petName,
         species: petType,
-        breed: breed,
+        breed_id: Number(breedId),
         gender: gender as "Male" | "Female",
         weight: 0,
         date_of_birth: birthday ? birthday.toISOString().split("T")[0] : "",

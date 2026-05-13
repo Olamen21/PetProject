@@ -1,7 +1,7 @@
 import axios from "axios";
-import { getToken } from "../../auth/services/AuthStorage";
-import { Pet } from "../types/Pet";
 import api from "../../../../api/axiosInstance";
+import { Pet } from "../../../shared/types/Pet";
+import { getToken } from "../../auth/services/AuthStorage";
 
 const API_PET_SERVICE = process.env.EXPO_PUBLIC_API_URL_PET_SERVICE; 
 
@@ -16,16 +16,6 @@ petApi.interceptors.request.use(async (config) => {
   }
   return config;
 });
-
-export const getPetList = async (): Promise<Pet[]> => {
-  try {
-    const res = await petApi.get(`/pets/pets`);
-    return res.data;
-  } catch (error) {
-    console.error("Lỗi khi gọi API pets:", error);
-    throw error;
-  }
-};
 
 export const getPetById = async (petId: string): Promise<Pet> => {
   try {
@@ -52,22 +42,6 @@ export const createPet = async (data: Omit<Pet, "id" >): Promise<Pet> => {
 };
 
 
-export const updatePetProfile = async (
-  petId: number,
-  data: Partial<Pet> 
-): Promise<Pet> => {
-  try {
-    const res = await petApi.patch(`/pets/${petId}`, data);
-    return res.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error("API error:", error.response.status, error.response.data);
-    } else {
-      console.error("Network error:", error.message);
-    }
-    throw error;
-  }
-};
 export const updatePet = async (id: number, payload: FormData) => {
   return await api.patch("pets/" + id, payload, {
     headers: {
