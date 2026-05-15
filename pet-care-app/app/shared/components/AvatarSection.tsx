@@ -30,7 +30,7 @@ export default function AvatarSection({ pets, selectedPet, onSelectPet, }: {
 }
 
 const styles = StyleSheet.create({
-  avatarSection: { flexDirection: "row", alignItems: "center", gap: 16, marginHorizontal: 16, marginBottom: 20 },
+  avatarSection: { flexDirection: "row", alignItems: "center", gap: 16, marginHorizontal: 16, marginVertical: 10,},
   avatarWrapper: { alignItems: "center" },
   avatarCircle: { width: 90, height: 90, borderRadius: 45, backgroundColor: "#5A7863", justifyContent: "center", alignItems: "center", padding: 3, marginBottom: 8 },
   avatarInner: { width: "100%", height: "100%", borderRadius: 42, backgroundColor: "#fff", justifyContent: "center", alignItems: "center" },
