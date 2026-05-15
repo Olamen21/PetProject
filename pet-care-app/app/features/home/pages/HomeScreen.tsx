@@ -6,7 +6,7 @@ import FilterMenu from "@/app/shared/components/FilterMenu";
 import { HeaderBar } from "@/app/shared/components/HeaderBar";
 import { getPetList } from "@/app/shared/services/CommonApi";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
   ScrollView,
@@ -24,6 +24,7 @@ export default function HomeScreen() {
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -73,7 +74,7 @@ export default function HomeScreen() {
             onPress: () => {},
             showDot: true,
           },
-          { type: "ion", name: "notifications-outline", onPress: () => {} },
+          { type: "ion", name: "notifications-outline", onPress: () => router.push("/(tabs)/NotificationPage"), },
           user?.avatar_url ?
           {
             type: "image",
