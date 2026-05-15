@@ -110,6 +110,7 @@ export default function Vaccination() {
           treatment="Rabies 1ml"
           dose="1 dose"
           time="9:00"
+          task="Meal"
         />
 
         {/* Ongoing vaccine */}
