@@ -1,5 +1,5 @@
 import { Colors } from "../../constants/Colors";
-import React, { useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { key: "pet", label: "Pet profile", icon: "paw-outline", route: "/PetProfileScreen" },
   { key: "nutrition", label: "Nutrition", icon: "fast-food-outline", route: "/NutritionPage" },
   { key: "health", label: "Vets", icon: "medkit-outline", route: "/VetPage" },
-  { key: "calendar", label: "Reminder", icon: "calendar-outline", route: "/reminder" },
+  { key: "calendar", label: "Reminder", icon: "calendar-outline", route: "/ReminderScreen" },
     { key: "profile", label: "Profile", icon: "person-outline", route: "/ProfileScreen" },
 
 ];

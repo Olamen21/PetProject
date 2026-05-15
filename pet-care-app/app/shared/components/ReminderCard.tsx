@@ -3,20 +3,38 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/app/constants/Colors"; 
 
-type ReminderCardProps = {
+export type ReminderCardProps = {
   petName: string;
   treatment: string;
   dose: string;
   time: string;
+  task: "Meal" | "Vitamin" | "Pill" | "Drop" | "Vaccine" | "Appointment" | "Beauty" | "Activity";
 };
 
-export const ReminderCard: React.FC<ReminderCardProps> = ({ petName, treatment, dose, time }) => {
+const taskIcons: Record<ReminderCardProps["task"], string> = {
+  "Meal": "fast-food-outline",
+  "Vitamin": "nutrition-outline",
+  "Pill": "medkit-outline",
+  "Drop": "water-outline",
+  "Vaccine" : "bandage-outline",
+  "Appointment" : "calendar-outline",
+  "Beauty" : "flower-outline",
+  "Activity" : "walk-outline",
+};
+
+export const ReminderCard: React.FC<ReminderCardProps> = ({ 
+  petName, 
+  treatment, 
+  dose, 
+  time,
+  task }) => {
+    const icon = taskIcons[task];
     const [checked, setChecked] = useState(false);
     return (
         <View style={styles.card}>
             {/* Icon bên trái */}
             <View style={styles.iconBox}>
-                <Ionicons name="medkit-outline" size={24} color={Colors.primary} />
+                <Ionicons name= {icon as any} size={24} color={Colors.black} />
             </View>
 
             {/* Nội dung chính */}
