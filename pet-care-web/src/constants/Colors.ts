@@ -28,4 +28,5 @@ export const Colors = {
   red: "#ff1900",
   black:"#000000",
   pink_light: "#ffb6c1",
+  purple: "#9C27B0",
 };

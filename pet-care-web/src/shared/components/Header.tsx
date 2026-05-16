@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaBars, FaBell, FaCog, FaSearch } from "react-icons/fa";
+import { FaBars, FaSearch } from "react-icons/fa";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { HiOutlineCog6Tooth } from "react-icons/hi2";
 import CommonButton from "./CommonButton";
