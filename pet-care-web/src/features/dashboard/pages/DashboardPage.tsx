@@ -10,10 +10,16 @@ import { Colors } from '../../../constants/Colors';
 import DailyRevenueCard from '../components/DailyRevenueCard';
 import PaymentsHistory from '../components/PaymentHistoryCard';
 import UpcomingAppointments from '../components/UpcomingAppointments';
+import { useState } from 'react';
+import SettingItem from '../../../shared/components/SettingItem';
+import NotificationItem from '../../../shared/components/NotificationItem';
 
 function DashboardPage() {
+  const [openSettings, setOpenSettings] = useState(false);
+  const [openNotifications, setOpenNotification] = useState(false);
+  
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", position: "relative" }}>
       <Sidebar />
       <main style={{ flex: 1, padding: "20px" }}>
         <Header
@@ -24,9 +30,12 @@ function DashboardPage() {
           }}
           onToggleMenu={() => console.log("Toggle menu")}
           onSearch={(q) => console.log("Search:", q)}
-          onOpenNotifications={() => console.log("Notifications")}
-          onOpenSettings={() => console.log("Settings")}
+          onOpenNotifications={() => setOpenNotification(!openNotifications)}
+          onOpenSettings={() => setOpenSettings(!openSettings)}
         />
+
+        {openSettings && <SettingItem />}
+        {openNotifications && <NotificationItem />}
 
         {/* Nội dung chính của Dashboard */}
         <div style={styles.row}>
