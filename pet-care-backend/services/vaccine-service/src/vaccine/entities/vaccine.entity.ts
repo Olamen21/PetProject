@@ -20,6 +20,9 @@ export class PetVaccination {
   @Column()
   dose_number!: number;
 
+  @Column()
+  vaccine_id!: number;
+
   @ManyToOne(() => VaccineCategory, (item) => item.vaccinations)
   @JoinColumn({ name: 'vaccine_id' })
   vaccine!: VaccineCategory;

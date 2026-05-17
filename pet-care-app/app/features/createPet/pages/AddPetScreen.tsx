@@ -17,7 +17,7 @@ import CommonTextInput from "@/app/shared/components/CommonTextInput";
 export default function AddPetScreen() {
   const router = useRouter();
   const [petName, setPetName] = useState("");
-  const [petType, setPetType] = useState<"dog" | "cat" | null>(null);
+  const [petType, setPetType] = useState<"Dog" | "Cat" | null>(null);
   const [showError, setShowError] = useState(false);
 
   const isFormComplete = petName.trim() !== "" && petType !== null;
@@ -71,9 +71,9 @@ export default function AddPetScreen() {
           <TouchableOpacity
             style={[
               styles.typeCircle,
-              petType === "dog" && styles.typeSelected,
+              petType === "Dog" && styles.typeSelected,
             ]}
-            onPress={() => setPetType("dog")}
+            onPress={() => setPetType("Dog")}
           >
             <Image
               source={require("../../../../assets/images/dog_icon.png")}
@@ -84,9 +84,9 @@ export default function AddPetScreen() {
           <TouchableOpacity
             style={[
               styles.typeCircle,
-              petType === "cat" && styles.typeSelected,
+              petType === "Cat" && styles.typeSelected,
             ]}
-            onPress={() => setPetType("cat")}
+            onPress={() => setPetType("Cat")}
           >
             <Image
               source={require("../../../../assets/images/cat_icon.png")}

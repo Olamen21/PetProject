@@ -54,7 +54,7 @@ export default function AddVaccinationPage() {
         }
       };
       fetchPetProfile();
-    }, []),
+    }, [petId]),
   );
   const handleSubmit = async () => {
   if (!petId || !vaccine?.category_id || !scheduledDate) {

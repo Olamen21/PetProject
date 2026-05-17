@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   infoLabel: { fontSize: 12, color: "#A0AEC0", marginBottom: 6 },
-  infoValue: { fontSize: 15, color: "#2D3748", fontWeight: "600" },
+  infoValue: { fontSize: 14, color: "#2D3748", fontWeight: "600" },
 });

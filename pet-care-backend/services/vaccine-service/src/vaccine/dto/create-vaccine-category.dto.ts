@@ -12,4 +12,10 @@ export class VaccineCategoryDto {
     description: 'Loài thú cưng (Dog/Cat)',
   })
   target_species!: string;
+
+  @ApiProperty({
+    example: 100,
+    description: 'Số lượng vaccine có sẵn',
+  })
+  quantity!: number;
 }
