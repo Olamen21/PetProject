@@ -24,7 +24,7 @@ export default function SelectBirthdayScreen() {
 
   const handleCreatePet = async () => {
     try {
-      const newPet = await createPet({
+       await createPet({
         name: petName,
         species: petType,
         breed_id: Number(breedId),

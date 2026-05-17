@@ -14,7 +14,7 @@ type Dose = {
 type VaccinationScheduleCardProps = {
   title: string;      
   subtitle: string;    
-  nextDose: string;    
+  nextDose?: string;    
   doses: Dose[];
   onChangeSchedule?: () => void;
 };
@@ -45,16 +45,17 @@ export const VaccinationScheduleCard: React.FC<VaccinationScheduleCardProps> = (
             <Ionicons name="medkit-outline" size={16} color={Colors.black} />
             <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
-        <View style={styles.row}>
+        {nextDose && 
+          <View style={styles.row}>
             <Ionicons name="calendar-clear-outline" size={16} color={Colors.black} />
             <Text style={styles.nextDose}>Next dose: {nextDose}</Text>
-        </View>
-
-        <View style={styles.divider} />
+          </View>
+        }
 
       {/* Danh sách các mũi tiêm */}
       {expanded && (
         <>
+            <View style={styles.divider} />
             {doses.map((dose, index) => (
             <View key={index} style={styles.doseRow}>
                 <Text style={styles.doseLabel}>{dose.label}</Text>
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     marginHorizontal: 15,
-    marginBottom: 50
   },
   header: {
     flexDirection: "row",
