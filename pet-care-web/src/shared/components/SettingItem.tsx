@@ -14,13 +14,13 @@ const MenuItem: React.FC = () => {
             label: "Manage Account",
             icon: <IoPersonCircleOutline />,
             color: Colors.text_tag_blue,
-            onClick: () => console.log("Manage Account clicked"),
+            onClick: () => navigation.navigate("/profile"),
         },
         {
             label: "Change Password",
             icon: <IoKeyOutline />,
             color: Colors.red,
-            onClick: () => console.log("Change Password clicked"),
+            onClick: () => navigation.navigate("/change-password"),
         },
         {
             label: "Activity Log",
@@ -32,7 +32,7 @@ const MenuItem: React.FC = () => {
             label: "Log out",
             icon: <IoLogOutOutline />,
             color: Colors.error,
-            onClick: () => console.log("Log out clicked"),
+            onClick: () => navigation.navigate("/logout"),
         },
     ];
 

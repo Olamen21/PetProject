@@ -17,10 +17,37 @@ import NotificationItem from '../../../shared/components/NotificationItem';
 function DashboardPage() {
   const [openSettings, setOpenSettings] = useState(false);
   const [openNotifications, setOpenNotification] = useState(false);
+  const [openSidebar, setOpenSidebar] = useState(true);
+  const stats = [
+    {
+      title: "Total Patients",
+      value: 1548,
+      icon: <LiaUserInjuredSolid />,
+      iconBg: Colors.bg_tag_green,
+    },
+    {
+      title: "Consultations",
+      value: 448,
+      icon: <FaRegCommentAlt />,
+      iconBg: Colors.pink_light,
+    },
+    {
+      title: "Staff",
+      value: 848,
+      icon: <LiaUserNurseSolid />,
+      iconBg: Colors.bg_tag_warning,
+    },
+    {
+      title: "Total Rooms",
+      value: 3100,
+      icon: <PiHospital />,
+      iconBg: Colors.bg_tag_green,
+    },
+  ];
   
   return (
     <div style={{ display: "flex", position: "relative" }}>
-      <Sidebar />
+      {openSidebar && <Sidebar />}
       <main style={{ flex: 1, padding: "20px" }}>
         <Header
           user={{
@@ -28,7 +55,7 @@ function DashboardPage() {
             role: "ADMIN",
             avatarUrl: avatar,
           }}
-          onToggleMenu={() => console.log("Toggle menu")}
+          onToggleMenu={() => setOpenSidebar(!openSidebar)}
           onSearch={(q) => console.log("Search:", q)}
           onOpenNotifications={() => setOpenNotification(!openNotifications)}
           onOpenSettings={() => setOpenSettings(!openSettings)}
@@ -41,30 +68,15 @@ function DashboardPage() {
         <div style={styles.row}>
           <div style={styles.leftColumn}>
             <div style={styles.content}>
-              <StatCard
-                title="Total Patients"
-                value={1548}
-                icon={<LiaUserInjuredSolid />}
-                iconBg= {Colors.bg_tag_green}
-              />
-              <StatCard
-                title="Consultations"
-                value={448}
-                icon={<FaRegCommentAlt />}
-                iconBg={Colors.pink_light}
-              />
-              <StatCard
-                title="Staff"
-                value={848}
-                icon={<LiaUserNurseSolid />}
-                iconBg= {Colors.bg_tag_warning}
-              />
-              <StatCard
-                title="Total Rooms"
-                value={3100}
-                icon={<PiHospital />}
-                iconBg= {Colors.bg_tag_green}
-              />
+               {stats.map((item, idx) => (
+                <StatCard
+                  key={idx}
+                  title={item.title}
+                  value={item.value}
+                  icon={item.icon}
+                  iconBg={item.iconBg}
+                />
+              ))}
             </div>
             <div style={styles.content}>
               <DailyRevenueCard/>

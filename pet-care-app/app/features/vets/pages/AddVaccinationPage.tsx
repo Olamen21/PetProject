@@ -114,11 +114,6 @@ export default function AddVaccinationPage() {
           onDateChange={(newDate) => setScheduledDate(newDate)}
         />
 
-        <CommonToggle
-          label="Add to reminder"
-          initialValue={true}
-          onToggle={(value) => console.log("Toggle changed:", value)}
-        />
 
         {/* Description */}
         <View style={styles.descripSection}>
@@ -134,34 +129,6 @@ export default function AddVaccinationPage() {
             numberOfLines={4}
           />
         </View>
-
-        {/* Frequency */}
-        <View style={{ ...styles.reminderCardHeader, marginBottom: 10 }}>
-          <Text style={styles.textReminder}>Frequency</Text>
-        </View>
-        <FrequencyCard />
-
-        {/* Toggle */}
-        <CommonToggle
-          iconName="calendar-outline"
-          label="Time interval"
-          initialValue={true}
-          onToggle={(value) => console.log("Toggle changed:", value)}
-        />
-
-        <CommonToggle
-          iconName="pin-outline"
-          label="Pin to top"
-          initialValue={true}
-          onToggle={(value) => console.log("Toggle changed:", value)}
-        />
-
-        <CommonToggle
-          iconName="notifications-outline"
-          label="Notification"
-          initialValue={true}
-          onToggle={(value) => console.log("Toggle changed:", value)}
-        />
 
         <CommonButton
           title="Save"
@@ -193,6 +160,7 @@ const styles = StyleSheet.create({
   },
   descripSection: {
     marginHorizontal: 10,
+    marginBottom: 10,
   },
   textArea: {
     borderWidth: 1,

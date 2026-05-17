@@ -133,6 +133,41 @@ export default function Vaccination() {
           ]}
           onChangeSchedule={() => console.log("Change schedule pressed")}
         />
+
+        {/* Parvovirus Vaccines */}
+        <View style={styles.reminderCardHeader}>
+          <Text style={styles.textReminder}>Parvovirus Vaccines</Text>
+        </View>
+        <VaccinationScheduleCard
+          title="Rabies 1ml"
+          subtitle="All doses are completed"
+          doses={[
+            { label: "Dose 1:", date: "Aug 15, 2025", status: "done" },
+            { label: "Dose 2:", date: "Sep 15, 2025", status: "done" },
+            {
+              label: "Dose 3:",
+              date: "Oct 15, 2025",
+              time: "6:00",
+              status: "done",
+            },
+          ]}
+          onChangeSchedule={() => console.log("Change schedule pressed")}
+        />
+        <VaccinationScheduleCard
+          title="Rabies 1ml"
+          subtitle="All doses are completed"
+          doses={[
+            { label: "Dose 1:", date: "Aug 15, 2025", status: "done" },
+            { label: "Dose 2:", date: "Sep 15, 2025", status: "done" },
+            {
+              label: "Dose 3:",
+              date: "Oct 15, 2025",
+              time: "6:00",
+              status: "done",
+            },
+          ]}
+          onChangeSchedule={() => console.log("Change schedule pressed")}
+        />
       </ScrollView>
     </View>
   );
@@ -142,7 +177,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FAFAFA",
-    marginBottom: 10,
+    marginBottom: 50,
   },
   reminderCardHeader: {
     flexDirection: "row",
