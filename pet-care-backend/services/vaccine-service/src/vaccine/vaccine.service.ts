@@ -1,21 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PetVaccination } from './entities/vaccine.entity';
 import { Repository, In } from 'typeorm';
 import { VaccinationStatus } from './constants/enums';
+import { VaccineCategory } from './entities/vaccine-category.entity';
 @Injectable()
 export class VaccineService {
   constructor(
     @InjectRepository(PetVaccination)
     private readonly vaccineRepository: Repository<PetVaccination>,
+    @InjectRepository(VaccineCategory)
+    private readonly categoryRepository: Repository<VaccineCategory>,
   ) {}
-  create(createVaccineDto: CreateVaccineDto): Promise<PetVaccination> {
+  async create(createVaccineDto: CreateVaccineDto): Promise<PetVaccination> {
     const newVaccine = this.vaccineRepository.create({
       ...createVaccineDto,
       status: VaccinationStatus.PENDING,
     });
-    return this.vaccineRepository.save(newVaccine);
+    return await this.vaccineRepository.save(newVaccine);
   }
 
   async findAll() {
@@ -57,14 +64,12 @@ export class VaccineService {
   }
 
   async updateStatus(id: number, status: VaccinationStatus) {
-    const record = await this.findOne(id);
-
-    const updateData: any = { status };
     if (status === VaccinationStatus.COMPLETED) {
-      updateData.administered_date = new Date();
+      return this.markComplete(id);
     }
 
-    await this.vaccineRepository.update(id, updateData);
+    const record = await this.findOne(id);
+    await this.vaccineRepository.update(id, { status });
     return this.findOne(id);
   }
 
@@ -77,5 +82,40 @@ export class VaccineService {
       .where('scheduled_date < :today', { today })
       .andWhere('status = :status', { status: VaccinationStatus.PENDING })
       .execute();
+  }
+
+  async markComplete(id: number) {
+    const record = await this.findOne(id);
+
+    if (record.status === VaccinationStatus.COMPLETED) {
+      throw new BadRequestException(
+        'Lịch tiêm này đã được xác nhận hoàn thành trước đó!',
+      );
+    }
+
+    const category = record.vaccine;
+
+    if (!category) {
+      throw new NotFoundException(
+        'Không tìm thấy thông tin danh mục của loại vaccine này',
+      );
+    }
+
+    if (category.quantity <= 0) {
+      throw new BadRequestException(
+        `Vaccine "${category.name}" trong kho đã hết!`,
+      );
+    }
+
+    await this.categoryRepository.update(category.id, {
+      quantity: category.quantity - 1,
+    });
+
+    await this.vaccineRepository.update(id, {
+      status: VaccinationStatus.COMPLETED,
+      administered_date: new Date(),
+    });
+
+    return this.findOne(id);
   }
 }

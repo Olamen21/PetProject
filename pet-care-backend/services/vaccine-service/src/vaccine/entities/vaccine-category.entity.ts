@@ -12,6 +12,9 @@ export class VaccineCategory {
   @Column()
   target_species!: string;
 
+  @Column({ type: 'int', default: 0 })
+  quantity!: number;
+
   @OneToMany(() => PetVaccination, (v) => v.vaccine)
   vaccinations!: PetVaccination[];
 }

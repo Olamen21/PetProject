@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
   },
-  photoIconContainer: { position: "relative", marginBottom: 20 },
+  photoIconContainer: { position: "relative", marginBottom: 0 },
   petPhoto: {
-    width: 120,
-    height: 120,
+    width: 310,
+    height: 200,
     borderRadius: 8,
     resizeMode: "cover",
   },

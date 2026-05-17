@@ -96,7 +96,7 @@ export class UsersController {
   }
 
   @Get('all-users')
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.VET)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Lấy danh sách tất cả người dùng (Chỉ Admin)' })
   findAll() {

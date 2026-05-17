@@ -11,6 +11,7 @@ export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
   selectedPet: Pet | null;
    onSelectPet: (pet: Pet) => void;
  }) {
+    
     return (
         <View>
             <View style={styles.reminderCardHeader}>

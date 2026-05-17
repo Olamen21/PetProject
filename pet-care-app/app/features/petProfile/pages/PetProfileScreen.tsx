@@ -13,7 +13,7 @@ import HealthSection from "../components/HealthSection";
 import InfoCards from "../components/InfoCards";
 import PhotoCard from "../components/PhotoCard";
 import TasksSection from "../components/TasksSection";
-import { getAllBreed } from "../services/PetApi";
+import { getAllBreed, updatePet } from "../services/PetApi";
 import { Breed } from "../types/Breed";
 
 export default function PetProfileScreen() {
@@ -21,7 +21,12 @@ export default function PetProfileScreen() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
-  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [isNewAvatar, setIsNewAvatar] = useState(false);
+
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
   const [breeds, setBreeds] = useState<Breed[]>([]);
 
   useFocusEffect(
@@ -40,18 +45,22 @@ export default function PetProfileScreen() {
         }
       };
       fetchPets();
-    }, [])
+    }, []),
   );
 
   const handleAddPhoto = async () => {
-    // xin quyền truy cập thư viện ảnh
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!selectedPet) {
+      setMessage({ type: "error", text: "Chưa chọn thú cưng để cập nhật!" });
+      return;
+    }
+
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       setMessage({ type: "error", text: "Bạn cần cấp quyền truy cập ảnh!" });
       return;
     }
 
-    // mở thư viện ảnh
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -59,7 +68,37 @@ export default function PetProfileScreen() {
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-      setPhotoUri(uri); 
+      setPhotoUri(uri);
+      setIsNewAvatar(true);
+
+      const uriParts = uri.split(".");
+      const fileExtension = uriParts[uriParts.length - 1].toLowerCase();
+
+      const fileToUpload = {
+        uri,
+        name: `photo.${fileExtension}`,
+        type: `image/${fileExtension === "jpg" ? "jpeg" : fileExtension}`,
+      };
+
+      const formData = new FormData();
+      formData.append("file", fileToUpload as any);
+
+      try {
+        const response = await updatePet(selectedPet.id, formData);
+        setIsNewAvatar(false);
+        setSelectedPet(response.data);
+        setMessage({
+          type: "success",
+          text: "Cập nhật hồ sơ thú cưng thành công!",
+        });
+        const updatedPets = await getPetList();
+        setPets(updatedPets);
+        const updatedPet = updatedPets.find((p) => p.id === selectedPet.id);
+        if (updatedPet) setSelectedPet(updatedPet);
+      } catch (error) {
+        console.error(error);
+        setMessage({ type: "error", text: "Có lỗi khi cập nhật thú cưng!" });
+      }
     }
   };
 
@@ -73,7 +112,11 @@ export default function PetProfileScreen() {
           showsVerticalScrollIndicator={false}
           style={styles.scrollView}
         >
-          <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+          <AvatarSection
+            pets={pets}
+            selectedPet={selectedPet}
+            onSelectPet={setSelectedPet}
+          />
           {message && (
             <CommonMessage type={message.type} message={message.text} />
           )}
@@ -98,7 +141,6 @@ export default function PetProfileScreen() {
     );
   }
 
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -109,18 +151,27 @@ export default function PetProfileScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
-        <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+        <AvatarSection
+          pets={pets}
+          selectedPet={selectedPet}
+          onSelectPet={setSelectedPet}
+        />
         {message && (
           <CommonMessage type={message.type} message={message.text} />
         )}
-        <PhotoCard onAddPhoto={handleAddPhoto} photoUri={selectedPet.avatar_url ? selectedPet.avatar_url : photoUri} />
-        <InfoCards pet={selectedPet} breeds={breeds}/>
+        <PhotoCard
+          onAddPhoto={handleAddPhoto}
+          photoUri={selectedPet.avatar_url ? selectedPet.avatar_url : photoUri}
+        />
+        <InfoCards pet={selectedPet} breeds={breeds} />
         <CommonButton
           title="Complete your pet's profile"
-          onPress={() => router.push({
-            pathname: "/(tabs)/EditPetProfileScreen",
-            params: { petId: selectedPet.id },
-          })}
+          onPress={() =>
+            router.push({
+              pathname: "/(tabs)/EditPetProfileScreen",
+              params: { petId: selectedPet.id },
+            })
+          }
           iconName="clipboard-outline"
           iconColor="#fff"
           backgroundColor="#5A7863"
