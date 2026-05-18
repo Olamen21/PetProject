@@ -8,9 +8,9 @@ import {
   FaUser,
   FaCog,
   FaUsers,
-  FaChartBar,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { MdOutlineVaccines } from "react-icons/md";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
 import { getProfile } from "../../api/UserApi";
@@ -43,12 +43,6 @@ const MENU_CONFIG = [
     icon: <FaUsers />,
     roles: ["ADMIN"],
   },
-  {
-    title: "Revenue",
-    path: "/admin/revenue",
-    icon: <FaChartBar />,
-    roles: ["ADMIN"],
-  },
 
   { title: "CLINICAL", isTitle: true, roles: ["VET", "ADMIN"] },
   {
@@ -56,6 +50,12 @@ const MENU_CONFIG = [
     path: "/diagnosis",
     icon: <FaStethoscope />,
     roles: ["VET"],
+  },
+  {
+    title: "Vaccines",
+    path: "/vaccines",
+    icon: <MdOutlineVaccines />,
+    roles: ["VET", "ADMIN"],
   },
 
   { title: "ACCOUNT", isTitle: true },

@@ -9,7 +9,7 @@ type Props = {
   iconColor?: string;
   placeholder: string;
   value: string;
-  onChangeText: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeText?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   secureTextEntry?: boolean;
   rightIcon?: React.ReactNode;
   containerStyle?: React.CSSProperties;
