@@ -37,4 +37,13 @@ export class VaccineCategoryService {
     const vaccineCategory = await this.findOne(id);
     await this.vaccineCategoryRepository.remove(vaccineCategory);
   }
+
+  async update(
+    id: number,
+    updateVaccineCategoryDto: VaccineCategoryDto,
+  ): Promise<VaccineCategory> {
+    const vaccineCategory = await this.findOne(id);
+    Object.assign(vaccineCategory, updateVaccineCategoryDto);
+    return await this.vaccineCategoryRepository.save(vaccineCategory);
+  }
 }

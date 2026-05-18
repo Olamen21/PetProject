@@ -18,6 +18,21 @@ export class VaccineService {
     private readonly categoryRepository: Repository<VaccineCategory>,
   ) {}
   async create(createVaccineDto: CreateVaccineDto): Promise<PetVaccination> {
+    const category = await this.categoryRepository.findOne({
+      where: { id: createVaccineDto.vaccine_id },
+    });
+    if (!category) {
+      throw new NotFoundException('Không tìm thấy loại vaccine này');
+    }
+    if (category.quantity <= 0) {
+      throw new BadRequestException(
+        `Vaccine "${category.name}" trong kho đã hết!`,
+      );
+    }
+
+    await this.categoryRepository.update(category.id, {
+      quantity: category.quantity - 1,
+    });
     const newVaccine = this.vaccineRepository.create({
       ...createVaccineDto,
       status: VaccinationStatus.PENDING,
@@ -64,11 +79,24 @@ export class VaccineService {
   }
 
   async updateStatus(id: number, status: VaccinationStatus) {
+    const record = await this.findOne(id);
     if (status === VaccinationStatus.COMPLETED) {
       return this.markComplete(id);
     }
+    if (
+      record.status === VaccinationStatus.PENDING &&
+      (status === VaccinationStatus.CANCELLED ||
+        status === VaccinationStatus.OVERDUE)
+    ) {
+      const category = record.vaccine;
 
-    const record = await this.findOne(id);
+      if (category) {
+        await this.categoryRepository.update(category.id, {
+          quantity: category.quantity + 1,
+        });
+      }
+    }
+
     await this.vaccineRepository.update(id, { status });
     return this.findOne(id);
   }
@@ -92,24 +120,6 @@ export class VaccineService {
         'Lịch tiêm này đã được xác nhận hoàn thành trước đó!',
       );
     }
-
-    const category = record.vaccine;
-
-    if (!category) {
-      throw new NotFoundException(
-        'Không tìm thấy thông tin danh mục của loại vaccine này',
-      );
-    }
-
-    if (category.quantity <= 0) {
-      throw new BadRequestException(
-        `Vaccine "${category.name}" trong kho đã hết!`,
-      );
-    }
-
-    await this.categoryRepository.update(category.id, {
-      quantity: category.quantity - 1,
-    });
 
     await this.vaccineRepository.update(id, {
       status: VaccinationStatus.COMPLETED,

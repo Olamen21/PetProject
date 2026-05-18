@@ -24,9 +24,9 @@ function VaccineInfo({form, setForm} : VaccineInfoProps) {
           </div>
           <div style={styles.row}>
             <CommonTextInput 
-              placeholder="Quatity"
-              value={form.quatity?.toString() ?? ""}
-              onChangeText={(e) => setForm({...form, quatity: Number(e.target.value)})}
+              placeholder="Quantity"
+              value={form.quantity?.toString() ?? ""}
+              onChangeText={(e) => setForm({...form, quantity: Number(e.target.value)})}
             />
           </div>
 
