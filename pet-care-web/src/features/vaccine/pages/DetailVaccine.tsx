@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { Vaccine } from "../types/Vaccine";
-import { mockVaccines } from "../data/MockData";
 import { Colors } from "../../../constants/Colors";
 import Sidebar from "../../../shared/components/Sidebar";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
 import { MdOutlineVaccines } from "react-icons/md";
 import { LuDog } from "react-icons/lu";
+import { getVaccineById } from "../services/vaccineService";
 
 function DetailVaccine() {
     const {id} = useParams<{ id: string}>();
 
     const [form, setForm] = useState<Vaccine>({
         name: "",
-        quatity: 0,
+        quantity: 0,
         target_species: "",
     });
 
     useEffect(() => {
         if(id) {
-            const found = mockVaccines.find((v) => v.id === id);
-            if (found) {
-                setForm(found);
-            }     
+            getVaccineById(id).then((vaccines) => {
+                setForm(vaccines);
+            });
         }
     }, [id]);
 
@@ -42,8 +41,8 @@ function DetailVaccine() {
                     </div>
                     <div style={styles.row}>
                         <CommonTextInput 
-                            placeholder="Quatity"
-                            value={form.quatity?.toString() ?? ""}
+                            placeholder="Quantity"
+                            value={form.quantity?.toString() ?? ""}
                         />
                     </div>
 

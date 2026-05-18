@@ -7,6 +7,7 @@ import {
   Get,
   Delete,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -44,5 +45,17 @@ export class VaccineCategoryController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.vaccineCategoryService.remove(+id);
+  }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.VET)
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateVaccineCategoryDto: VaccineCategoryDto,
+  ) {
+    return await this.vaccineCategoryService.update(
+      +id,
+      updateVaccineCategoryDto,
+    );
   }
 }

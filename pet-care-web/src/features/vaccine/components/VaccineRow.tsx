@@ -2,25 +2,26 @@ import React from "react";
 import { FaTrashAlt, FaRegEdit, FaEye } from "react-icons/fa";
 import { Colors } from "../../../constants/Colors";
 import type { Vaccine } from "../types/Vaccine";
+import { deleteVaccine } from "../services/vaccineService";
 
-const VaccineRow: React.FC<{ vaccine: Vaccine }> = ({ vaccine }) => {
+const VaccineRow: React.FC<{ vaccine: Vaccine,  onDeleted: () => void }> = ({ vaccine, onDeleted }) => {
   const roleStyle = {
     padding: "4px 12px",
     borderRadius: "20px",
     fontSize: "14px",
     fontWeight: 600,
     background:
-            vaccine.target_species === "Dog"
-              ? Colors.bg_tag_orange
-              : vaccine.target_species === "Cat"
-                ? Colors.bg_tag_green
-                  : Colors.bg_tag_blue,
-          color:
-            vaccine.target_species === "Dog"
-              ? Colors.text_tag_orange
-                : vaccine.target_species === "Cat"
-                  ? Colors.text_tag_green
-                  : Colors.text_tag_blue,
+      vaccine.target_species === "Dog"
+        ? Colors.bg_tag_orange
+        : vaccine.target_species === "Cat"
+          ? Colors.bg_tag_green
+          : Colors.bg_tag_blue,
+    color:
+      vaccine.target_species === "Dog"
+        ? Colors.text_tag_orange
+        : vaccine.target_species === "Cat"
+          ? Colors.text_tag_green
+          : Colors.text_tag_blue,
   };
 
   const statusStyle = {
@@ -55,6 +56,23 @@ const VaccineRow: React.FC<{ vaccine: Vaccine }> = ({ vaccine }) => {
       transition: "0.2s",
     },
   };
+  const handleDelete = async () => {
+    try {
+      if (window.confirm("Bạn có chắc muốn xóa vaccine này?")) {
+        const res = await deleteVaccine(vaccine.id!);
+        if (res && (res.status === 200 || res.status === 201)) {
+          alert("Xóa thành công!");
+          onDeleted();
+        } else {
+          alert("Cập nhật thất bại, bạn hãy kiểm tra lại nhé!");
+        }
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa:", error);
+      alert("Xóa thất bại, bạn hãy thử lại nhé!");
+      return;
+    }
+  };
 
   return (
     <tr style={styles.row}>
@@ -62,18 +80,21 @@ const VaccineRow: React.FC<{ vaccine: Vaccine }> = ({ vaccine }) => {
       <td style={styles.cell}>
         <strong>{vaccine.name}</strong>
       </td>
-      <td style={styles.cell}>{vaccine.quatity}</td>
+      <td style={styles.cell}>{vaccine.quantity}</td>
       <td style={styles.cell}>
         <span style={styles.role}>{vaccine.target_species}</span>
       </td>
 
       <td style={styles.cell}>
-        <button style={{ ...styles.actionBtn, color: Colors.error }}>
+        <button
+          style={{ ...styles.actionBtn, color: Colors.error }}
+          onClick={handleDelete}
+        >
           <FaTrashAlt />
         </button>
       </td>
       <td style={styles.cell}>
-        <button 
+        <button
           style={{ ...styles.actionBtn, color: Colors.info }}
           onClick={() => navigation.navigate(`/edit-vaccine/${vaccine.id}`)}
         >
@@ -81,7 +102,7 @@ const VaccineRow: React.FC<{ vaccine: Vaccine }> = ({ vaccine }) => {
         </button>
       </td>
       <td style={styles.cell}>
-        <button 
+        <button
           style={{ ...styles.actionBtn, color: Colors.primary }}
           onClick={() => navigation.navigate(`/detail-vaccine/${vaccine.id}`)}
         >
