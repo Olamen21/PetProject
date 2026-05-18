@@ -14,6 +14,10 @@ import Logout from "./shared/components/Logout";
 import PetListPage from "./features/pet/pages/PetListPage";
 import NewPetPage from "./features/pet/pages/NewPetPage";
 import EditPetPage from "./features/pet/pages/EditPetPage";
+import VaccinePage from "./features/vaccine/pages/VaccinePage";
+import NewVaccinePage from "./features/vaccine/pages/NewVaccinePage";
+import EditVaccine from "./features/vaccine/pages/EditVaccine";
+import DetailVaccine from "./features/vaccine/pages/DetailVaccine";
 
 function App() {
   return (
@@ -47,6 +51,10 @@ function App() {
           <Route path="/pets" element={<PetListPage />} />
           <Route path="/new-pet" element={<NewPetPage/>}/>
           <Route path="/edit-pet/:id" element={<EditPetPage />}/>
+          <Route path="/vaccines" element={<VaccinePage />}/>
+          <Route path="/new-vaccine" element={<NewVaccinePage />} />
+          <Route path="/edit-vaccine/:id" element={<EditVaccine />} />
+          <Route path="/detail-vaccine/:id" element={<DetailVaccine />} />
       </Routes>
       </AuthProvider>
     </Router>
