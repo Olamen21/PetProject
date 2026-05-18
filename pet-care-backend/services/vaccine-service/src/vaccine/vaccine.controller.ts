@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -12,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { VaccineService } from './vaccine.service';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
-import { UpdateVaccineDto } from './dto/update-vaccine.dto';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -23,8 +21,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '../roles/role.enum';
 import { PetVaccination } from './entities/vaccine.entity';
-import { Request } from 'express';
-import { VaccinationStatus } from './constants/enums';
 
 @ApiTags('Vaccine')
 @ApiBearerAuth('token')

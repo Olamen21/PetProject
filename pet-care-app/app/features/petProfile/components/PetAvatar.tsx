@@ -8,15 +8,26 @@ interface PetAvatarProps {
   editable?: boolean;           
   onChangeAvatar?: () => void;  
   isSelected?: boolean;
+  species?: string;
 }
 
 export default function PetAvatar({ 
   name, 
   avatarUri,
+  species,
   editable = false, 
   onChangeAvatar,
   isSelected = true, 
 }: PetAvatarProps) {
+   const renderDefaultIcon = () => {
+    if (species === "Dog") {
+      return <MaterialCommunityIcons name="dog" size={40} color="#2D3748" />;
+    }
+    if (species === "Cat") {
+      return <MaterialCommunityIcons name="cat" size={40} color="#2D3748" />;
+    }
+    return <MaterialCommunityIcons name="paw" size={40} color="#2D3748" />;
+  };
   return (
     <View style={styles.avatarWrapper}>
       <View style={[
@@ -29,7 +40,7 @@ export default function PetAvatar({
           {avatarUri ? (
             <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
           ) : (
-            <MaterialCommunityIcons name="dog" size={40} color="#2D3748" />
+            renderDefaultIcon()
           )}
         </View>
 

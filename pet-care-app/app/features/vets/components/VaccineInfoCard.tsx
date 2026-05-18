@@ -21,27 +21,41 @@ export default function VaccineInfoCard({
   const [showVaccineModal, setShowVaccineModal] = useState(false);
   const [selectedVaccineCategory, setSelectedVaccineCategory] =
     useState<VaccineCategory | null>(null);
-  const [doseNumber, setDoseNumber] = useState(""); 
+  const [showDoseModal, setShowDoseModal] = useState(false);
+  const [doseOptions, setDoseOptions] = useState<string[]>([]);
 
-  const handleSelectVaccine = (name: string) => {
+ const handleSelectVaccine = (name: string) => {
     const found = vaccineCategory.find((v) => v.name === name);
     setSelectedVaccineCategory(found || null);
     setShowVaccineModal(false);
-    const num = doseNumber ? Number(doseNumber) : undefined;
-    setVaccine({
-      ...vaccine,
-      category_id: found?.id,
-      dose_number: num,
-    });
+
+    if (found) {
+      
+      if (found.max_doses === 1) {
+        setDoseOptions([]);
+        setVaccine({
+          ...vaccine,
+          category_id: found.id,
+          dose_number: 1,
+        });
+      } else {
+        const options = Array.from({ length: found.max_doses || 3 }, (_, i) => String(i + 1));
+        setDoseOptions(options);
+        setVaccine({
+          ...vaccine,
+          category_id: found.id,
+          dose_number: undefined,
+        });
+      }
+    }
   };
 
-  const handleDoseChange = (text: string) => {
-    const num = text ? Number(text) : undefined;
-    setDoseNumber(text);
+  const handleSelectDose = (dose: string) => {
+    setShowDoseModal(false);
     setVaccine({
       ...vaccine,
       category_id: selectedVaccineCategory?.id,
-      dose_number: num,
+      dose_number: Number(dose),
     });
   };
 
@@ -66,13 +80,28 @@ export default function VaccineInfoCard({
 
         <View style={[styles.input, styles.numberInput]}>
           <Text style={styles.label}>{"Number *"}</Text>
-          <CommonTextInput
-            placeholder="4"
-            value={doseNumber}
-            onChangeText={handleDoseChange}
-            backgroundColor={Colors.white}
-            bordered
+
+          <CommonSelector
+            value={vaccine?.dose_number ? String(vaccine.dose_number) : ""}
+            placeholder={
+              selectedVaccineCategory?.max_doses === 1 ? "1" : "Select"
+            }
+            disabled={
+              !selectedVaccineCategory ||
+              selectedVaccineCategory.max_doses === 1
+            }
+            onPress={() => setShowDoseModal(true)}
           />
+
+          {selectedVaccineCategory && selectedVaccineCategory.max_doses > 1 && (
+            <CommonSelectModal
+              visible={showDoseModal}
+              onClose={() => setShowDoseModal(false)}
+              options={doseOptions}
+              selected={vaccine?.dose_number ? String(vaccine.dose_number) : ""}
+              onSelect={handleSelectDose}
+            />
+          )}
         </View>
       </View>
     </View>

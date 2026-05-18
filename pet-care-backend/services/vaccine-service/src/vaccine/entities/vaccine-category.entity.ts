@@ -15,6 +15,9 @@ export class VaccineCategory {
   @Column({ type: 'int', default: 0 })
   quantity!: number;
 
+  @Column({ type: 'int', default: 1 })
+  max_doses!: number;
+
   @OneToMany(() => PetVaccination, (v) => v.vaccine)
   vaccinations!: PetVaccination[];
 }

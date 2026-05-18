@@ -1,67 +1,80 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "@/app/constants/Colors"; 
+import { Colors } from "@/app/constants/Colors";
 
 export type ReminderCardProps = {
   petName: string;
   treatment: string;
   dose: string;
   time: string;
-  task: "Meal" | "Vitamin" | "Pill" | "Drop" | "Vaccine" | "Appointment" | "Beauty" | "Activity";
+  task:
+    | "Meal"
+    | "Vitamin"
+    | "Pill"
+    | "Drop"
+    | "Vaccine"
+    | "Appointment"
+    | "Beauty"
+    | "Activity";
+  showCheckbox?: boolean;
 };
 
 const taskIcons: Record<ReminderCardProps["task"], string> = {
-  "Meal": "fast-food-outline",
-  "Vitamin": "nutrition-outline",
-  "Pill": "medkit-outline",
-  "Drop": "water-outline",
-  "Vaccine" : "bandage-outline",
-  "Appointment" : "calendar-outline",
-  "Beauty" : "flower-outline",
-  "Activity" : "walk-outline",
+  Meal: "fast-food-outline",
+  Vitamin: "nutrition-outline",
+  Pill: "medkit-outline",
+  Drop: "water-outline",
+  Vaccine: "bandage-outline",
+  Appointment: "calendar-outline",
+  Beauty: "flower-outline",
+  Activity: "walk-outline",
 };
 
-export const ReminderCard: React.FC<ReminderCardProps> = ({ 
-  petName, 
-  treatment, 
-  dose, 
+export const ReminderCard: React.FC<ReminderCardProps> = ({
+  petName,
+  treatment,
+  dose,
   time,
-  task }) => {
-    const icon = taskIcons[task];
-    const [checked, setChecked] = useState(false);
-    return (
-        <View style={styles.card}>
-            {/* Icon bên trái */}
-            <View style={styles.iconBox}>
-                <Ionicons name= {icon as any} size={24} color={Colors.black} />
-            </View>
+  task,
+  showCheckbox = true,
+}) => {
+  const icon = taskIcons[task];
+  const [checked, setChecked] = useState(false);
+  return (
+    <View style={styles.card}>
+      {/* Icon bên trái */}
+      <View style={styles.iconBox}>
+        <Ionicons name={icon as any} size={24} color={Colors.black} />
+      </View>
 
-            {/* Nội dung chính */}
-            <View style={styles.info}>
-                <Text style={styles.petName}>{petName}</Text>
-                <Text style={styles.treatment}>{treatment}</Text>
-                <Text style={styles.dose}>{dose}</Text>
-            </View>
+      {/* Nội dung chính */}
+      <View style={styles.info}>
+        <Text style={styles.petName}>{petName}</Text>
+        <Text style={styles.treatment}>{treatment}</Text>
+        <Text style={styles.dose}>{dose}</Text>
+      </View>
 
-            {/* Thời gian + checkbox */}
-            <View style={styles.rightSection}>
-                <Text style={styles.time}>{time}</Text>
-                <TouchableOpacity
-                    style={styles.checkbox}
-                    onPress={() => setChecked(!checked)}
-                >
-                    {checked && (
-                        <Ionicons
-                        name="checkmark-outline"
-                        size={26}
-                        color= {Colors.check}
-                        />
-                    )}
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+      {/* Thời gian + checkbox */}
+      <View style={styles.rightSection}>
+        <Text style={styles.time}>{time}</Text>
+        {showCheckbox && (
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={() => setChecked(!checked)}
+          >
+            {checked && (
+              <Ionicons
+                name="checkmark-outline"
+                size={26}
+                color={Colors.check}
+              />
+            )}
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

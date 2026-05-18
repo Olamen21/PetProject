@@ -15,23 +15,35 @@ function VaccineInfo({form, setForm} : VaccineInfoProps) {
         <div style={styles.sectionCard}>
           <div style={styles.sectionTitle}>Info vaccine</div>
           <div style={styles.row}>
+            
             <CommonTextInput 
               Icon={MdOutlineVaccines}
               placeholder="Vaccine's Name"
+              label="Vaccine's Name"
               value={form.name}
               onChangeText={(e) => setForm({...form, name: e.target.value})}
             />
           </div>
           <div style={styles.row}>
             <CommonTextInput 
+              label="Quantity"
               placeholder="Quantity"
               value={form.quantity?.toString() ?? ""}
               onChangeText={(e) => setForm({...form, quantity: Number(e.target.value)})}
             />
           </div>
+          <div style={styles.row}>
+            <CommonTextInput
+              label="Max Doses"
+              placeholder="Max Doses"
+              value={form.max_doses?.toString() ?? ""}
+              onChangeText={(e) => setForm({...form, max_doses: Number(e.target.value)})}
+            />
+          </div>
 
           <div style={styles.row}>
             <CommonSelectInput
+              label="Target Species"
               Icon={LuDog}
               placeholder="Species"
               value={form.target_species}

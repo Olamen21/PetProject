@@ -28,7 +28,7 @@ export default function AddVaccinationPage() {
   const [breeds, setBreeds] = useState<Breed[]>([]);
   const [vaccineCategory, setVaccineCategory] = useState<VaccineCategory[]>([]);
   const [vaccine, setVaccine] = useState<Vaccine | null>(null);
-  const [scheduledDate, setScheduledDate] = useState<Date>(new Date());
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -42,7 +42,7 @@ export default function AddVaccinationPage() {
           const allVaccines = await getAllVaccineCategory();
 
           const filteredVaccines = allVaccines.filter(
-            (v) => v.target_species === dataPet.species,
+            (v: any) => v.target_species === dataPet.species,
           );
 
           setVaccineCategory(filteredVaccines);
@@ -57,28 +57,45 @@ export default function AddVaccinationPage() {
     }, [petId]),
   );
   const handleSubmit = async () => {
-  if (!petId || !vaccine?.category_id || !scheduledDate) {
-    alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
-    return;
-  }
+    if (!petId || !vaccine?.category_id || !scheduledDate) {
+      alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
+      return;
+    }
+    if(scheduledDate < new Date()) {
+      alert("Ngày tiêm phải là ngày hiện tại hoặc tương lai!");
+      return;
+    }
 
-  try {
-    const formData = new FormData();
-    formData.append("pet_id", String(petId)); 
-    formData.append("vaccine_id", String(vaccine.category_id)); 
-    formData.append("dose_number", String(vaccine.dose_number))
-    formData.append("scheduled_date", scheduledDate instanceof Date ? scheduledDate.toISOString() : scheduledDate);
-    formData.append("note", description || ""); 
+    try {
+      const formData = new FormData();
+      formData.append("pet_id", String(petId));
+      formData.append("vaccine_id", String(vaccine.category_id));
+      formData.append("dose_number", String(vaccine.dose_number));
+      formData.append(
+        "scheduled_date",
+        scheduledDate instanceof Date
+          ? scheduledDate.toISOString()
+          : scheduledDate,
+      );
+      formData.append("note", description || "");
 
-    console.log("Đang gửi dữ liệu...");
-    await createVaccine(formData);
-    
-    alert("Tạo lịch tiêm thành công!");
-  } catch (error) {
-    console.error("Lỗi tạo vaccine:", error);
-    alert("Có lỗi xảy ra, vui lòng thử lại sau.");
-  }
-};
+      console.log("Đang gửi dữ liệu...");
+      await createVaccine(formData);
+
+      alert("Tạo lịch tiêm thành công!");
+      router.push("/(tabs)/VaccinationPage");
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        alert(error.response.data.message);
+      } else {
+        alert("Có lỗi kết nối xảy ra, vui lòng thử lại sau!");
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -109,11 +126,11 @@ export default function AddVaccinationPage() {
         <View style={styles.reminderCardHeader}>
           <Text style={styles.textReminder}>Select Date of each Vaccine</Text>
         </View>
-        <SelectDateVaccine
-          selectedDate={scheduledDate}
-          onDateChange={(newDate) => setScheduledDate(newDate)}
-        />
 
+        <SelectDateVaccine
+          selectedDate={new Date()}
+          onDateChange={(date) => setScheduledDate(date)}
+        />
 
         {/* Description */}
         <View style={styles.descripSection}>
@@ -157,6 +174,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: "#3B4953",
+    marginBottom: 10,
   },
   descripSection: {
     marginHorizontal: 10,

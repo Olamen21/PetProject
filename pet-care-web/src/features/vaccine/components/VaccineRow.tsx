@@ -84,7 +84,7 @@ const VaccineRow: React.FC<{ vaccine: Vaccine,  onDeleted: () => void }> = ({ va
       <td style={styles.cell}>
         <span style={styles.role}>{vaccine.target_species}</span>
       </td>
-
+      <td style={styles.cell}>{vaccine.max_doses}</td>
       <td style={styles.cell}>
         <button
           style={{ ...styles.actionBtn, color: Colors.error }}

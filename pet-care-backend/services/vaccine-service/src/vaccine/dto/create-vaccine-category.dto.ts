@@ -18,4 +18,10 @@ export class VaccineCategoryDto {
     description: 'Số lượng vaccine có sẵn',
   })
   quantity!: number;
+
+  @ApiProperty({
+    example: 3,
+    description: 'Số mũi tiêm tối đa cho loại vaccine này',
+  })
+  max_doses!: number;
 }

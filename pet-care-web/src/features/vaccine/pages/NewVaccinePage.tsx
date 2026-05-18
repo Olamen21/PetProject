@@ -15,10 +15,11 @@ function NewVaccinePage() {
     name: "",
     quantity: 0,
     target_species: "",
+    max_doses: 1,
   });
 
   const handleSubmit = async () => {
-    console.log("Đang tiến hành submit..." + form.name + " - " + form.quantity + " - " + form.target_species );
+    console.log("Đang tiến hành submit..." + form.name + " - " + form.quantity + " - " + form.target_species + " - " + form.max_doses);
     try {
       if (!form.name || !form.target_species) {
         alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
@@ -32,6 +33,7 @@ function NewVaccinePage() {
       dataForm.append("name", form.name);
       dataForm.append("quantity", String(form.quantity));
       dataForm.append("target_species", form.target_species);
+      dataForm.append("max_doses", String(form.max_doses));
       const res = await createVaccine(dataForm);
       if (res && (res.status === 200 || res.status === 201)) {
         alert("Tạo vaccine thành công!");
