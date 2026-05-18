@@ -37,9 +37,8 @@ export default function BasicInfoCard({
         {/* <Image source={{ uri: pet?.avatar_url ?? "" }} style={styles.image} /> */}
         <PetAvatar
           name={pet?.name ?? "Unknown"}
-          avatarUri={
-            pet?.avatar_url ?? "https://example.com/default-avatar.png"
-          }
+          avatarUri={pet?.avatar_url}
+          species={pet?.species}
         />
         {/* <Text style={styles.name}>{pet?.name}</Text> */}
       </View>
@@ -56,12 +55,10 @@ export default function BasicInfoCard({
                 : "Unknown"
             }
           />
-
-         
         </View>
 
         <View style={styles.row}>
-           <InfoRow icon="male-outline" label={pet?.gender ?? ""} />
+          <InfoRow icon="male-outline" label={pet?.gender ?? ""} />
           <InfoRow
             icon="scale-outline"
             label={pet?.weight ? `${pet.weight} kg` : "Unknown"}
@@ -70,7 +67,6 @@ export default function BasicInfoCard({
             icon="resize-outline"
             label={pet?.height ? `${pet.height} cm` : "Unknown"}
           />
-          
         </View>
 
         <View style={styles.vaccinRow}>

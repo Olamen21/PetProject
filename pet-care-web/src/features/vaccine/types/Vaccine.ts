@@ -3,4 +3,5 @@ export interface Vaccine {
     name: string;
     quantity: number;
     target_species: string;
+    max_doses: number;
 }

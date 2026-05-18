@@ -29,6 +29,11 @@ export class VaccineService {
         `Vaccine "${category.name}" trong kho đã hết!`,
       );
     }
+    if (createVaccineDto.dose_number > category.max_doses) {
+      throw new BadRequestException(
+        `Vaccine "${category.name}" chỉ có tối đa ${category.max_doses} mũi chính. Bạn không thể chọn mũi số ${createVaccineDto.dose_number}!`,
+      );
+    }
 
     await this.categoryRepository.update(category.id, {
       quantity: category.quantity - 1,

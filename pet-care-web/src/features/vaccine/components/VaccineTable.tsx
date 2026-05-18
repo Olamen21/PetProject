@@ -24,6 +24,7 @@ const VaccineTable: React.FC<{ vaccines: Vaccine[], onDeleted: () => void }> = (
             <th style={styles.headerCell}>Name</th>
             <th style={styles.headerCell}>Quantity</th>
             <th style={styles.headerCell}>Species</th>
+            <th style={styles.headerCell}>Max Doses</th>
             </tr>
         </thead>
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Vaccine } from "../types/Vaccine";
-import { mockVaccines } from "../data/MockData";
 import { Colors } from "../../../constants/Colors";
 import Sidebar from "../../../shared/components/Sidebar";
 import VaccineInfo from "../components/VaccineInfo";
@@ -17,6 +16,7 @@ function EditVaccine() {
     name: "",
     quantity: 0,
     target_species: "",
+    max_doses: 1,
   });
 
   useEffect(() => {
@@ -41,6 +41,7 @@ function EditVaccine() {
       dataForm.append("name", form.name);
       dataForm.append("quantity", String(form.quantity));
       dataForm.append("target_species", form.target_species);
+      dataForm.append("max_doses", String(form.max_doses));
 
       const res = await updateVaccine(dataForm, id!);
       if (res && (res.status === 200 || res.status === 201)) {

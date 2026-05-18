@@ -15,7 +15,11 @@ import { useCallback, useState } from "react";
 import { ReminderCard } from "@/app/shared/components/ReminderCard";
 import { VaccinationScheduleCard } from "../components/VaccinationScheduleCard";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { getPetById, getAllBreed } from "../services/vetService";
+import {
+  getPetById,
+  getAllBreed,
+  getVaccineByPetId,
+} from "../services/vetService";
 import { Pet } from "@/app/shared/types/Pet";
 import type { Breed } from "../types/Breed";
 
@@ -24,6 +28,7 @@ export default function Vaccination() {
   const { petId } = useLocalSearchParams<{ petId: string }>();
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [breeds, setBreeds] = useState<Breed[]>([]);
+  const [vaccinationSchedule, setVaccinationSchedule] = useState<any>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,6 +40,9 @@ export default function Vaccination() {
           setSelectedPet(dataPet);
           const breeds = await getAllBreed();
           setBreeds(breeds);
+          const vaccinationSchedule = await getVaccineByPetId(petId);
+          setVaccinationSchedule(vaccinationSchedule);
+          console.log("vaccinationSchedule: ", vaccinationSchedule);
         } catch (error) {
           console.error("Không thể tải pet:", error);
         }
@@ -105,13 +113,17 @@ export default function Vaccination() {
         <View style={styles.reminderCardHeader}>
           <Text style={styles.textReminder}>Upcoming Vaccine</Text>
         </View>
-        <ReminderCard
-          petName="Tommy"
-          treatment="Rabies 1ml"
-          dose="1 dose"
-          time="9:00"
-          task="Meal"
-        />
+        {vaccinationSchedule?.map((item) => (
+          <ReminderCard
+            key={item.id}
+            petName={selectedPet?.name ?? "Unknown"}
+            treatment={item.vaccine?.name}
+            dose={`Dose ${item.dose_number}`}
+            time={item.scheduled_date}
+            task="Vaccine"
+            showCheckbox={false}
+          />
+        ))}
 
         {/* Ongoing vaccine */}
         <View style={styles.reminderCardHeader}>

@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { Vaccine } from "../types/Vaccine";
 
 interface SelectDateVaccineProps {
-  selectedDate: Date;
+  selectedDate: Date | undefined;
   onDateChange: (date: Date) => void;
 }
 export default function SelectDateVaccine({
@@ -32,7 +32,7 @@ export default function SelectDateVaccine({
 
  return (
     <View>
-      <Text style={{ ...styles.label, marginLeft: 10 }}>Dose 1</Text>
+      {/* <Text style={{ ...styles.label, marginLeft: 10 }}>Dose 1</Text> */}
       <View style={styles.row}>
         <CommonSelector
           value={selectedDate.toLocaleDateString("en-GB")}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   row: {
-    flexDirection: "row",
+    // flexDirection: "row",
     gap: 12,
     paddingHorizontal: 10,
   },
