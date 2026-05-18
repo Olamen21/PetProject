@@ -8,6 +8,7 @@ type Props = {
   placeholder?: string;
   onPress: () => void;
   label?: string; 
+  disabled?: boolean;
 };
 
 export default function CommonSelector({
@@ -15,6 +16,7 @@ export default function CommonSelector({
   placeholder = "Select an option",
   onPress,
   label,
+  disabled = false,
 }: Props) {
   return (
     <View style={styles.wrapper}>
@@ -22,12 +24,13 @@ export default function CommonSelector({
       <TouchableOpacity 
         style={[
           styles.inputBox, 
-          { borderColor: value ? Colors.primary : Colors.gray } 
+          { borderColor: value ? Colors.primary : Colors.gray },
+          disabled && styles.disabledInputBox
         ]} 
         onPress={onPress}
         activeOpacity={0.6}
       >
-        <Text style={[styles.value, !value && styles.placeholder]}>
+        <Text style={[styles.value, !value && styles.placeholder, disabled && styles.disabledText]}>
           {value || placeholder}
         </Text>
         <Ionicons 
@@ -67,4 +70,11 @@ const styles = StyleSheet.create({
   placeholder: {
     color: "#999",
   },
+  disabledInputBox: {
+    backgroundColor: "#F1F5F9", 
+    borderColor: "#E2E8F0",
+  },
+  disabledText: {
+    color: "#94A3B8",
+  }
 });

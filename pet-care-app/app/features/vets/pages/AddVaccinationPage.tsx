@@ -30,7 +30,6 @@ export default function AddVaccinationPage() {
   const [vaccine, setVaccine] = useState<Vaccine | null>(null);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
 
-
   useFocusEffect(
     useCallback(() => {
       const fetchPetProfile = async () => {
@@ -60,6 +59,10 @@ export default function AddVaccinationPage() {
   const handleSubmit = async () => {
     if (!petId || !vaccine?.category_id || !scheduledDate) {
       alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
+      return;
+    }
+    if(scheduledDate < new Date()) {
+      alert("Ngày tiêm phải là ngày hiện tại hoặc tương lai!");
       return;
     }
 
@@ -123,9 +126,10 @@ export default function AddVaccinationPage() {
         <View style={styles.reminderCardHeader}>
           <Text style={styles.textReminder}>Select Date of each Vaccine</Text>
         </View>
+
         <SelectDateVaccine
-          selectedDate={scheduledDate ?? undefined}
-          onDateChange={(newDate) => setScheduledDate(newDate)}
+          selectedDate={new Date()}
+          onDateChange={(date) => setScheduledDate(date)}
         />
 
         {/* Description */}

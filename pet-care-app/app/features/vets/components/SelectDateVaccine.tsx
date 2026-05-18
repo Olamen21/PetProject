@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { Vaccine } from "../types/Vaccine";
 
 interface SelectDateVaccineProps {
-  selectedDate: Date | undefined;
+  selectedDate: Date;
   onDateChange: (date: Date) => void;
 }
 export default function SelectDateVaccine({

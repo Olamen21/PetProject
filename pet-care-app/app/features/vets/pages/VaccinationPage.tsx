@@ -48,7 +48,7 @@ export default function Vaccination() {
         }
       };
       fetchPetProfile();
-    }, [petId]),
+    }, []),
   );
 
   return (
