@@ -1,10 +1,11 @@
 // create-vaccine.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
+import { DoseType } from '../constants/enums';
 
 export class CreateVaccineDto {
   @ApiProperty({
     example: 1,
-    description: 'ID của bé thú cưng',
+    description: 'ID của thú cưng',
   })
   pet_id!: number;
 
@@ -32,4 +33,11 @@ export class CreateVaccineDto {
     required: false,
   })
   note?: string;
+
+  @ApiProperty({
+    example: 'PRIMARY',
+    description: 'Loại mũi tiêm (PRIMARY hoặc BOOSTER)',
+    enum: ['PRIMARY', 'BOOSTER'],
+  })
+  dose_type!: DoseType;
 }

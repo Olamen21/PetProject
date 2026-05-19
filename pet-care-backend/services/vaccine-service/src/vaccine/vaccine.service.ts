@@ -7,7 +7,7 @@ import { CreateVaccineDto } from './dto/create-vaccine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PetVaccination } from './entities/vaccine.entity';
 import { Repository, In } from 'typeorm';
-import { VaccinationStatus } from './constants/enums';
+import { DoseType, VaccinationStatus } from './constants/enums';
 import { VaccineCategory } from './entities/vaccine-category.entity';
 @Injectable()
 export class VaccineService {
@@ -24,10 +24,62 @@ export class VaccineService {
     if (!category) {
       throw new NotFoundException('Không tìm thấy loại vaccine này');
     }
+
     if (category.quantity <= 0) {
       throw new BadRequestException(
         `Vaccine "${category.name}" trong kho đã hết!`,
       );
+    }
+    if (createVaccineDto.dose_type === DoseType.PRIMARY) {
+      if (createVaccineDto.dose_number > category.max_doses) {
+        throw new BadRequestException(
+          `Vaccine này chỉ có tối đa ${category.max_doses} mũi chính!`,
+        );
+      }
+
+      if (createVaccineDto.dose_number > 1) {
+        const previousDose = await this.vaccineRepository.findOne({
+          where: {
+            pet_id: createVaccineDto.pet_id,
+            vaccine_id: createVaccineDto.vaccine_id,
+            dose_number: createVaccineDto.dose_number - 1,
+            dose_type: DoseType.PRIMARY,
+          },
+        });
+
+        if (
+          !previousDose ||
+          previousDose.status === VaccinationStatus.CANCELLED
+        ) {
+          throw new BadRequestException(
+            `Bạn phải hoàn thành mũi số ${createVaccineDto.dose_number - 1} trước!`,
+          );
+        }
+      }
+    }
+
+    if (createVaccineDto.dose_type === DoseType.BOOSTER) {
+      if (createVaccineDto.dose_number !== 1) {
+        throw new BadRequestException(
+          'Mũi nhắc lại hàng năm bắt buộc phải là mũi số 1!',
+        );
+      }
+
+      const finalPrimaryDose = await this.vaccineRepository.findOne({
+        where: {
+          pet_id: createVaccineDto.pet_id,
+          vaccine_id: createVaccineDto.vaccine_id,
+          dose_number: category.max_doses,
+          dose_type: DoseType.PRIMARY,
+          status: VaccinationStatus.COMPLETED,
+        },
+      });
+
+      if (!finalPrimaryDose) {
+        throw new BadRequestException(
+          `Bé pet chưa hoàn thành đủ phác đồ ${category.max_doses} mũi cơ bản của loại vaccine này, chưa thể tiêm mũi nhắc lại hàng năm!`,
+        );
+      }
     }
     if (createVaccineDto.dose_number > category.max_doses) {
       throw new BadRequestException(

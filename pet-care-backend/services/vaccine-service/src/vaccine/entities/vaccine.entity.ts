@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { VaccinationStatus } from '../constants/enums';
+import { DoseType, VaccinationStatus } from '../constants/enums';
 import { VaccineCategory } from './vaccine-category.entity';
 
 @Entity('pet-vaccinations')
@@ -39,6 +39,13 @@ export class PetVaccination {
     default: VaccinationStatus.PENDING,
   })
   status!: VaccinationStatus;
+
+  @Column({
+    type: 'enum',
+    enum: DoseType,
+    default: DoseType.PRIMARY,
+  })
+  dose_type!: DoseType;
 
   @Column({ nullable: true })
   note!: string;

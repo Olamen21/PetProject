@@ -4,3 +4,7 @@ export enum VaccinationStatus {
   CANCELLED = 'CANCELLED',
   OVERDUE = 'OVERDUE',
 }
+export enum DoseType {
+  PRIMARY = 'PRIMARY',
+  BOOSTER = 'BOOSTER',
+}

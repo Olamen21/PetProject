@@ -5,4 +5,5 @@ export interface Vaccine {
     note?: string;
     scheduled_date?: Date;
     dose_number?: number;
+    dose_type?: string;
 }
