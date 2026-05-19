@@ -11,17 +11,19 @@ export default function VetPage() {
 
     return (
         <View style={styles.container}>
-            <HeaderBar
-                title="Vets and medical records"
-                rightIcons={[{
-                    type: "ion",
-                    name: "search",
-                    onPress: () => {},
-                }]}
-            />
-            <BtnComponent selected={selected}  onSelect={setSelected}/>
-            {selected === "Veterinarians" && <VeterinariansComponent />}
-            {selected === "Medical records" && <MedicalRecordComponent />}
+            <View style={{ flex: 1 }}>
+                <HeaderBar
+                    title="Vets and medical records"
+                    rightIcons={[{
+                        type: "ion",
+                        name: "search",
+                        onPress: () => {},
+                    }]}
+                />
+                <BtnComponent selected={selected}  onSelect={setSelected}/>
+                {selected === "Veterinarians" && <VeterinariansComponent />}
+                {selected === "Medical records" && <MedicalRecordComponent />}
+            </View>
             <BottomNavBar />
         </View>
     )
