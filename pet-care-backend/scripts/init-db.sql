@@ -9,3 +9,6 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_notification
 
 SELECT 'CREATE DATABASE pet_care_vaccine'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_vaccine')\gexec
+
+SELECT 'CREATE DATABASE pet_care_appointment'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_vaccine')\gexec
