@@ -56,46 +56,48 @@ export default function AddVaccinationPage() {
       fetchPetProfile();
     }, [petId]),
   );
-  const handleSubmit = async () => {
-    if (!petId || !vaccine?.category_id || !scheduledDate) {
-      alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
-      return;
-    }
-    if(scheduledDate < new Date()) {
-      alert("Ngày tiêm phải là ngày hiện tại hoặc tương lai!");
-      return;
-    }
+ const handleSubmit = async () => {
+  if (!petId || !vaccine?.category_id || !scheduledDate || !vaccine?.dose_number) {
+    alert("Vui lòng điền đầy đủ các thông tin bắt buộc!");
+    return;
+  }
+  
+  if (scheduledDate < new Date()) {
+    alert("Ngày tiêm phải là ngày hiện tại hoặc tương lai!");
+    return;
+  }
 
-    try {
-      const formData = new FormData();
-      formData.append("pet_id", String(petId));
-      formData.append("vaccine_id", String(vaccine.category_id));
-      formData.append("dose_number", String(vaccine.dose_number));
-      formData.append(
-        "scheduled_date",
-        scheduledDate instanceof Date
-          ? scheduledDate.toISOString()
-          : scheduledDate,
-      );
-      formData.append("note", description || "");
+  try {
+    // ĐỔI SANG JSON: Đóng gói object đúng cấu trúc Backend DTO đang chờ
+    const payload = {
+      pet_id: Number(petId),
+      vaccine_id: Number(vaccine.category_id),
+      dose_number: Number(vaccine.dose_number),
+      dose_type: vaccine.dose_type || "PRIMARY", // Gửi thêm trường này lên Backend nha Thúy!
+      scheduled_date: scheduledDate instanceof Date ? scheduledDate.toISOString() : scheduledDate,
+      note: description || ""
+    };
 
-      console.log("Đang gửi dữ liệu...");
-      await createVaccine(formData);
+    console.log("Đang gửi dữ liệu JSON lên server:", payload);
+    
+    // Gọi API với cấu trúc JSON payload
+    await createVaccine(payload);
 
-      alert("Tạo lịch tiêm thành công!");
-      router.push("/(tabs)/VaccinationPage");
-    } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        alert(error.response.data.message);
-      } else {
-        alert("Có lỗi kết nối xảy ra, vui lòng thử lại sau!");
-      }
+    alert("Tạo lịch tiêm thành công!");
+    router.push("/(tabs)/VaccinationPage");
+  } catch (error: any) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.message
+    ) {
+      // Hứng trọn vẹn câu thông báo lỗi tùy biến thông minh từ NestJS truyền về
+      alert(error.response.data.message);
+    } else {
+      alert("Có lỗi kết nối xảy ra, vui lòng thử lại sau!");
     }
-  };
+  }
+};
 
   return (
     <View style={styles.container}>

@@ -150,6 +150,7 @@ export default function PetProfileScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
+        contentContainerStyle={{ paddingBottom: 120 }}
       >
         <AvatarSection
           pets={pets}
@@ -202,7 +203,7 @@ export default function PetProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FAFAFA" },
   header: { marginTop: 20 },
-  scrollView: { flex: 1, marginBottom: 140 },
+  scrollView: { flex: 1 },
   button: {
     flexDirection: "row",
     paddingVertical: 16,
