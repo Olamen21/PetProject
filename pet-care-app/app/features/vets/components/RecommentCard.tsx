@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors } from "@/app/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 type RecommentCardProps = {
   rating: number;
@@ -11,8 +12,9 @@ type RecommentCardProps = {
 };
 
 const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, specialty, avatarUrl }) => {
+  const router = useRouter();
   return (
-    <View>
+    <TouchableOpacity onPress={() => router.push("/(tabs)/AppointmentPage")}>
       <View
         style={styles.card}
       >
@@ -33,7 +35,7 @@ const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, specialty, 
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.specialty}>{specialty}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

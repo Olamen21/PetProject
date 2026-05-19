@@ -5,7 +5,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 type VetCardProps = {
   name: string;
   role: string;
-  avatarUrl: string;
+  avatarUrl: number | string;
   online?: boolean;
 };
 
@@ -14,7 +14,7 @@ const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false
     <View style={styles.card}>
       {/* Avatar */}
       <Image
-        source={{ uri: avatarUrl }} 
+        source={typeof avatarUrl === "string" ? { uri: avatarUrl } : avatarUrl}
         style={styles.avatar}
       />
 

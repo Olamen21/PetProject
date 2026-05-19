@@ -4,4 +4,5 @@ export interface Vet {
     role: string;
     avatarUrl: string;
     online?: boolean;
+    rating?: number;
 }

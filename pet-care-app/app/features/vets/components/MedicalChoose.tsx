@@ -45,6 +45,8 @@ export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
                     textStyle={{fontSize: 11}}
                     iconSize={16}
                 />
+            </View>
+            <View style={styles.buttonContainer}>
                 <CommonButton
                     title="Prescriptions"
                     onPress={() => console.log("Prescriptions!")}
@@ -58,20 +60,6 @@ export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
                     style={styles.btn}
                     textStyle={{fontSize: 11}}
                     iconSize={16}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
-                <CommonButton
-                    title="Consulations"
-                    onPress={() => console.log("Consulations")}
-                    iconName="chatbox-outline"
-                    iconColor= {Colors.secondary}
-                    backgroundColor= {Colors.white}
-                    textColor= {Colors.text}
-                    style={styles.btn}
-                    bordered={true}
-                    borderColor="#F2F2F2"
-                    borderWidth={2}
                 />
             </View>
         </View>
