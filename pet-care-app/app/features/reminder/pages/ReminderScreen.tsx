@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
-import WeeklyCalendar from "../components/WeeklyCalendarComponent";
+import WeeklyCalendar from "../../../shared/components/WeeklyCalendarComponent";
 import { Ionicons } from "@expo/vector-icons";
 import FilterMenu from "@/app/shared/components/FilterMenu";
 import CommonButton from "@/app/shared/components/CommonButton";

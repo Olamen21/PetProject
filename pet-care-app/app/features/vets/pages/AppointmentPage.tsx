@@ -102,7 +102,7 @@ const AppointmentPage = () => {
 
       <CommonButton 
         title="Book appointment"
-        onPress={() => console.log("Book appointment")}
+        onPress={() => router.push("/(tabs)/BookAppointment")}
         style={styles.bookButton}
       />
     </ScrollView>

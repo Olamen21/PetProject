@@ -25,8 +25,6 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
   leftIcons = [],
 }) => {
   return (
-    
-    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.left}>
           {leftIcons.map((icon, index) => (
@@ -65,14 +63,10 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
           ))}
         </View>
       </View>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: Colors.white, 
-  },
   container: {
     paddingHorizontal: 10,
     paddingVertical: 12,
@@ -80,7 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: "#FAFAFA",
     
     borderBottomWidth: 0.5,
     borderBottomColor: Colors.border,
