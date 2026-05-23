@@ -16,5 +16,6 @@ export const Colors = {
   black:"#000000",
   gray_light:"#ffffff33",
   check: "#4CAF50",
-  failBackground: "#FFF1F1"
+  failBackground: "#FFF1F1",
+  orange: "#F77B4E",
 };

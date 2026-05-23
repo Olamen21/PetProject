@@ -7,9 +7,10 @@ type VetCardProps = {
   role: string;
   avatarUrl: number | string;
   online?: boolean;
+  showOnlineStatus?: boolean;
 };
 
-const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false }) => {
+const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false, showOnlineStatus = true }) => {
   return (
     <View style={styles.card}>
       {/* Avatar */}
@@ -24,16 +25,25 @@ const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false
         <Text style={styles.role}>{role}</Text>
 
         {/* Online status */}
-        <View style={styles.statusContainer}>
-          <View style={[ styles.statusDot, { backgroundColor: online ? "green" : "gray" }]} />
-            <Text  style={[
-              styles.statusText,
-              { color: online ? "green" : "gray" }
-            ]}>
+        {showOnlineStatus && (
+          <View style={styles.statusContainer}>
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: online ? "green" : "gray" },
+              ]}
+            />
+            <Text
+              style={[
+                styles.statusText,
+                { color: online ? "green" : "gray" },
+              ]}
+            >
               {online ? "Online" : "Offline"}
             </Text>
           </View>
-        </View>
+        )}
+      </View>
     </View>
   );
 };
