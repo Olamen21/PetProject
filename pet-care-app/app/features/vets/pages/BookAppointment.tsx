@@ -56,7 +56,6 @@ const BookAppointment = () => {
                         onPress={() => {}}
                         backgroundColor={Colors.white}
                         textColor={Colors.primary}
-                        style={styles.btnSeeList}
                         bordered={true}
                     />
                 </View>
@@ -66,7 +65,7 @@ const BookAppointment = () => {
 
             <CommonButton 
                 title="Continue"
-                onPress={() => {}}
+                onPress={() => router.push("/(tabs)/PatientInfoPage")}
                 style={styles.nextButton}
             />
 
@@ -121,9 +120,6 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: "500",
         color: Colors.subtitleColor,
-    },
-    btnSeeList: {
-
     },
     nextButton: {
         marginHorizontal: 16,
