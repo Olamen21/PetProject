@@ -1,3 +1,4 @@
+import { Colors } from "@/app/constants/Colors";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
@@ -12,7 +13,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
     <View style={styles.container}>
       {steps.map((step, index) => {
         const stepNumber = index + 1;
-        const isActive = currentStep === stepNumber;
+        const isCompletedOrActive = stepNumber <= currentStep;
 
         return (
           <React.Fragment key={step}>
@@ -20,7 +21,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
               <View
                 style={[
                   styles.circle,
-                  { backgroundColor: isActive ? "#3A7BD5" : "#ccc" },
+                  { backgroundColor: isCompletedOrActive ? Colors.primary : "#ccc" },
                 ]}
               >
                 <Text style={styles.circleText}>{stepNumber}</Text>
@@ -28,7 +29,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
               <Text
                 style={[
                   styles.label,
-                  { color: isActive ? "#3A7BD5" : "#999" },
+                  { color: isCompletedOrActive ? Colors.primary : "#999" },
                 ]}
               >
                 {step}
