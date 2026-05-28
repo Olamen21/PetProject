@@ -7,7 +7,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('Pet Care - Pet Service')
+    .setTitle('Pet Care - Vaccine Service')
     .setDescription('Tài liệu API cho dịch vụ quản lý vaccine')
     .setVersion('1.0')
     .addBearerAuth(
