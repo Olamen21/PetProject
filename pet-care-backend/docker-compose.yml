@@ -103,6 +103,36 @@ services:
     networks:
       - pet-network 
 
+  appointment-service:
+    build: ./services/appointment-service
+    env_file:
+      - .env
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./services/appointment-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+      - redis
+    networks:
+      - pet-network 
+
+  # medical-record-service:
+  #   build: ./services/medical-record-service
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "3007:3007"
+  #   volumes:
+  #     - ./services/medical-record-service:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - postgresdb
+  #     - redis
+  #   networks:
+  #     - pet-network 
+
 networks:
   pet-network:
     driver: bridge
