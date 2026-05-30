@@ -2,8 +2,10 @@ import { Colors } from "@/app/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-
-const TimeSlotSelector = () => {
+interface TimeSlotSelectorProps {
+  onSelectTime?: (time: string) => void; 
+}
+const TimeSlotSelector = ({ onSelectTime }: TimeSlotSelectorProps) => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const morningSlots = ["10:00", "10:30", "11:00", "11:30"];
@@ -17,7 +19,10 @@ const TimeSlotSelector = () => {
           <TouchableOpacity
             key={time}
             style={[styles.slot, isSelected && styles.selectedSlot]}
-            onPress={() => setSelectedTime(time)}
+            onPress={() => {
+              setSelectedTime(time);
+              onSelectTime?.(time);
+            }}
           >
             <Text style={[styles.slotText, isSelected && styles.selectedText]}>
               {time}

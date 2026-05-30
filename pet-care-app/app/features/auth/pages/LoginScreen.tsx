@@ -34,11 +34,19 @@ export default function LoginScreen() {
         if (email.trim() === "" || password.trim() === "" || username.trim() === "") {
           setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
           return;
+        }  
+        const result = await login({email: email, password: password, full_name: username});
+        if(result && result.user) {
+          const { user } = result;
+          if (user.role === "USER") {
+            setMessage({ type: "success", text: "Đăng nhập thành công!" });
+            router.replace("/(tabs)/HomeScreen")
+          } else {
+            setMessage({ type: "error", text: "Bạn không có quyền truy cập!" });
+          }
+        } else {
+          setMessage({ type: "error", text: "Đăng nhập thất bại!" });
         }
-  
-        await login({email: email, password: password, full_name: username});
-        setMessage({ type: "success", text: "Đăng nhập thành công!" });
-        router.replace("/(tabs)/HomeScreen")
       } catch (err: any) {
         const errorMsg = err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
         setMessage({ type: "error", text: errorMsg });

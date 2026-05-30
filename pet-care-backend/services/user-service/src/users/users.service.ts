@@ -20,7 +20,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(DoctorProfile)
     private doctorProfileRepository: Repository<DoctorProfile>,
-  ) { }
+  ) {}
 
   //lấy thông tin người dùng theo ID
   async findOne(id: number): Promise<User> {
@@ -117,6 +117,22 @@ export class UsersService {
   //lấy tất cả người dùng (chỉ admin mới có quyền)
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
+  }
+  async findAllVets(): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { role: Role.VET },
+      relations: ['doctorProfile'],
+    });
+  }
+  async findVetById(id: number): Promise<User> {
+    const vet = await this.usersRepository.findOne({
+      where: { id, role: Role.VET },
+      relations: ['doctorProfile'],
+    });
+    if (!vet) {
+      throw new NotFoundException(`Không tìm thấy bác sĩ thú y có ID ${id}`);
+    }
+    return vet;
   }
 
   //hàm băm mật khẩu

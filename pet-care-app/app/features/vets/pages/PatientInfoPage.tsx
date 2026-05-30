@@ -1,5 +1,5 @@
 import HeaderBar from "@/app/shared/components/HeaderBar";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { Alert, StyleSheet, Text, TextInput, View } from "react-native"
 import StepIndicator from "../components/StepIndicator";
 import { Colors } from "@/app/constants/Colors";
@@ -20,6 +20,7 @@ const PatientInfoPage = () => {
         type: "error" | "success" | "warning" | "info";
         text: string;
     } | null>(null);
+    const { vetId, appointmentTime } = useLocalSearchParams<{ vetId: string; appointmentTime: string }>();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -43,7 +44,19 @@ const PatientInfoPage = () => {
         setMessage({ type: "error", text: "Please enter a reason for your visit." });
         return;
         }
-        router.push("/(tabs)/ConfirmPage");
+        console.log("Selected Pet:", selectedPet);
+        console.log("Reason for visit:", text);
+        console.log("Vet ID:", vetId);
+        console.log("Appointment Time:", appointmentTime);
+        router.push({
+            pathname: "/(tabs)/ConfirmPage",
+            params: { 
+                vetId,
+                appointmentTime,
+                petId: selectedPet?.id,
+                reason: text,
+             },
+        });
     };
 
     return (
@@ -89,7 +102,7 @@ const PatientInfoPage = () => {
                 onChangeText={setText}
             />
 
-            <View style={styles.fileSection}>
+            {/* <View style={styles.fileSection}>
                 <Text style={styles.textFile}>Attach any related files here:</Text>
                 <CommonButton 
                     title="Attach File"
@@ -100,7 +113,7 @@ const PatientInfoPage = () => {
                     textColor={Colors.primary}
                     bordered={true}
                 />
-            </View>
+            </View> */}
             <CommonButton 
                 title="Continue"
                 onPress={handleContinue}

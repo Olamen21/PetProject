@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MedicalRecordService } from './medical-record.service';
 import { MedicalRecordController } from './medical-record.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { JwtStrategy } from '../auth/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { MedicalExamination } from './entities/medical_examinations.entity';
