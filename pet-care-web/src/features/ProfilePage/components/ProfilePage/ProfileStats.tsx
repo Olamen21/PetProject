@@ -9,7 +9,7 @@ interface ProfileStatsProps {
 const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date }) => {
   const colorStyles = [styles.tagGreen, styles.tagBlue, styles.tagOrange];
 
-  const calculateYears = (startDate) => {
+  const calculateYears = (startDate: string | undefined) => {
     if (!startDate) return 0;
     const start = new Date(startDate);
     const now = new Date();

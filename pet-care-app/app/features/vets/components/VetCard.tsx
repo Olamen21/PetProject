@@ -3,14 +3,15 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
 type VetCardProps = {
-  name: string;
-  role: string;
-  avatarUrl: number | string;
+  full_name?: string;
+  role?: string;
+  avatarUrl?: string;
   online?: boolean;
-  showOnlineStatus?: boolean;
+  bio?: string | null;
+  degree?: string | null;
 };
 
-const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false, showOnlineStatus = true }) => {
+const VetCard: React.FC<VetCardProps> = ({ full_name, role, avatarUrl, bio, degree }) => {
   return (
     <View style={styles.card}>
       {/* Avatar */}
@@ -21,11 +22,11 @@ const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.role}>{role}</Text>
-
+        <Text style={styles.name}>{full_name}</Text>
+        <Text style={styles.role}>{role}: {degree}</Text>
+        <Text style={styles.role}>{bio}</Text>
         {/* Online status */}
-        {showOnlineStatus && (
+        {/* {showOnlineStatus && (
           <View style={styles.statusContainer}>
             <View
               style={[
@@ -42,7 +43,7 @@ const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false
               {online ? "Online" : "Offline"}
             </Text>
           </View>
-        )}
+        )} */}
       </View>
     </View>
   );
@@ -79,6 +80,11 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
   role: {
+    fontSize: 14,
+    color: Colors.subtitleColor,
+    marginTop: 4,
+  },
+  bio: {
     fontSize: 12,
     color: Colors.subtitleColor,
     marginTop: 4,

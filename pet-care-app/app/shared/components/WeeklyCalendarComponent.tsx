@@ -2,17 +2,23 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 
-export default function WeeklyCalendar() {
+interface WeeklyCalendarProps {
+  onSelectDate?: (date: Date) => void;
+}
+export default function WeeklyCalendar({ onSelectDate }: WeeklyCalendarProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [weekDates, setWeekDates] = useState<Date[]>([]);
 
   useEffect(() => {
     const today = new Date();
-    const monday = startOfWeek(today, { weekStartsOn: 1 }); // tuần bắt đầu từ Thứ Hai
+    const monday = startOfWeek(today, { weekStartsOn: 1 }); 
     const dates = Array.from({ length: 7 }, (_, i) => addDays(monday, i));
     setWeekDates(dates);
   }, []);
-
+ const handlePress = (date: Date) => {
+    setSelectedDate(date);
+    onSelectDate?.(date); 
+  };
   return (
     <View style={styles.container}>
       {weekDates.map((date) => {
@@ -21,7 +27,7 @@ export default function WeeklyCalendar() {
             <View key={date.toISOString()} style={styles.wrapper}>
                 <TouchableOpacity
                     style={[styles.item, isSelected && styles.selectedItem]}
-                    onPress={() => setSelectedDate(date)}
+                    onPress={() => handlePress(date)}
                 >
                     <Text style={[styles.date, isSelected && styles.selectedText]}>
                     {format(date, "d")}

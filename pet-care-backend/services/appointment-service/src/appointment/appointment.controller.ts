@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -21,7 +22,13 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
 import { Appointment } from './entities/appointment.entity';
-
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email?: string;
+    name?: string;
+  };
+}
 @ApiTags('Appointment')
 @ApiBearerAuth('token')
 @Controller('appointment')
@@ -33,8 +40,12 @@ export class AppointmentController {
   @Post('create-appointment')
   @ApiOperation({ summary: 'Tạo lịch hẹn khám bệnh' })
   @ApiResponse({ status: 201, description: 'Thành công', type: Appointment })
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentService.create(createAppointmentDto);
+  async create(
+    @Body() createAppointmentDto: CreateAppointmentDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.user.id;
+    return this.appointmentService.create(createAppointmentDto, +userId);
   }
 
   @UseGuards(JwtAuthGuard)

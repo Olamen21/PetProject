@@ -21,7 +21,7 @@ export class Appointment {
   @Column()
   vet_id!: number;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   appointment_date!: Date;
 
   @Column({
@@ -34,8 +34,8 @@ export class Appointment {
   @Column({ nullable: true })
   user_note!: string;
 
-  @Column({ nullable: true })
-  vet_note!: string;
+  // @Column({ nullable: true })
+  // vet_note!: string;
 
   @CreateDateColumn()
   create_at!: Date;

@@ -5,16 +5,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 type RecommentCardProps = {
+  id?: string;
   rating: number;
   name: string;
-  specialty: string;
+  bio?: string | null;
   avatarUrl: number | string;
+  degree?: string | null;
 };
 
-const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, specialty, avatarUrl }) => {
+const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, bio, avatarUrl, degree, id }) => {
   const router = useRouter();
   return (
-    <TouchableOpacity onPress={() => router.push("/(tabs)/AppointmentPage")}>
+    <TouchableOpacity onPress={() => router.push({ pathname: "/(tabs)/AppointmentPage", params: { vetId: id } })}>
       <View
         style={styles.card}
       >
@@ -33,7 +35,7 @@ const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, specialty, 
           </Text>
         </View>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.specialty}>{specialty}</Text>
+        <Text style={styles.degree}>{degree} : {bio}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -54,9 +56,12 @@ const styles = StyleSheet.create({
     width: 250,
     marginRight: 16,
   },
-  avatar: {
+   avatar: {
     width: 100,
-    height: 148,
+    height: 150,       
+    borderRadius: 50, 
+    resizeMode: "cover", 
+    marginBottom: 8,  
   },
   info: {
     width: 250,
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: Colors.text,
   },
-  specialty: {
+  degree: {
     fontSize: 12,
     color: "#5C5C5C",
     fontWeight: "500",
