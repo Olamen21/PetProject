@@ -99,7 +99,7 @@ export default function LoginScreen() {
           style={styles.forgotContainer}
           onPress={() => router.replace("./ForgotPasswordScreen")}
         >
-          <Text style={styles.forgot}>Forgot Password?</Text>
+          <Text style={styles.forgot}>Forgot Password </Text>
         </TouchableOpacity>
 
         <CommonButton
@@ -118,7 +118,7 @@ export default function LoginScreen() {
           <CommonMessage type={message.type} message={message.text} />
         )}
 
-        <DividerWithText text="or login with" />
+        <DividerWithText text="or login with " />
         <CommonButton
           title="Login with Google"
           onPress={() => router.replace("./(tabs)/home")}
