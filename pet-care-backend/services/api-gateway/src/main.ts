@@ -89,16 +89,16 @@ async function bootstrap() {
       },
     }),
   );
-  // app.use(
-  //   '/medical-record',
-  //   createProxyMiddleware({
-  //     target: 'http://medical-record-service:3007',
-  //     changeOrigin: true,
-  //     pathRewrite: {
-  //       '^/': '/medical-record/',
-  //     },
-  //   }),
-  // );
+  app.use(
+    '/medical-record',
+    createProxyMiddleware({
+      target: 'http://medical-record-service:3007',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/medical-record/',
+      },
+    }),
+  );
   await app.listen(3000);
   console.log('Gateway is running on port 3000');
 }

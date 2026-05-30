@@ -118,20 +118,20 @@ services:
     networks:
       - pet-network 
 
-  # medical-record-service:
-  #   build: ./services/medical-record-service
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "3007:3007"
-  #   volumes:
-  #     - ./services/medical-record-service:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   depends_on:
-  #     - postgresdb
-  #     - redis
-  #   networks:
-  #     - pet-network 
+  medical-record-service:
+    build: ./services/medical-record-service
+    env_file:
+      - .env
+    ports:
+      - "3007:3007"
+    volumes:
+      - ./services/medical-record-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+      - redis
+    networks:
+      - pet-network 
 
 networks:
   pet-network:
