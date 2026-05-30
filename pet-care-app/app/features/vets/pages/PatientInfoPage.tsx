@@ -1,6 +1,6 @@
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import { useFocusEffect, useRouter } from "expo-router";
-import { StyleSheet, Text, TextInput, View } from "react-native"
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native"
 import StepIndicator from "../components/StepIndicator";
 import { Colors } from "@/app/constants/Colors";
 import React, { useState } from "react";
@@ -8,6 +8,7 @@ import { Pet } from "@/app/shared/types/Pet";
 import AvatarSection from "@/app/shared/components/AvatarSection";
 import { getPetList } from "@/app/shared/services/CommonApi";
 import CommonButton from "@/app/shared/components/CommonButton";
+import CommonMessage from "@/app/shared/components/CommonMessage";
 
 const PatientInfoPage = () => {
     const router = useRouter();
@@ -15,6 +16,10 @@ const PatientInfoPage = () => {
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
     const [text, setText] = useState("");
     const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+    const [message, setMessage] = useState<{
+        type: "error" | "success" | "warning" | "info";
+        text: string;
+    } | null>(null);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -32,6 +37,14 @@ const PatientInfoPage = () => {
           fetchPets();
         }, []),
       );
+
+    const handleContinue = () => {
+        if (text.trim() === "") {
+        setMessage({ type: "error", text: "Please enter a reason for your visit." });
+        return;
+        }
+        router.push("/(tabs)/ConfirmPage");
+    };
 
     return (
         <View style={styles.container}>
@@ -57,6 +70,10 @@ const PatientInfoPage = () => {
                 selectedPet={selectedPet}
                 onSelectPet={setSelectedPet}
             />
+
+            {message && (
+                <CommonMessage type={message.type} message={message.text} />
+            )}
 
             {/* Reason for Visit */}
             <View style={styles.cardHeader}>
@@ -84,13 +101,12 @@ const PatientInfoPage = () => {
                     bordered={true}
                 />
             </View>
-
             <CommonButton 
                 title="Continue"
-                onPress={() => {}}
+                onPress={handleContinue}
                 backgroundColor={Colors.primary}
                 textColor={Colors.white}
-                style={{marginHorizontal: 10, marginTop: 150}}
+                style={{marginHorizontal: 10, marginTop: 100}}
             />
 
         </View>
