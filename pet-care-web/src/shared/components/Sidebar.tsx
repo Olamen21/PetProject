@@ -24,9 +24,9 @@ const MENU_CONFIG = [
   },
   {
     title: "Appointments",
-    path: "/appointments",
+    path: "/vet/appointments",
     icon: <FaCalendarAlt />,
-    roles: ["VET", "ADMIN"],
+    roles: ["VET"],
   },
   {
     title: "Pet Profiles",
@@ -44,10 +44,10 @@ const MENU_CONFIG = [
     roles: ["ADMIN"],
   },
 
-  { title: "CLINICAL", isTitle: true, roles: ["VET", "ADMIN"] },
+  { title: "CLINICAL", isTitle: true, roles: ["VET"] },
   {
     title: "Diagnosis",
-    path: "/diagnosis",
+    path: "/vet/diagnosis",
     icon: <FaStethoscope />,
     roles: ["VET"],
   },
