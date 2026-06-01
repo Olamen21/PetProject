@@ -1,5 +1,5 @@
 export interface Vaccine {
-    id?: string;
+    id?: number;
     name: string;
     quantity: number;
     target_species: string;

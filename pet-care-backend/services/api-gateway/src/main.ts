@@ -60,12 +60,12 @@ async function bootstrap() {
   );
 
   app.use(
-    '/vaccine',
+    '/vaccine-pet',
     createProxyMiddleware({
       target: 'http://vaccine-service:3005',
       changeOrigin: true,
       pathRewrite: {
-        '^/': '/vaccine/',
+        '^/': '/vaccine-pet/',
       },
     }),
   );

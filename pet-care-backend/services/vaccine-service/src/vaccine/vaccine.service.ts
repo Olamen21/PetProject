@@ -177,7 +177,6 @@ export class VaccineService {
         'Lịch tiêm này đã được xác nhận hoàn thành trước đó!',
       );
     }
-
     await this.vaccineRepository.update(id, {
       status: VaccinationStatus.COMPLETED,
       administered_date: new Date(),

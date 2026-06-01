@@ -68,19 +68,17 @@ export default function AddVaccinationPage() {
   }
 
   try {
-    // ĐỔI SANG JSON: Đóng gói object đúng cấu trúc Backend DTO đang chờ
     const payload = {
       pet_id: Number(petId),
       vaccine_id: Number(vaccine.category_id),
       dose_number: Number(vaccine.dose_number),
-      dose_type: vaccine.dose_type || "PRIMARY", // Gửi thêm trường này lên Backend nha Thúy!
+      dose_type: vaccine.dose_type || "PRIMARY", 
       scheduled_date: scheduledDate instanceof Date ? scheduledDate.toISOString() : scheduledDate,
       note: description || ""
     };
 
     console.log("Đang gửi dữ liệu JSON lên server:", payload);
     
-    // Gọi API với cấu trúc JSON payload
     await createVaccine(payload);
 
     alert("Tạo lịch tiêm thành công!");
@@ -130,7 +128,7 @@ export default function AddVaccinationPage() {
         </View>
 
         <SelectDateVaccine
-          selectedDate={new Date()}
+          selectedDate={scheduledDate || new Date()}
           onDateChange={(date) => setScheduledDate(date)}
         />
 
