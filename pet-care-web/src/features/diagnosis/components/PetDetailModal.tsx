@@ -3,9 +3,9 @@ import { IoClose } from "react-icons/io5";
 
 interface Props {
   pet: {
-    petName: string;
-    ownerName: string;
-    userNote?: string;
+    pet_name: string;
+    owner_name: string;
+    note?: string;
   };
   onClose: () => void;
 }
@@ -21,13 +21,13 @@ export default function PetDetailModal({ pet, onClose }: Props) {
         </div>
 
         <div style={styles.body}>
-          <p style={styles.infoLine}><strong>Pet Name:</strong> {pet.petName}</p>
-          <p style={styles.infoLine}><strong>Owner:</strong> {pet.ownerName}</p>
+          <p style={styles.infoLine}><strong>Pet Name:</strong> {pet.pet_name}</p>
+          <p style={styles.infoLine}><strong>Owner:</strong> {pet.owner_name}</p>
           
           <div style={styles.noteSection}>
             <h4 style={styles.noteTitle}>User Note (Tình trạng từ chủ nuôi):</h4>
             <div style={styles.noteContent}>
-              {pet.userNote ? `"${pet.userNote}"` : "Không có ghi chú nào được để lại."}
+              {pet.note ? `"${pet.note}"` : "Không có ghi chú nào được để lại."}
             </div>
           </div>
         </div>

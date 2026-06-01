@@ -9,7 +9,7 @@ export const getAllBreed = async () => {
   return res.data;
 }
 export const createVaccine = async (payload: any) => {
-  return await api.post('/vaccine/create-vaccine', payload, {
+  return await api.post('/vaccine-pet/create-vaccine', payload, {
     headers: {
       'Content-Type': 'application/json', 
     },
@@ -20,7 +20,7 @@ export const getAllVaccineCategory = async() => {
   return res.data;
 }
 export const getVaccineByPetId = async (petId: string) => {
-  const res = await api.get(`/vaccine/pet/` + petId);
+  const res = await api.get(`/vaccine-pet/pet/` + petId);
   return res.data;
 }
 

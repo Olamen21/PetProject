@@ -74,4 +74,25 @@ export class AppointmentController {
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(+id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.VET, Role.ADMIN)
+  @Get('vet/:vetId')
+  findByVetId(@Param('vetId') vetId: string) {
+    return this.appointmentService.findByVetId(+vetId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.VET, Role.ADMIN)
+  @Post(':id/confirm')
+  confirmAppointment(@Param('id') id: string) {
+    return this.appointmentService.confirmAppointment(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.VET, Role.ADMIN)
+  @Post(':id/cancel')
+  cancelAppointment(@Param('id') id: string) {
+    return this.appointmentService.cancelAppointment(+id);
+  }
 }

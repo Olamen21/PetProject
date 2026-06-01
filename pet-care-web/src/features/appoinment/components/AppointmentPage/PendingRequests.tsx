@@ -1,17 +1,10 @@
 import { Colors } from "../../../../constants/Colors";
+import type { AppointmentList } from "../../types/AppoinmentList";
 
-interface PendingItem {
-  id: number;
-  petName: string;
-  breed: string;
-  owner: string;
-  time: string;
-  day: string;
-  reason: string;
-}
+
 
 interface PendingRequestsProps {
-  pendingList: PendingItem[];
+  pendingList: AppointmentList[];
   onAccept: (id: number) => void;
   onReject: (id: number) => void;
 }
@@ -30,15 +23,15 @@ export default function PendingRequests({ pendingList, onAccept, onReject }: Pen
               <div style={styles.cardHeader}>
                 <div>
                   <h4 style={styles.petName}>{apt.petName}</h4>
-                  <p style={styles.petDetails}>Breed: {apt.breed}</p>
+                  <p style={styles.petDetails}>Species: {apt.species}</p>
                   <p style={styles.petDetails}>Owner: {apt.owner}</p>
                 </div>
                 <span style={styles.requestTimeBadge}>
-                  {apt.day} {apt.time}
+                  {apt.date} {apt.time}
                 </span>
               </div>
 
-              <div style={styles.reasonBox}>"{apt.reason}"</div>
+              <div style={styles.reasonBox}>"{apt.user_note}"</div>
 
               <div style={{ display: "flex", gap: "10px" }}>
                 <button style={styles.btnAccept} onClick={() => onAccept(apt.id)}>

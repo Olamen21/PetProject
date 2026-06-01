@@ -6,14 +6,15 @@ export const Colors = {
   text: "#3B4953",       // Xám đậm
   white: "#FFFFFF",
   error: "#E74C3C",
+  bg_error: "#FDEDEC",
   success: "#5A7863",
   warning: "#F0AD4E",
   info: "#5BC0DE",
   border: "#E0E4E8",
   gray: "#D0D5DD",
-  sidebar: "#F7F9F8", // Màu nền cho Sidebar
-  bg_verified: "#e9f9f1", // Màu nền cho badge "Verified"
-  text_verified: "#27ae60", // Màu chữ cho badge "Verified"
+  sidebar: "#F7F9F8", 
+  bg_verified: "#e9f9f1", 
+  text_verified: "#27ae60", 
   bg_tag_green: "#dff5ec",
   text_tag_green: "#1f9d55",
   bg_tag_blue: "#e6f0ff",

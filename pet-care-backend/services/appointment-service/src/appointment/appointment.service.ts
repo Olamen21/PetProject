@@ -4,6 +4,7 @@ import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment } from './entities/appointment.entity';
 import { Repository } from 'typeorm';
+import { AppointmentStatus } from './constants/enums';
 
 @Injectable()
 export class AppointmentService {
@@ -34,5 +35,37 @@ export class AppointmentService {
 
   remove(id: number) {
     return this.appointmentRepository.delete(id);
+  }
+
+  async findByVetId(userId: number): Promise<Appointment[]> {
+    return await this.appointmentRepository.find({ where: { vet_id: userId } });
+  }
+
+  async confirmAppointment(id: number) {
+    const appointment = await this.appointmentRepository.findOne({
+      where: { id },
+    });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    if (appointment.status === AppointmentStatus.CONFIRMED) {
+      throw new Error('Appointment is already confirmed');
+    }
+    appointment.status = AppointmentStatus.CONFIRMED;
+    return await this.appointmentRepository.save(appointment);
+  }
+
+  async cancelAppointment(id: number) {
+    const appointment = await this.appointmentRepository.findOne({
+      where: { id },
+    });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    if (appointment.status === AppointmentStatus.CANCELLED) {
+      throw new Error('Appointment is already cancelled');
+    }
+    appointment.status = AppointmentStatus.CANCELLED;
+    return await this.appointmentRepository.save(appointment);
   }
 }
