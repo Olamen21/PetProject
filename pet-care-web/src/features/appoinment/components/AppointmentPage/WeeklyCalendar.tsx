@@ -12,18 +12,25 @@ interface WeeklyCalendarProps {
   weeklySchedule: Appointment[];
 }
 
-function generateDaysOfWeek(startDateStr: string) {
-  const startDate = new Date(startDateStr);
+function getStartOfWeek(date: Date): Date {
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
+  return new Date(date.setDate(diff));
+}
+
+function generateDaysOfWeekForCurrentWeek() {
+  const today = new Date();
+  const startOfWeek = getStartOfWeek(new Date(today)); 
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(startDate);
-    d.setDate(startDate.getDate() + i);
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
 
     const key = d.toISOString().split("T")[0]; 
     const label = `${days[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}`;
 
-    return { key, label, isToday: isSameDay(d, new Date()) };
+    return { key, label, isToday: isSameDay(d, today) };
   });
 }
 
@@ -35,10 +42,11 @@ function isSameDay(a: Date, b: Date) {
   );
 }
 
-const daysOfWeek = generateDaysOfWeek("2026-06-01");
+const daysOfWeek = generateDaysOfWeekForCurrentWeek();
 
 
-const hours = Array.from({ length: 9 }, (_, i) => `${String(i + 8).padStart(2, "0")}:00`);
+
+const hours = Array.from({ length: 13 }, (_, i) => `${String(i + 8).padStart(2, "0")}:00`);
 
 const serviceStyles: { [key: string]: React.CSSProperties } = {
   CONFIRMED: {

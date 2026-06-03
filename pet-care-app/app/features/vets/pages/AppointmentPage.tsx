@@ -7,7 +7,7 @@ import ReviewCard from "../components/ReviewCard";
 import CommonButton from "@/app/shared/components/CommonButton";
 import {useFocusEffect } from "expo-router";
 import { Vets } from "../types/Vets";
-import { getVetById } from "../services/vetService";
+import { getProfile, getVetById } from "../services/vetService";
 
 const AppointmentPage = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const AppointmentPage = () => {
         try {
           const data = await getVetById(vetId);
           setVet(data);
-          console.log("Fetched vet details:", data);
+          console.log("Fetched vet details:", vetId);
         } catch (error) {
           console.error("Error fetching vet details:", error);
         }

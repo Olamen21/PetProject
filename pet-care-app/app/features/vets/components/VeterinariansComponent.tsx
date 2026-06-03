@@ -1,6 +1,7 @@
 import CommonButton from "@/app/shared/components/CommonButton";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,18 +14,55 @@ import { MockVets } from "../data/MockVet";
 import VetCard from "./VetCard";
 import RecommentCard from "./RecommentCard";
 import { Vets } from "../types/Vets";
-import { getAllVets } from "../services/vetService";
+import {
+  getAllPetUser,
+  getAllVets,
+  getAppointmentsByUserId,
+  getProfile,
+} from "../services/vetService";
 import { useFocusEffect } from "expo-router";
+import AppointmentCard from "./AppointmentCard";
+import { Appointment } from "../types/Appointment";
 
 export default function VeterinariansComponent() {
   const [vets, setVets] = useState<Vets[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
   useFocusEffect(
     React.useCallback(() => {
       const fetchVets = async () => {
         try {
           const data = await getAllVets();
-          console.log("Fetching vets..." + JSON.stringify(data));
+          const getUser = await getProfile();
+          const getAllPetByUserId = await getAllPetUser();
+          const userId = getUser.id;
+          const appointmentsData = await getAppointmentsByUserId(userId);
+          
 
+          const mergedAppointments = appointmentsData.map(
+            (appointment: Appointment) => {
+              const pet = getAllPetByUserId.find(
+                (p: { id: number; name: string }) => p.id === appointment.pet_id,
+              );
+              const vet = data.find((v: Vets) => v.id === appointment.vet_id);
+              const appointmentDate = new Date(appointment.appointment_date);
+              const dateUTC = appointmentDate.toISOString().split("T")[0];
+              const timeUTC = appointmentDate.toISOString().split("T")[1].slice(0, 5);
+              return {
+                id: appointment.id,
+                pet_name: pet ? pet.name : "Unknown Pet",
+                vet_name: vet ? vet.full_name : "Unknown Vet",
+                vet_image: vet ? vet.avatar_url : null,
+                date: dateUTC,
+                time: timeUTC,
+                status: appointment.status,
+              };
+            },
+          );
+          setAppointments(mergedAppointments);
+          console.log(
+            "Fetching appointments..." + JSON.stringify(mergedAppointments),
+          );
           setVets(data);
         } catch (error) {
           console.error("Không thể tải vets:", error);
@@ -36,33 +74,63 @@ export default function VeterinariansComponent() {
       fetchVets();
     }, []),
   );
+  const handleReview = (id: number) => {
+    console.log(`Điều hướng sang màn hình viết Review cho cuộc hẹn ID: ${id}`);
+    // Bạn có thể dùng navigation.navigate('ReviewScreen', { id }) tại đây
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.reminderCardHeader}>
         <Text style={styles.textReminder}>Upcoming appointments</Text>
       </View>
-      <View style={styles.icon}>
-        <Ionicons
-          name="calendar-number-outline"
-          color={Colors.primary}
-          size={100}
-        />
-      </View>
-      <Text style={styles.noRemindersText}>
-        You don’t have any appointments yet. Book a vet call to keep your pet on
-        track
-      </Text>
-      <CommonButton
-        title="Book appointment"
-        onPress={() => console.log("Book appointment")}
-        iconName="timer-outline"
-        backgroundColor="#5A7863"
-        style={{
-          marginBottom: 20,
-          paddingVertical: 12,
-          marginHorizontal: 90,
-        }}
-      />
+      {appointments.length > 0 ? (
+        <View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.tipScrollView}
+          >
+            {appointments.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                id={appointment.id}
+                pet_name={appointment.pet_name}
+                vet_name={appointment.vet_name}
+                vet_image={appointment.vet_image}
+                date={appointment.date}
+                time={appointment.time}
+                status={appointment.status}
+                onReviewPress={handleReview}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      ) : (
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.icon}>
+            <Ionicons
+              name="calendar-number-outline"
+              color={Colors.primary}
+              size={100}
+            />
+          </View>
+          <Text style={styles.noRemindersText}>
+            You don’t have any appointments yet. Book a vet call to keep your
+            pet on track
+          </Text>
+          <CommonButton
+            title="Book appointment"
+            onPress={() => console.log("Book appointment")}
+            iconName="timer-outline"
+            backgroundColor="#5A7863"
+            style={{
+              marginBottom: 20,
+              paddingVertical: 12,
+              marginHorizontal: 90,
+            }}
+          />
+        </View>
+      )}
 
       {/* Veterinarians */}
       <View style={styles.cardHeader}>
@@ -79,6 +147,7 @@ export default function VeterinariansComponent() {
       {vets.map((vet) => (
         <VetCard
           key={vet.id}
+          id={vet.id}
           full_name={vet.full_name}
           role={vet.role}
           avatarUrl={vet.avatar_url}
@@ -170,6 +239,6 @@ const styles = StyleSheet.create({
   },
   tipScrollView: {
     marginLeft: 10,
-    marginBottom: 120,
+    marginBottom: 20,
   },
 });

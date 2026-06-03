@@ -5,13 +5,13 @@ import StepIndicator from "../components/StepIndicator";
 import VetCard from "../components/VetCard";
 import { Colors } from "@/app/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import WeeklyCalendar from "@/app/shared/components/WeeklyCalendarComponent";
 import TimeSlotSelector from "../components/TimeSlotSelector";
 import CommonButton from "@/app/shared/components/CommonButton";
 import { useCallback, useState } from "react";
 import { Vets } from "../types/Vets";
-import { getVetById } from "../services/vetService";
+import { getAppointmentByVetId, getVetById } from "../services/vetService";
 
 const BookAppointment = () => {
   const router = useRouter();
@@ -20,13 +20,33 @@ const BookAppointment = () => {
   const [vet, setVet] = useState<Vets | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [appointmentVet, setAppointmentVet] = useState<any>(null);
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const morningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"];
+  const eveningSlots = [
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+  ];
   useFocusEffect(
     useCallback(() => {
       const fetchVetDetails = async () => {
         try {
           const data = await getVetById(vetId);
           setVet(data);
-          console.log("Fetched vet details:", data);
+          const getAppointmentByVet = await getAppointmentByVetId(vetId);
+          setAppointmentVet(getAppointmentByVet);
         } catch (error) {
           console.error("Error fetching vet details:", error);
         }
@@ -35,23 +55,42 @@ const BookAppointment = () => {
     }, [vetId]),
   );
   const handleDateSelect = (date: Date) => {
-    console.log("User selected date:", format(date, "yyyy-MM-dd"));
     setSelectedDate(date);
-    const fullyBookedDate = new Date("2024-11-15");
-    if (format(date, "yyyy-MM-dd") === format(fullyBookedDate, "yyyy-MM-dd")) {
+
+    if (!appointmentVet) return;
+    console.log("All appointments for vet:", appointmentVet.appointment_date);
+
+    const appointmentsForDate = appointmentVet.filter((apt: any) => {
+      const aptDate = new Date(apt.appointment_date);
+      return isSameDay(aptDate, date);
+    });
+
+    const bookedTimes = appointmentsForDate.map((apt: any) => {
+      const dateObj = new Date(apt.appointment_date);
+      // Lấy giờ phút theo UTC
+      const hours = dateObj.getUTCHours().toString().padStart(2, "0");
+      const minutes = dateObj.getUTCMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    });
+
+    const allSlots = [...morningSlots, ...eveningSlots];
+    const freeSlots = allSlots.filter((slot) => !bookedTimes.includes(slot));
+
+    if (freeSlots.length === 0) {
       setIsFullyBooked(true);
+      setAvailableSlots([]);
     } else {
       setIsFullyBooked(false);
+      setAvailableSlots(freeSlots);
     }
   };
 
   const handleTimeSelect = (time: string) => {
-    console.log("Selected time:", time);
     setSelectedTime(time);
   };
+
   const BookAppointment = () => {
     if (selectedDate && selectedTime) {
-
       const appointmentDateTime = new Date(selectedDate);
       appointmentDateTime.setHours(parseInt(selectedTime.split(":")[0]));
       appointmentDateTime.setMinutes(parseInt(selectedTime.split(":")[1]));
@@ -77,7 +116,11 @@ const BookAppointment = () => {
           {
             type: "ion",
             name: "chevron-back-outline",
-            onPress: () => router.push("/(tabs)/AppointmentPage"),
+            onPress: () =>
+              router.push({
+                pathname: "/(tabs)/AppointmentPage",
+                params: { vetId },
+              }),
           },
         ]}
       />
@@ -117,7 +160,15 @@ const BookAppointment = () => {
           />
         </View>
       ) : (
-        <TimeSlotSelector onSelectTime={handleTimeSelect} />
+        <TimeSlotSelector
+          morningSlots={availableSlots.filter(
+            (slot) => parseInt(slot.split(":")[0]) < 12,
+          )}
+          eveningSlots={availableSlots.filter(
+            (slot) => parseInt(slot.split(":")[0]) >= 12,
+          )}
+          onSelectTime={handleTimeSelect}
+        />
       )}
 
       <CommonButton

@@ -68,4 +68,12 @@ export class AppointmentService {
     appointment.status = AppointmentStatus.CANCELLED;
     return await this.appointmentRepository.save(appointment);
   }
+  async findByPetId(petId: number): Promise<Appointment[]> {
+    return await this.appointmentRepository.find({ where: { pet_id: petId } });
+  }
+  async findByUserId(userId: number): Promise<Appointment[]> {
+    return await this.appointmentRepository.find({
+      where: { user_id: userId },
+    });
+  }
 }
