@@ -4,7 +4,7 @@ interface Appointment {
   id: number;
   petName: string;
   time: string;
-  day: string;
+  date: string;
   type: string;
 }
 
@@ -12,30 +12,41 @@ interface WeeklyCalendarProps {
   weeklySchedule: Appointment[];
 }
 
-const daysOfWeek = [
-  { key: "Mon", label: "Mon 01" },
-  { key: "Tue", label: "Tue 02" },
-  { key: "Wed", label: "Wed 03", isToday: true },
-  { key: "Thu", label: "Thu 04" },
-  { key: "Fri", label: "Fri 05" },
-  { key: "Sat", label: "Sat 06" },
-  { key: "Sun", label: "Sun 07" },
-];
+function generateDaysOfWeek(startDateStr: string) {
+  const startDate = new Date(startDateStr);
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+
+    const key = d.toISOString().split("T")[0]; 
+    const label = `${days[d.getDay()]} ${String(d.getDate()).padStart(2, "0")}`;
+
+    return { key, label, isToday: isSameDay(d, new Date()) };
+  });
+}
+
+function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+const daysOfWeek = generateDaysOfWeek("2026-06-01");
+
 
 const hours = Array.from({ length: 9 }, (_, i) => `${String(i + 8).padStart(2, "0")}:00`);
 
 const serviceStyles: { [key: string]: React.CSSProperties } = {
-  vaccine: {
+  CONFIRMED: {
     backgroundColor: Colors.bg_tag_blue,
     color: Colors.purple,
     borderLeft: `3px solid ${Colors.primary_light}`,
   },
-  checkup: {
-    backgroundColor: Colors.bg_tag_green,
-    color: Colors.text_tag_blue,
-    borderLeft: `3px solid ${Colors.info}`,
-  },
-  spa: {
+  PENDING: {
     backgroundColor: Colors.bg_tag_orange,
     color: Colors.text_tag_orange,
     borderLeft: `3px solid ${Colors.warning}`,
@@ -72,7 +83,7 @@ export default function WeeklyCalendar({ weeklySchedule }: WeeklyCalendarProps) 
 
             {daysOfWeek.map((day) => {
               const appointmentsInSlot = weeklySchedule.filter(
-                (slot) => slot.day === day.key && slot.time.startsWith(hour.substring(0, 2))
+                (slot) => slot.date === day.key && slot.time.startsWith(hour.substring(0, 2))
               );
 
               return (

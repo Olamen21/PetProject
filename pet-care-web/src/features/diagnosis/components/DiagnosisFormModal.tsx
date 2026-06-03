@@ -6,8 +6,8 @@ import { MdSave } from "react-icons/md";
 interface Props {
   pet: {
     id: number;
-    petName: string;
-    ownerName: string;
+    pet_name: string;
+    owner_name: string;
   };
   onClose: () => void;
   onSave: (id: number, diagnosisData: { condition: string; prescription: string }) => void;
@@ -37,7 +37,7 @@ export default function DiagnosisFormModal({ pet, onClose, onSave }: Props) {
         </div>
 
         <form onSubmit={handleSubmit} style={styles.body}>
-          <p style={styles.infoLine}><strong>Bệnh nhân:</strong> {pet.petName} ({pet.ownerName})</p>
+          <p style={styles.infoLine}><strong>Bệnh nhân:</strong> {pet.pet_name} ({pet.owner_name})</p>
           
           <div style={styles.formGroup}>
             <label style={styles.label}>Tình trạng bệnh / Triệu chứng lâm sàng:</label>

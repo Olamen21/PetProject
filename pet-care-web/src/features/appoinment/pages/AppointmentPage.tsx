@@ -9,6 +9,8 @@ import PendingRequests from "../components/AppointmentPage/PendingRequests";
 import {
   getAppointmentByVetId,
   getAllPet,
+  markCompleteAppointment,
+  cancelAppointment,
 } from "../services/AppointmentService";
 import { getProfile, getAllUser } from "../../../api/UserApi";
 import type { AppointmentList } from "../types/AppoinmentList";
@@ -38,7 +40,7 @@ function AppointmentPage() {
           const timeUTC = appointmentDate
             .toISOString()
             .split("T")[1]
-            .slice(0, 5); 
+            .slice(0, 5);
 
           console.log("Date (UTC):", dateUTC);
           console.log("Time (UTC):", timeUTC);
@@ -48,9 +50,10 @@ function AppointmentPage() {
             petName: pet?.name || "Unknown Pet",
             species: pet?.species || "Unknown Species",
             owner: owner?.full_name || "Unknown Owner",
-            date: dateUTC, 
-            time: timeUTC, 
+            date: dateUTC,
+            time: timeUTC,
             user_note: al.user_note || "No reason provided",
+            status: al.status,
           };
         },
       );
@@ -61,30 +64,35 @@ function AppointmentPage() {
     loadData();
   }, []);
 
-  const weeklySchedule = [
-    { id: 101, petName: "Cún Đen", time: "09:00", day: "Mon", type: "vaccine" },
-    {
-      id: 102,
-      petName: "Mèo MoChi",
-      time: "10:30",
-      day: "Wed",
-      type: "checkup",
-    },
-    { id: 103, petName: "Bé Thỏ", time: "14:00", day: "Wed", type: "spa" },
-    { id: 104, petName: "LuKu", time: "11:00", day: "Thu", type: "checkup" },
-    { id: 105, petName: "Miu Miu", time: "16:00", day: "Sat", type: "vaccine" },
-  ];
 
-  const handleAccept = (id: number) => {
-    alert(`Đã phê duyệt lịch hẹn số ${id}`);
-    setPendingList(pendingList.filter((item) => item.id !== id));
+  const weeklySchedule = pendingList.map((apt) => ({
+    id: apt.id,
+    petName: apt.petName,
+    time: apt.time,
+    date: apt.date,
+    type: apt.status,
+  }));
+
+  console.log("Weekly Schedule:", weeklySchedule);
+
+  const handleAccept = async (id: number) => {
+    const confirmAppointment = await markCompleteAppointment(id);
+    if (confirmAppointment) {
+      alert(`Đã xác nhận lịch ${id}`);
+      setPendingList(pendingList.filter((item) => item.id !== id));
+    } else {
+      alert(`Xác nhận lịch ${id} thất bại. Vui lòng thử lại.`);
+    }
   };
 
-  const handleReject = (id: number) => {
-    const reason = prompt("Nhập lý do từ chối lịch:");
-    if (reason) {
-      alert(`Đã từ chối lịch ${id}. Lý do: ${reason}`);
+  const handleReject = async (id: number) => {
+    const confirmReject = await cancelAppointment(id);
+    console.log("Cancel Response:");
+    if (confirmReject) {
+      alert(`Đã từ chối lịch ${id}`);
       setPendingList(pendingList.filter((item) => item.id !== id));
+    } else {
+      alert(`Từ chối lịch ${id} thất bại. Vui lòng thử lại.`);
     }
   };
 

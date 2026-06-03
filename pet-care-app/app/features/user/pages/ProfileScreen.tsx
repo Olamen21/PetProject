@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; // 1. Thêm useState, useEffect
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import { Colors } from "@/app/constants/Colors";
