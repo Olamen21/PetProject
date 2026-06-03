@@ -1,14 +1,17 @@
 import { Colors } from "../../../constants/Colors";
 import { FaEye } from "react-icons/fa";
 import { MdMedicalServices } from "react-icons/md";
+import type { Appointment } from "../types/Appointment";
+import type { Pet } from "../types/Pet";
 
 interface Props {
-  appointments: any[];
-  onRowClick: (pet: any) => void;
-  onOpenDiagnosis: (pet: any) => void; 
+  appointments: Appointment[];
+  onRowClick: (pet: Pet) => void;
+  onOpenDiagnosis: (pet: Pet) => void; 
 }
 
 export default function AppointmentSection({ appointments, onRowClick, onOpenDiagnosis }: Props) {
+  const appointment = appointments.filter((a) => a.status === "CONFIRMED");
   return (
     <div>
       <h3 style={styles.title}>Confirmed Consultations</h3>
@@ -18,18 +21,18 @@ export default function AppointmentSection({ appointments, onRowClick, onOpenDia
             <th style={styles.th}>Pet</th>
             <th style={styles.th}>Owner</th>
             <th style={styles.th}>Reason</th>
-            <th style={styles.th} style={{ textAlign: "center" }}>Actions</th>
+            <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {appointments.length === 0 ? (
+          {appointment.length === 0 ? (
             <tr><td colSpan={4} style={styles.empty}>No general consultations confirmed</td></tr>
           ) : (
-            appointments.map((a) => (
+            appointment.map((a) => (
               <tr key={a.id} style={styles.row}>
-                <td style={styles.td}><strong>{a.petName}</strong></td>
-                <td style={styles.td}>{a.ownerName}</td>
-                <td style={styles.td} style={{ color: Colors.info, fontWeight: 500 }}>{a.reason}</td>
+                <td style={styles.td}><strong>{a.pet_name}</strong></td>
+                <td style={styles.td}>{a.owner_name}</td>
+                <td style={styles.td}><span style={{ color: Colors.info, fontWeight: 500 }}>{a.note}</span></td>
                 <td style={styles.td}>
                   <div style={styles.actionGroup}>
                     <button style={styles.actionBtn} onClick={() => onRowClick(a)} title="View Note">

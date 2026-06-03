@@ -84,14 +84,14 @@ export class AppointmentController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.VET, Role.ADMIN)
-  @Post(':id/confirm')
+  @Patch(':id/confirm')
   confirmAppointment(@Param('id') id: string) {
     return this.appointmentService.confirmAppointment(+id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.VET, Role.ADMIN)
-  @Post(':id/cancel')
+  @Patch(':id/cancel')
   cancelAppointment(@Param('id') id: string) {
     return this.appointmentService.cancelAppointment(+id);
   }

@@ -10,13 +10,15 @@ import {
   getAllPet,
   getAllPetVaccine,
   getAllVaccine,
-  markComplete,
+  getAppointmentByVetId,
+  markCompleteVaccine,
 } from "../services/DiagnosisService";
 import type { PetVaccine } from "../types/PetVaccine";
-import { getAllUser } from "../../../api/UserApi";
+import { getAllUser, getProfile } from "../../../api/UserApi";
 import type { Vaccine } from "../types/Vaccine";
 import type { Pet } from "../types/Pet";
 import type { User } from "../types/User";
+import type { Appointment } from "../types/Appointment";
 
 export default function DiagnosisPage() {
   const [vaccinePets, setVaccinePets] = useState<PetVaccine[]>([]);
@@ -53,30 +55,43 @@ export default function DiagnosisPage() {
       });
 
       setVaccinePets(mergedData);
-      setAppointments([
-        {
-          id: 101,
-          pet_name: "Gấu Corgi",
-          owner_name: "Lê Văn C",
-          reason: "Khám da liễu",
-          status: "CONFIRM",
-          note: "Bị rụng lông nhiều vùng tai, ngứa ngáy liên tục",
-        },
-      ]);
+      const userData = await getProfile();
+      const getAppointmentData = await getAppointmentByVetId(userData.id);
+      const mergedAppointments = getAppointmentData.map((apt: Appointment) => {
+        const pet = pets.find((p: Pet) => p.id === apt.pet_id);
+        const owner = users.find((u: User) => u.id === pet?.owner_id);
+        return {
+          id: apt.id,
+          pet_name: pet?.name ?? "Unknown Pet",
+          owner_name: owner?.full_name ?? "Unknown Owner",
+          note: apt.user_note ?? "No reason provided",
+          status: apt.status,
+        };
+      });
+      setAppointments(mergedAppointments);
+      console.log("Merged Appointments:", mergedAppointments);
       setLoading(false);
     };
     fetchData();
   }, []);
 
   const handleCompleteVaccine = async (id: number) => {
-    const markCompleteData = await markComplete(id);
-    alert("Đã hoàn thành tiêm vắc-xin!");
-    window.location.reload();
+    const markCompleteData = await markCompleteVaccine(id);
+    if (markCompleteData) {
+      alert("Đã đánh dấu lịch tiêm vắc-xin hoàn thành!");
+      setVaccinePets(vaccinePets.map((v) => (v.id === id ? { ...v, status: "COMPLETED" } : v)));
+    } else {
+      alert("Đánh dấu hoàn thành thất bại. Vui lòng thử lại.");
+    }
   };
   const handleCancelVaccine = async (id: number) => {
     const cancelData = await cancelVaccine(id);
-    alert("Đã hủy lịch tiêm vắc-xin!");
-    window.location.reload();
+    if (cancelData) {
+      alert("Đã hủy lịch tiêm vắc-xin!");
+      setVaccinePets(vaccinePets.filter((v) => v.id !== id));
+    } else {
+      alert("Hủy lịch tiêm vắc-xin thất bại. Vui lòng thử lại.");
+    }
   };
 
   const handleSaveDiagnosis = (
@@ -92,10 +107,10 @@ export default function DiagnosisPage() {
     setAppointments((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // const filteredVaccines = vaccines.filter((v: PetVaccine) => v.petName && v.petName.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredVaccines = vaccinePets.filter((v: PetVaccine) => v.pet_name && v.pet_name.toLowerCase().includes(searchTerm.toLowerCase()));
   const filteredAppointments = appointments.filter(
-    (a: any) =>
-      a.petName && a.petName.toLowerCase().includes(searchTerm.toLowerCase()),
+    (a: Appointment) =>
+      a.pet_name && a.pet_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -118,7 +133,7 @@ export default function DiagnosisPage() {
           <div style={styles.gridColumns}>
             <div style={styles.columnCard}>
               <VaccineSection
-                vaccines={vaccinePets}
+                vaccines={filteredVaccines}
                 onComplete={handleCompleteVaccine}
                 onRowClick={(pet) => setSelectedPet(pet)}
                 onCancel={handleCancelVaccine}

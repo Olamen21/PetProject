@@ -10,15 +10,16 @@ interface PendingRequestsProps {
 }
 
 export default function PendingRequests({ pendingList, onAccept, onReject }: PendingRequestsProps) {
+  const pendingLists = pendingList.filter((apt) => apt.status === "PENDING");
   return (
     <div style={styles.sidebarRequests}>
-      <h2 style={styles.sectionTitle}>New Requests ({pendingList.length})</h2>
+      <h2 style={styles.sectionTitle}>New Requests ({pendingLists.length})</h2>
 
       <div style={styles.pendingScrollList}>
-        {pendingList.length === 0 ? (
+        {pendingLists.length === 0 ? (
           <p style={styles.emptyText}>No pending requests 🎉</p>
         ) : (
-          pendingList.map((apt) => (
+          pendingLists.map((apt) => (
             <div key={apt.id} style={styles.requestCard}>
               <div style={styles.cardHeader}>
                 <div>
