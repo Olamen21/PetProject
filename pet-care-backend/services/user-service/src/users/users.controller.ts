@@ -103,6 +103,20 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('all-vets')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Lấy danh sách tất cả bác sĩ thú y' })
+  findAllVets() {
+    return this.usersService.findAllVets();
+  }
+
+  @Get('vet/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Lấy thông tin bác sĩ thú y theo ID' })
+  findVetById(@Param('id') id: number) {
+    return this.usersService.findVetById(id);
+  }
+
   @Patch(':id/assign-role')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)

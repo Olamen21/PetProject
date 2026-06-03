@@ -13,5 +13,5 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_vaccine')\ge
 SELECT 'CREATE DATABASE pet_care_appointment'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_appointment')\gexec
 
-SELECT 'CREATE DATABASE pet_care_medicalRecord'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_medicalRecord')\gexec
+SELECT 'CREATE DATABASE pet_care_medical_records'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pet_care_medical_records')\gexec

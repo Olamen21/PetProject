@@ -8,6 +8,7 @@ import {
   UseGuards,
   Query,
   ParseArrayPipe,
+  Patch,
 } from '@nestjs/common';
 import { VaccineService } from './vaccine.service';
 import { CreateVaccineDto } from './dto/create-vaccine.dto';
@@ -21,10 +22,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '../roles/role.enum';
 import { PetVaccination } from './entities/vaccine.entity';
+import { VaccinationStatus } from './constants/enums';
 
-@ApiTags('Vaccine')
+@ApiTags('Vaccine-Pet')
 @ApiBearerAuth('token')
-@Controller('vaccine')
+@Controller('vaccine-pet')
 export class VaccineController {
   constructor(private readonly vaccineService: VaccineService) {}
 
@@ -66,20 +68,20 @@ export class VaccineController {
     return this.vaccineService.findOne(+id);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Roles(Role.ADMIN, Role.VET)
-  // @Patch(':id/complete')
-  // @ApiOperation({ summary: 'Vet xác nhận đã tiêm xong' })
-  // markComplete(@Param('id') id: string) {
-  //   return this.vaccineService.updateStatus(+id, VaccinationStatus.COMPLETED);
-  // }
-  // @UseGuards(JwtAuthGuard)
-  // @Roles(Role.USER, Role.ADMIN)
-  // @Patch(':id/cancel')
-  // @ApiOperation({ summary: 'User hủy lịch tiêm' })
-  // cancel(@Param('id') id: string) {
-  //   return this.vaccineService.updateStatus(+id, VaccinationStatus.CANCELLED);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.VET)
+  @Patch(':id/complete')
+  @ApiOperation({ summary: 'Vet xác nhận đã tiêm xong' })
+  markComplete(@Param('id') id: string) {
+    return this.vaccineService.updateStatus(+id, VaccinationStatus.COMPLETED);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'User hủy lịch tiêm hoặc Vet hủy lịch tiêm' })
+  cancel(@Param('id') id: string) {
+    return this.vaccineService.updateStatus(+id, VaccinationStatus.CANCELLED);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.vaccineService.remove(+id);

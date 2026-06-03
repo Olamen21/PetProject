@@ -1,14 +1,41 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/app/constants/Colors";
 import ReviewCard from "../components/ReviewCard";
 import CommonButton from "@/app/shared/components/CommonButton";
+import {useFocusEffect } from "expo-router";
+import { Vets } from "../types/Vets";
+import { getProfile, getVetById } from "../services/vetService";
 
 const AppointmentPage = () => {
   const router = useRouter();
   const [liked, setLiked] = useState(false);
+  const [vet, setVet] = useState<Vets | null>(null);
+  const { vetId } = useLocalSearchParams<{ vetId: string }>();
+  useFocusEffect(
+    useCallback(() => {
+      const fetchVetDetails = async () => {
+        try {
+          const data = await getVetById(vetId);
+          setVet(data);
+          console.log("Fetched vet details:", vetId);
+        } catch (error) {
+          console.error("Error fetching vet details:", error);
+        }
+      };
+      fetchVetDetails();
+    }, [vetId])
+  );
+   const calculateYears = (startDate:any)  => {
+    if (!startDate) return 0;
+    const start = new Date(startDate);
+    const now = new Date();
+    const diffInMs = now.getTime() - start.getTime();
+    const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
+    return Math.floor(diffInYears);
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -32,18 +59,18 @@ const AppointmentPage = () => {
           </TouchableOpacity>
         </View>
         <Image
-          source={require("../../../../assets/images/doctor.jpg")}
+          source={vet?.avatar_url ? { uri: vet.avatar_url } : require("../../../../assets/images/doctor_remove_background.png")}
           style={styles.avatar}
         />
-        <Text style={styles.name}>Dr. Sara Fredo Jay</Text>
-        <Text style={styles.role}>DVM, Veterinary Dermatologist</Text>
+        <Text style={styles.name}>{vet?.full_name}</Text>
+        <Text style={styles.role}>{vet?.doctorProfile?.degree}</Text>
 
         {/* Stats */}
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Ionicons name="briefcase-outline" size={20} color={Colors.primary} />
             <Text style={styles.statLabel}>Experience </Text>
-            <Text style={styles.statText}>10 Years</Text>
+            <Text style={styles.statText}>{calculateYears(vet?.doctorProfile?.experience_start_date)} years</Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons name="people-outline" size={20} color={Colors.primary} />
@@ -62,13 +89,8 @@ const AppointmentPage = () => {
       <View style={styles.aboutSection}>
         <Text style={styles.aboutTitle}>About Doctor</Text>
         <Text style={styles.aboutText}>
-          Dr. Sarah Fredo is a highly experienced, board-certified veterinarian
-          with over 11 years of expertise in veterinary medicine. Her
-          specialization includes dermatology and comprehensive pet care...
+          {vet?.doctorProfile?.bio || "No biography available."}
         </Text>
-        <TouchableOpacity>
-          <Text style={styles.readMore}>Read More</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Last reviews */}
@@ -102,7 +124,7 @@ const AppointmentPage = () => {
 
       <CommonButton 
         title="Book appointment"
-        onPress={() => router.push("/(tabs)/BookAppointment")}
+        onPress={() => router.push({ pathname: "/(tabs)/BookAppointment", params: { vetId: vet?.id } })}
         style={styles.bookButton}
       />
     </ScrollView>

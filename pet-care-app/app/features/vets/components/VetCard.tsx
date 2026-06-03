@@ -1,31 +1,55 @@
 import { Colors } from "@/app/constants/Colors";
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 type VetCardProps = {
-  name: string;
-  role: string;
-  avatarUrl: number | string;
+  id?: number;
+  full_name?: string;
+  role?: string;
+  avatarUrl?: string;
   online?: boolean;
-  showOnlineStatus?: boolean;
+  bio?: string | null;
+  degree?: string | null;
 };
 
-const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false, showOnlineStatus = true }) => {
+const VetCard: React.FC<VetCardProps> = ({
+  id,
+  full_name,
+  role,
+  avatarUrl,
+  bio,
+  degree,
+}) => {
+  const router = useRouter();
+
   return (
-    <View style={styles.card}>
-      {/* Avatar */}
-      <Image
-        source={typeof avatarUrl === "string" ? { uri: avatarUrl } : avatarUrl}
-        style={styles.avatar}
-      />
+    <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/(tabs)/AppointmentPage",
+          params: { vetId: id },
+        })
+      }
+    >
+      <View style={styles.card}>
+        {/* Avatar */}
+        <Image
+          source={
+            typeof avatarUrl === "string" ? { uri: avatarUrl } : avatarUrl
+          }
+          style={styles.avatar}
+        />
 
-      {/* Info */}
-      <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.role}>{role}</Text>
-
-        {/* Online status */}
-        {showOnlineStatus && (
+        {/* Info */}
+        <View style={styles.info}>
+          <Text style={styles.name}>{full_name}</Text>
+          <Text style={styles.role}>
+            {role}: {degree}
+          </Text>
+          <Text style={styles.role}>{bio}</Text>
+          {/* Online status */}
+          {/* {showOnlineStatus && (
           <View style={styles.statusContainer}>
             <View
               style={[
@@ -42,9 +66,10 @@ const VetCard: React.FC<VetCardProps> = ({ name, role, avatarUrl, online = false
               {online ? "Online" : "Offline"}
             </Text>
           </View>
-        )}
+        )} */}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -79,6 +104,11 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
   role: {
+    fontSize: 14,
+    color: Colors.subtitleColor,
+    marginTop: 4,
+  },
+  bio: {
     fontSize: 12,
     color: Colors.subtitleColor,
     marginTop: 4,

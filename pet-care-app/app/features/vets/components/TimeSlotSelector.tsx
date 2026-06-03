@@ -2,12 +2,14 @@ import { Colors } from "@/app/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+interface TimeSlotSelectorProps {
+  morningSlots: string[];
+  eveningSlots: string[];
+  onSelectTime?: (time: string) => void;
+}
 
-const TimeSlotSelector = () => {
+const TimeSlotSelector = ({ morningSlots, eveningSlots, onSelectTime }: TimeSlotSelectorProps) => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-
-  const morningSlots = ["10:00", "10:30", "11:00", "11:30"];
-  const eveningSlots = ["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30"];
 
   const renderSlots = (slots: string[]) => (
     <View style={styles.slotContainer}>
@@ -17,7 +19,10 @@ const TimeSlotSelector = () => {
           <TouchableOpacity
             key={time}
             style={[styles.slot, isSelected && styles.selectedSlot]}
-            onPress={() => setSelectedTime(time)}
+            onPress={() => {
+              setSelectedTime(time);
+              onSelectTime?.(time);
+            }}
           >
             <Text style={[styles.slotText, isSelected && styles.selectedText]}>
               {time}
@@ -30,21 +35,24 @@ const TimeSlotSelector = () => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.headerSection}>  
-            <Ionicons name="partly-sunny-outline" size={20} color={Colors.subtitleColor} />
-            <Text style={styles.sectionTitle}>Morning</Text>
-        </View>
-        {renderSlots(morningSlots)}
-
-
+      {/* Morning section */}
       <View style={styles.headerSection}>
-            <Ionicons name="moon-outline" size={20} color={Colors.subtitleColor} />
-            <Text style={styles.sectionTitle}>Evening</Text>
-        </View>
+        <Ionicons name="partly-sunny-outline" size={20} color={Colors.subtitleColor} />
+        <Text style={styles.sectionTitle}>Morning</Text>
+      </View>
+      {renderSlots(morningSlots)}
+
+      {/* Evening section */}
+      <View style={styles.headerSection}>
+        <Ionicons name="moon-outline" size={20} color={Colors.subtitleColor} />
+        <Text style={styles.sectionTitle}>Evening</Text>
+      </View>
       {renderSlots(eveningSlots)}
     </View>
   );
 };
+
+
 
 export default TimeSlotSelector;
 

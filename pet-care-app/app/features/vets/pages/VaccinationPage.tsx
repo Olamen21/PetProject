@@ -24,7 +24,6 @@ import {
 import { Pet } from "@/app/shared/types/Pet";
 import type { Breed } from "../types/Breed";
 import { VaccineCategory } from "../types/VaccineCategory";
-import { set } from "date-fns";
 
 export default function Vaccination() {
   const [selected, setSelected] = useState<string>("Vaccination");
