@@ -39,3 +39,19 @@ export const bookAppointment = async (payload: any) => {
     },
   });
 }
+export const getAppointmentsByUserId = async (userId: string) => {
+  const res = await api.get(`/appointment/user/` + userId);
+  return res.data;
+}
+export const getProfile = async () => {
+  const res = await api.get(`/users/profile`); 
+  return res.data;
+};
+export const getAllPetUser = async () => {
+  const res = await api.get(`/pets/pets`);
+  return res.data;
+};
+export const getAppointmentByVetId = async (vetId: string) => {
+  const res = await api.get(`/appointment/vet/` + vetId);
+  return res.data;
+}

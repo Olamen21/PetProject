@@ -8,7 +8,7 @@ interface DoctorProfile {
   certificate_url?: string | null;
 }
 export interface Vets {
-    id?: string;
+    id?: number;
     full_name: string;
     role: string;
     avatar_url: string;

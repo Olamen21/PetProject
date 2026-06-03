@@ -1,8 +1,10 @@
 import { Colors } from "@/app/constants/Colors";
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 type VetCardProps = {
+  id?: number;
   full_name?: string;
   role?: string;
   avatarUrl?: string;
@@ -11,22 +13,43 @@ type VetCardProps = {
   degree?: string | null;
 };
 
-const VetCard: React.FC<VetCardProps> = ({ full_name, role, avatarUrl, bio, degree }) => {
-  return (
-    <View style={styles.card}>
-      {/* Avatar */}
-      <Image
-        source={typeof avatarUrl === "string" ? { uri: avatarUrl } : avatarUrl}
-        style={styles.avatar}
-      />
+const VetCard: React.FC<VetCardProps> = ({
+  id,
+  full_name,
+  role,
+  avatarUrl,
+  bio,
+  degree,
+}) => {
+  const router = useRouter();
 
-      {/* Info */}
-      <View style={styles.info}>
-        <Text style={styles.name}>{full_name}</Text>
-        <Text style={styles.role}>{role}: {degree}</Text>
-        <Text style={styles.role}>{bio}</Text>
-        {/* Online status */}
-        {/* {showOnlineStatus && (
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/(tabs)/AppointmentPage",
+          params: { vetId: id },
+        })
+      }
+    >
+      <View style={styles.card}>
+        {/* Avatar */}
+        <Image
+          source={
+            typeof avatarUrl === "string" ? { uri: avatarUrl } : avatarUrl
+          }
+          style={styles.avatar}
+        />
+
+        {/* Info */}
+        <View style={styles.info}>
+          <Text style={styles.name}>{full_name}</Text>
+          <Text style={styles.role}>
+            {role}: {degree}
+          </Text>
+          <Text style={styles.role}>{bio}</Text>
+          {/* Online status */}
+          {/* {showOnlineStatus && (
           <View style={styles.statusContainer}>
             <View
               style={[
@@ -44,8 +67,9 @@ const VetCard: React.FC<VetCardProps> = ({ full_name, role, avatarUrl, bio, degr
             </Text>
           </View>
         )} */}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

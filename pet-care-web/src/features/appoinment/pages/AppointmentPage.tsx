@@ -36,7 +36,7 @@ function AppointmentPage() {
           const owner = users.find((u: User) => u.id === pet?.owner_id);
 
           const appointmentDate = new Date(al.appointment_date);
-          const dateUTC = appointmentDate.toISOString().split("T")[0]; // "2026-05-31"
+          const dateUTC = appointmentDate.toISOString().split("T")[0]; 
           const timeUTC = appointmentDate
             .toISOString()
             .split("T")[1]

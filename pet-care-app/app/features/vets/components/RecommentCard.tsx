@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 type RecommentCardProps = {
-  id?: string;
+  id?: number;
   rating: number;
   name: string;
   bio?: string | null;
