@@ -18,4 +18,7 @@ export const Colors = {
   check: "#4CAF50",
   failBackground: "#FFF1F1",
   orange: "#F77B4E",
+  chartColorsBlue: "#708FF9",
+  chartColorsGreen: "#C4F9AF",
+  chartColorsOrange: "#F99470",
 };
