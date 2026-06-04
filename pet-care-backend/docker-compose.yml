@@ -133,6 +133,21 @@ services:
     networks:
       - pet-network 
 
+  nutrition-service:
+    build: ./services/nutrition-service
+    env_file:
+      - .env
+    ports:
+      - "3008:3008"
+    volumes:
+      - ./services/nutrition-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+      - redis
+    networks:
+      - pet-network 
+
 networks:
   pet-network:
     driver: bridge

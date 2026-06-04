@@ -1,19 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMedicalRecordDto } from './dto/create-medical-record.dto';
 import { UpdateMedicalRecordDto } from './dto/update-medical-record.dto';
+import { Repository } from 'typeorm';
+import { MedicalExamination } from './entities/medical_examinations.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class MedicalRecordService {
-  create(createMedicalRecordDto: CreateMedicalRecordDto) {
-    return 'This action adds a new medicalRecord';
+  constructor(
+    @InjectRepository(MedicalExamination)
+    private readonly medicalExaminationRepository: Repository<MedicalExamination>,
+  ) {}
+
+  async create(createMedicalRecordDto: CreateMedicalRecordDto, vetId: number) {
+    const medicalExamination = this.medicalExaminationRepository.create({
+      ...createMedicalRecordDto,
+      vet_id: vetId,
+    });
+    return this.medicalExaminationRepository.save(medicalExamination);
   }
 
-  findAll() {
-    return `This action returns all medicalRecord`;
+  async findAll() {
+    return this.medicalExaminationRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} medicalRecord`;
+  async findOne(id: number) {
+    return this.medicalExaminationRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateMedicalRecordDto: UpdateMedicalRecordDto) {

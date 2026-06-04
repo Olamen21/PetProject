@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from 'typeorm';
+import { MedicalExamination } from './medical_examinations.entity';
 
 @Entity('prescriptions')
 export class Prescription {
@@ -19,4 +26,8 @@ export class Prescription {
 
   @Column({ nullable: true })
   note!: string;
+
+  @ManyToOne(() => MedicalExamination, (exam) => exam.prescriptions)
+  @JoinColumn({ name: 'examination_id' })
+  examination!: MedicalExamination;
 }

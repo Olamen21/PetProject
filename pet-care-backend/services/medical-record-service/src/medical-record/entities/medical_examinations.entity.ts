@@ -2,8 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Prescription } from './prescriptions.entity';
 
 @Entity('medical_examinations')
 export class MedicalExamination {
@@ -19,10 +23,18 @@ export class MedicalExamination {
   @Column({ nullable: true })
   appointment_id!: number;
 
+  @ManyToMany(() => Prescription)
+  @JoinTable({
+    name: 'examination_prescriptions',
+    joinColumn: { name: 'examination_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'prescription_id', referencedColumnName: 'id' },
+  })
+  prescriptions!: Prescription[];
+
   @Column()
   diagnosis!: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'decimal', precision: 10, scale: 2 })
   weight_at_exam!: number;
 
   @Column({ nullable: true })

@@ -22,3 +22,10 @@ export const getAppointmentByVetId = async (vetId: number) => {
     const res = await api.get(`/appointment/vet/${vetId}`);
     return res.data;
 }
+export const createMedicalRecord = async (data: FormData) => {
+    return await api.post('/medical-record/create-medical-record', data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
