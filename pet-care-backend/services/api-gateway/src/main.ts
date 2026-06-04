@@ -99,6 +99,16 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(
+    '/nutrition',
+    createProxyMiddleware({
+      target: 'http://nutrition-service:3008',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/nutrition/',
+      },
+    }),
+  );
   await app.listen(3000);
   console.log('Gateway is running on port 3000');
 }

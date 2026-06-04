@@ -12,6 +12,9 @@ export class Breed {
   @Column({ nullable: true })
   description!: string;
 
+  @Column({ nullable: true })
+  species!: string;
+
   @OneToMany(() => Pet, (pet) => pet.breed_relation)
   pets!: Pet[];
 }

@@ -23,6 +23,7 @@ import { Roles } from '../roles/roles.decorator';
 import { Role } from '../roles/role.enum';
 import { PetVaccination } from './entities/vaccine.entity';
 import { VaccinationStatus } from './constants/enums';
+import { RolesGuard } from '../roles/roles.guard';
 
 @ApiTags('Vaccine-Pet')
 @ApiBearerAuth('token')
@@ -30,7 +31,7 @@ import { VaccinationStatus } from './constants/enums';
 export class VaccineController {
   constructor(private readonly vaccineService: VaccineService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Post('create-vaccine')
   @ApiOperation({ summary: 'Tạo lịch tiêm vaccine' })
