@@ -67,11 +67,9 @@ export function getActivityFactor(activity: string, species: string): [number, n
 export function calculateMER(weightKg: number, species: string, activity: string) {
   const rer = calculateRER(weightKg);
   const [kMin, kMax] = getActivityFactor(activity, species);
-  console.log(`kMin: ${kMin}, kMax: ${kMax}, activity: ${activity}, species: ${species}`);
   const merMin = rer * kMin;
   const merMax = rer * kMax;
   const merAvg = (merMin + merMax) / 2;
-  console.log(`MER Min: ${merMin}, MER Max: ${merMax}, MER Avg: ${merAvg}`);
   return merAvg;
 }
 

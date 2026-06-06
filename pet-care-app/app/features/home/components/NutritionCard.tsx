@@ -1,7 +1,10 @@
 import CommonButton from "@/app/shared/components/CommonButton";
+import { useRouter } from "expo-router";
 import { Text, View, StyleSheet, Image } from "react-native";
 
 export default function NutritionCard() {
+    const router = useRouter();
+
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
@@ -10,7 +13,7 @@ export default function NutritionCard() {
                 <CommonButton
                     title="Get Started"
                     backgroundColor="#F77B4E"
-                    onPress={() => console.log("Get Started with Nutrition!")}
+                    onPress={() => router.push("/(tabs)/NutritionPage")}
                     textStyle={{ fontSize: 14, fontWeight: 400}}
                     style={styles.button}
                 />
@@ -26,7 +29,7 @@ export default function NutritionCard() {
 const styles = StyleSheet.create({
     container : {
         margin: 10,
-        marginBottom: 20,
+        marginBottom: 150,
         backgroundColor: '#FDE6C5',
         padding: 15,
         borderRadius: 16,

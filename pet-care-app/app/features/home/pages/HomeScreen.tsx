@@ -92,44 +92,6 @@ export default function HomeScreen() {
         {/* Pet Profile Card */}
         <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
 
-        {/* Action Buttons */}
-        <View style={styles.buttonContainer}>
-          <CommonButton
-            title="Emergency"
-            onPress={() => console.log("Emergency!")}
-            iconName="medkit-outline"
-            iconColor="#90AB8B"
-            backgroundColor="#fff"
-            textColor="#3B4953"
-            bordered={true}
-            borderColor="#F2F2F2"
-            borderWidth={2}
-          />
-          <CommonButton
-            title="Add reminder"
-            onPress={() => console.log("Add reminder!")}
-            iconName="calendar-outline"
-            iconColor="#90AB8B"
-            backgroundColor="#fff"
-            textColor="#3B4953"
-            bordered={true}
-            borderColor="#F2F2F2"
-            borderWidth={2}
-          />
-        </View>
-        <CommonButton
-          title="Calorie calculator"
-          onPress={() => console.log("Calorie calculator")}
-          iconName="stats-chart-outline"
-          iconColor="#90AB8B"
-          backgroundColor="#fff"
-          textColor="#3B4953"
-          style={{ margin: 10 }}
-          bordered={true}
-          borderColor="#F2F2F2"
-          borderWidth={2}
-        />
-
         {/* Today's Reminder */}
         <View style={styles.reminderCardHeader}>
           <Text style={styles.textReminder}>Today's Reminder</Text>
@@ -170,7 +132,7 @@ export default function HomeScreen() {
         <NutritionCard />
 
         {/* Tips */}
-        <View style={[styles.reminderCardHeader, { marginBottom: 20 }]}>
+        {/* <View style={[styles.reminderCardHeader, { marginBottom: 20 }]}>
           <Text style={styles.textReminder}>Perfect tips</Text>
           <TouchableOpacity style={styles.buttonViewAll}>
             <Text style={styles.textViewAll}>View all</Text>
@@ -189,7 +151,7 @@ export default function HomeScreen() {
           <TipCard />
           <TipCard />
           <TipCard />
-        </ScrollView>
+        </ScrollView> */}
       </ScrollView>
       {/* Bottom Navigation Bar */}
       <BottomNavBar />

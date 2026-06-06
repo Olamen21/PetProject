@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CommonButton from "../../../shared/components/CommonButton";
@@ -23,19 +23,25 @@ export default function SelectBreedScreen() {
   const [breedName, setBreedName] = useState("");
   const isFormComplete = breedName.trim() !== "" && petType !== null;
 
-   useEffect(() => {
-    const fetchPet = async () => {
-      try {
-        const breedsData = await getAllBreed();
-        setBreeds(breedsData);
-      } catch (error) {
-        console.error("Không thể tải pet:", error);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchPet = async () => {
+        try {
+          const breedsData = await getAllBreed();
 
-    fetchPet();
-  }, []);
+          const filteredBreeds = breedsData.filter(
+            (b: Breed) => b.species?.toLowerCase() === petType?.toLowerCase()
+          );
+          setBreeds(filteredBreeds);
+        } catch (error) {
+          console.error("Không thể tải pet:", error);
+        }
+      };
 
+      fetchPet();
+    },[])
+  );
+  
   const handleContinue = () => {
     if (isFormComplete) {
       router.replace({
@@ -65,7 +71,7 @@ export default function SelectBreedScreen() {
           <Text style={styles.title}>Name your pet!</Text>
         </View>
 
-        {petType === "dog" ? (
+        {petType === "Dog" ? (
           <Image
             source={require("../../../../assets/images/dog_bg.png")}
             style={styles.image}

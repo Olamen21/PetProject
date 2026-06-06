@@ -120,18 +120,6 @@ export default function PetProfileScreen() {
           {message && (
             <CommonMessage type={message.type} message={message.text} />
           )}
-          <CommonButton
-            title="Emergency"
-            onPress={() => {}}
-            iconName="call-outline"
-            iconColor="#FF6B6B"
-            backgroundColor="#ffffff"
-            textColor="#FF6B6B"
-            bordered
-            borderColor="#FF6B6B"
-            borderWidth={1.5}
-            style={styles.button}
-          />
           <HealthSection />
           <TasksSection />
 
@@ -177,18 +165,6 @@ export default function PetProfileScreen() {
           iconColor="#fff"
           backgroundColor="#5A7863"
           textColor="#fff"
-          style={styles.button}
-        />
-        <CommonButton
-          title="Emergency"
-          onPress={() => {}}
-          iconName="call-outline"
-          iconColor="#FF6B6B"
-          backgroundColor="#ffffff"
-          textColor="#FF6B6B"
-          bordered
-          borderColor="#FF6B6B"
-          borderWidth={1.5}
           style={styles.button}
         />
         <HealthSection />
