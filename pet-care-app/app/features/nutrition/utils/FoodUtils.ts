@@ -1,23 +1,53 @@
 import { Food } from '../types/Food';
-import foodDataRaw from '../../../../assets/food_full.json';
 import { SchedulePlan } from '../types/SchedulePlan';
 import { cosineSimilarity } from './NutritionUtils';
+import { getNutrition } from '../services/NutritionApi';
+
+let cachedFoods: Food[] | null = null;
+let cachedVectors: { food_id: any; name: string; vector: number[]; species: string }[] | null = null;
+
+export function clearFoodCache() {
+  cachedFoods = null;
+  cachedVectors = null;
+}
 
 export async function loadFoodData(): Promise<Food[]> {
-  const foods: Food[] = (foodDataRaw as any[]).map(item => ({
-    food_id: item.food_id,
-    food_name: item.food_name,
-    calories: Number(item.calories),
-    protein: Number(item.protein),
-    fat: Number(item.fat),
-    carb: Number(item.carb),
-    species: item.species,
-  }));
 
-  return foods;
+  if (cachedFoods) {
+    return cachedFoods;
+  }
+
+  try {
+    const rawData = await getNutrition();
+
+    if (!Array.isArray(rawData)) {
+      console.warn("Dữ liệu dinh dưỡng từ API không đúng định dạng mảng");
+      return [];
+    }
+
+    const foods: Food[] = rawData.map((item: any) => ({
+      food_id: item.food_id,
+      food_name: item.food_name,
+      calories: Number(item.calories),
+      protein: Number(item.protein),
+      fat: Number(item.fat),
+      carb: Number(item.carb),
+      species: item.species,
+    }));
+
+    cachedFoods = foods;
+    return foods;
+  } catch (error) {
+    console.error("Lỗi khi loadFoodData từ API:", error);
+    return [];
+  }
 }
 
 export async function loadFoodVectors(): Promise<{ name: string; vector: number[]; species: string }[]> {
+  if (cachedVectors) {
+    return cachedVectors;
+  }
+
   const foods = await loadFoodData();
 
   const vectors = foods.map(food => ({
@@ -27,6 +57,7 @@ export async function loadFoodVectors(): Promise<{ name: string; vector: number[
     species: food.species,
   }));
 
+  cachedVectors = vectors;
   return vectors;
 }
 
