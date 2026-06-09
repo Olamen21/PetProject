@@ -31,6 +31,8 @@ export const Colors = {
   text_tag_blue: "#2f80ed",
   bg_tag_orange: "#fff1e6",
   text_tag_orange: "#e67e22",
+  bg_tag_gray: "#f0f0f0",
+  text_tag_gray: "#757575",
   bg_tag_warning: "#fff4e5",
   text_tag_warning: "#f39c12",
   stars: "#f1c40f",
