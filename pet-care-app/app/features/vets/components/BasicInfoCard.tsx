@@ -70,7 +70,7 @@ export default function BasicInfoCard({
         </View>
 
         <View style={styles.vaccinRow}>
-          <Text style={styles.text}>Vaccination: Up-to-date</Text>
+          <Text style={styles.text}>Vaccination: Up-to-date  </Text>
         </View>
       </View>
     </View>
