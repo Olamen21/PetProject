@@ -12,6 +12,8 @@ import {
   getAllVaccine,
   getAppointmentByVetId,
   markCompleteVaccine,
+  createMedicalRecord,
+  markCompleteAppointment,
 } from "../services/DiagnosisService";
 import type { PetVaccine } from "../types/PetVaccine";
 import { getAllUser, getProfile } from "../../../api/UserApi";
@@ -19,15 +21,17 @@ import type { Vaccine } from "../types/Vaccine";
 import type { Pet } from "../types/Pet";
 import type { User } from "../types/User";
 import type { Appointment } from "../types/Appointment";
+import type { DiagnosisData } from "../types/DiagnosisData";
 
 export default function DiagnosisPage() {
   const [vaccinePets, setVaccinePets] = useState<PetVaccine[]>([]);
-  const [appointments, setAppointments] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
-  const [diagnosisPet, setDiagnosisPet] = useState<Pet | null>(null);
+  const [diagnosisAppointment, setDiagnosisAppointment] =
+    useState<Appointment | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +83,11 @@ export default function DiagnosisPage() {
     const markCompleteData = await markCompleteVaccine(id);
     if (markCompleteData) {
       alert("Đã đánh dấu lịch tiêm vắc-xin hoàn thành!");
-      setVaccinePets(vaccinePets.map((v) => (v.id === id ? { ...v, status: "COMPLETED" } : v)));
+      setVaccinePets(
+        vaccinePets.map((v) =>
+          v.id === id ? { ...v, status: "COMPLETED" } : v,
+        ),
+      );
     } else {
       alert("Đánh dấu hoàn thành thất bại. Vui lòng thử lại.");
     }
@@ -94,20 +102,41 @@ export default function DiagnosisPage() {
     }
   };
 
-  const handleSaveDiagnosis = (
+  const handleSaveDiagnosis = async (
     id: number,
-    diagnosisData: { condition: string; prescription: string },
+    diagnosisData: DiagnosisData,
   ) => {
     console.log("Lưu thông tin bệnh án cho ca hẹn:", id, diagnosisData);
 
-    alert(
-      `Lưu hồ sơ bệnh án thành công cho thú cưng!\n- Bệnh lý: ${diagnosisData.condition}\n- Đơn thuốc: ${diagnosisData.prescription}`,
-    );
+    try {
+      const dataForm = new FormData();
+      dataForm.append("pet_id", String(id));
+      dataForm.append("appointment_id", String(diagnosisData.appointment_id));
+      dataForm.append("symptoms", diagnosisData.symptoms);
+      dataForm.append("diagnosis", diagnosisData.diagnosis);
+      dataForm.append("weight_at_exam", String(diagnosisData.weight_at_exam));
+      dataForm.append("vet_notes", diagnosisData.vet_notes);
+      dataForm.append("medications", JSON.stringify(diagnosisData.medications));
 
-    setAppointments((prev) => prev.filter((item) => item.id !== id));
+      const res = await createMedicalRecord(dataForm);
+      await markCompleteAppointment(diagnosisData.appointment_id);
+
+      if (res && (res.status === 200 || res.status === 201)) {
+        alert("Cập nhật thành công!");
+        setAppointments(appointments.filter((v) => v.id !== id ));
+      } else {
+        alert("Cập nhật thất bại, bạn hãy kiểm tra lại nhé!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi update:", error);
+      alert("Đã có lỗi xảy ra khi kết nối server!");
+    }
   };
 
-  const filteredVaccines = vaccinePets.filter((v: PetVaccine) => v.pet_name && v.pet_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredVaccines = vaccinePets.filter(
+    (v: PetVaccine) =>
+      v.pet_name && v.pet_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   const filteredAppointments = appointments.filter(
     (a: Appointment) =>
       a.pet_name && a.pet_name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -144,7 +173,7 @@ export default function DiagnosisPage() {
               <AppointmentSection
                 appointments={filteredAppointments}
                 onRowClick={(pet) => setSelectedPet(pet)}
-                onOpenDiagnosis={(pet) => setDiagnosisPet(pet)}
+                onOpenDiagnosis={(appointment) => setDiagnosisAppointment(appointment)}
               />
             </div>
           </div>
@@ -158,10 +187,10 @@ export default function DiagnosisPage() {
         />
       )}
 
-      {diagnosisPet && (
+      {diagnosisAppointment && (
         <DiagnosisFormModal
-          pet={diagnosisPet}
-          onClose={() => setDiagnosisPet(null)}
+          appointment={diagnosisAppointment}
+          onClose={() => setDiagnosisAppointment(null)}
           onSave={handleSaveDiagnosis}
         />
       )}

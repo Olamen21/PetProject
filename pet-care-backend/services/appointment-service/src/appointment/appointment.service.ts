@@ -54,6 +54,19 @@ export class AppointmentService {
     appointment.status = AppointmentStatus.CONFIRMED;
     return await this.appointmentRepository.save(appointment);
   }
+  async completedAppointment(id: number) {
+    const appointment = await this.appointmentRepository.findOne({
+      where: { id },
+    });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    if (appointment.status === AppointmentStatus.COMPLETED) {
+      throw new Error('Appointment is already completed');
+    }
+    appointment.status = AppointmentStatus.COMPLETED;
+    return await this.appointmentRepository.save(appointment);
+  }
 
   async cancelAppointment(id: number) {
     const appointment = await this.appointmentRepository.findOne({
@@ -68,6 +81,7 @@ export class AppointmentService {
     appointment.status = AppointmentStatus.CANCELLED;
     return await this.appointmentRepository.save(appointment);
   }
+
   async findByPetId(petId: number): Promise<Appointment[]> {
     return await this.appointmentRepository.find({ where: { pet_id: petId } });
   }

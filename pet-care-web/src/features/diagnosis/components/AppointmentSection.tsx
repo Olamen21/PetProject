@@ -7,7 +7,7 @@ import type { Pet } from "../types/Pet";
 interface Props {
   appointments: Appointment[];
   onRowClick: (pet: Pet) => void;
-  onOpenDiagnosis: (pet: Pet) => void; 
+  onOpenDiagnosis: (appointment: Appointment) => void; 
 }
 
 export default function AppointmentSection({ appointments, onRowClick, onOpenDiagnosis }: Props) {

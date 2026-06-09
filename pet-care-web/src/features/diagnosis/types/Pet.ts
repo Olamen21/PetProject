@@ -1,5 +1,5 @@
 export interface Pet {
-  id?: number;
+  id: number;
   owner_id?: number;
   name?: string;
   species?: string;
@@ -11,7 +11,7 @@ export interface Pet {
   neutered?: string;
   allergies?: string[];
   avatar_url?: string;
-  pet_name?: string;
-  owner_name?: string;
+  pet_name: string;
+  owner_name: string;
   user_note?: string;
 }
