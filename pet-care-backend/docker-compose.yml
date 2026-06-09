@@ -148,6 +148,21 @@ services:
     networks:
       - pet-network 
 
+  review-service:
+    build: ./services/review-service
+    env_file:
+      - .env
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./services/review-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgresdb
+      - redis
+    networks:
+      - pet-network 
+
 networks:
   pet-network:
     driver: bridge

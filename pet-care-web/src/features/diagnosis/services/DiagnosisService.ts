@@ -29,3 +29,6 @@ export const createMedicalRecord = async (data: FormData) => {
         },
     });
 }
+export const markCompleteAppointment = async (id: number) => {
+    return await api.patch(`/appointment/${id}/complete`);
+}

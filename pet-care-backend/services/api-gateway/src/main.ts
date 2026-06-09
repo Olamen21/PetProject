@@ -109,6 +109,16 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(
+    '/review',
+    createProxyMiddleware({
+      target: 'http://review-service:3009',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/': '/review/',
+      },
+    }),
+  );
   await app.listen(3000);
   console.log('Gateway is running on port 3000');
 }

@@ -99,6 +99,13 @@ export class AppointmentController {
   confirmAppointment(@Param('id') id: string) {
     return this.appointmentService.confirmAppointment(+id);
   }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.VET, Role.ADMIN)
+  @ApiOperation({ summary: 'Hoàn thành lịch hẹn' })
+  @Patch(':id/complete')
+  completeAppointment(@Param('id') id: string) {
+    return this.appointmentService.completedAppointment(+id);
+  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.VET, Role.ADMIN)
