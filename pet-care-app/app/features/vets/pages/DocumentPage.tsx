@@ -9,61 +9,87 @@ import { Breed } from "../types/Breed";
 import { getAllBreed, getPetById } from "../services/vetService";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalButton } from "../components/MedicalButton";
-import MedicalItem from "../components/MedicalItem";
+import DocumentItem, { DocumentIconType } from "../components/DocumentItem";
 
-export default function PrescriptionPage() {
+interface DocumentData {
+  id: string;
+  date: string;
+  title: string;
+  subtitle: string;
+  iconType: DocumentIconType;
+}
+
+export default function DocumentPage() {
     const router = useRouter();
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
     const [breeds, setBreeds] = useState<Breed[]>([]);
     const { petId } = useLocalSearchParams<{ petId: string }>();
-    const [selected, setSelected] = useState<string>("Prescriptions");
+    const [selected, setSelected] = useState<string>("Documents");
 
-    useFocusEffect(
-        useCallback(() => {
-          const fetchPetProfile = async () => {
-            try {
-              console.log("petId: " + petId);
-              if (!petId) return;
-              const dataPet = await getPetById(petId);
-              setSelectedPet(dataPet);
-              const breeds = await getAllBreed();
-              setBreeds(breeds);
-            } catch (error) {
-              console.error("Không thể tải pet:", error);
-            }
-          };
-          fetchPetProfile();
-        }, []),
-      );
-
-    const data = [
+    const documents: DocumentData[] = [
         {
             id: '1',
-            name: 'Nestalin 220',
-            dose: '1 capsule',
-            type: 'pill',
-            status: 'refill',
+            date: '14 Sep, 2025',
+            title: 'Rabies Vaccination Certificate',
+            subtitle: 'Elisabeth Clinic',
+            iconType: 'document',
         },
         {
             id: '2',
-            name: 'Rabies 1 dose',
-            dose: '1 dose',
-            type: 'injection',
-            status: 'active',
+            date: '02 Aug, 2025',
+            title: 'Referral to physiotherapy',
+            subtitle: 'Dr. Mike Muller',
+            iconType: 'doctor',
         },
         {
             id: '3',
-            name: 'Prednsone 220',
-            dose: '1 capsule',
-            type: 'pill',
-            status: 'expired',
+            date: '27 Sep, 2025',
+            title: 'Insurance contract',
+            subtitle: 'TK health insurance company',
+            iconType: 'insurance',
+        },
+        {
+            id: '4',
+            date: '27 Apr, 2025',
+            title: 'Dental X-ray',
+            subtitle: 'Maria Clinic',
+            iconType: 'dental',
+        },
+        {
+            id: '5',
+            date: '07 Feb, 2025',
+            title: 'Foot CT scan',
+            subtitle: 'Maria Clinic',
+            iconType: 'bone',
         },
     ];
+
+    const handleView = (title: string) => {
+        console.log(`Đang xem tài liệu: ${title}`);
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchPetProfile = async () => {
+            try {
+                console.log("petId: " + petId);
+                if (!petId) return;
+                const dataPet = await getPetById(petId);
+                setSelectedPet(dataPet);
+                const breeds = await getAllBreed();
+                setBreeds(breeds);
+            } catch (error) {
+                console.error("Không thể tải pet:", error);
+            }
+            };
+            fetchPetProfile();
+        }, []),
+    );
 
     return (
         <View style={styles.container}>
             <HeaderBar
-                title="Prescriptions"
+                title="Documents"
                 leftIcons={[
                     {
                     type: "ion",
@@ -94,7 +120,7 @@ export default function PrescriptionPage() {
                             }
                         }}
                         >
-                    <Ionicons name="add-outline" color={Colors.white} size={24} />
+                        <Ionicons name="add-outline" color={Colors.white} size={24} />
                     </TouchableOpacity>
                 </View>
 
@@ -110,6 +136,12 @@ export default function PrescriptionPage() {
                         label="Prescriptions"
                         selected={selected === "Prescriptions"}
                         onPress={() => setSelected("Prescriptions")}
+                    />
+                    <MedicalButton
+                        icon="document-text-outline"
+                        label="Documents"
+                        selected={selected === "Documents"}
+                        onPress={() => setSelected("Documents")}
                     />
                     <MedicalButton
                         icon="chatbox-outline"
@@ -131,15 +163,18 @@ export default function PrescriptionPage() {
                     </TouchableOpacity>
                 </View>
 
-                {data.map((item) => (
-                    <MedicalItem
-                    key={item.id}
-                    name={item.name}
-                    dose={item.dose}
-                    type={item.type as 'pill' | 'injection'}
-                    status={item.status as 'refill' | 'active' | 'expired'}
+                {documents.map((item) => (
+                    <DocumentItem
+                        key={item.id} 
+                        date={item.date}
+                        title={item.title}
+                        subtitle={item.subtitle}
+                        iconType={item.iconType}
+                        onViewPress={() => handleView(item.title)}
                     />
                 ))}
+
+
             </ScrollView>
         </View>
     )

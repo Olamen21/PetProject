@@ -64,6 +64,26 @@ export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
                     iconSize={16}
                 />
             </View>
+
+            <View style={styles.buttonContainer}>
+                 <CommonButton
+                    title="Documents"
+                    onPress={() => router.push({
+                        pathname: "/(tabs)/DocumentPage",
+                        params: {petId: selectedPet?.id}
+                    })}
+                    iconName="document-text-outline"
+                    iconColor= {Colors.secondary}
+                    backgroundColor= {Colors.white}
+                    textColor= {Colors.text}
+                    bordered={true}
+                    borderColor="#F2F2F2"
+                    borderWidth={2}
+                    style={styles.btn}
+                    textStyle={{fontSize: 11}}
+                    iconSize={16}
+                />
+            </View>
         </View>
     )
 }
@@ -96,6 +116,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginHorizontal: 10,
         marginTop: 10,
+        gap: 10,
     },
     btn: {
         flex: 1,
