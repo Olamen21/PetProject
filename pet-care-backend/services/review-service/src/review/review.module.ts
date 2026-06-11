@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { Review } from './entities/review.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtStrategy } from '../auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forFeature([Review]),
   ],
   controllers: [ReviewController],
-  providers: [ReviewService],
+  providers: [ReviewService, JwtStrategy],
   exports: [ReviewService],
 })
 export class ReviewModule {}
