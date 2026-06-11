@@ -65,7 +65,7 @@ export default function DocumentPage() {
     ];
 
     const handleView = (title: string) => {
-        console.log(`Đang xem tài liệu: ${title}`);
+        router.push("/(tabs)/DocumentDetailPage");
     };
 
     useFocusEffect(
