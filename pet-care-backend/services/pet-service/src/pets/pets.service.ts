@@ -69,7 +69,7 @@ export class PetsService {
     data: UpdatePetDto,
     imageUrl?: string,
   ): Promise<Pet> {
-    const pet = await this.findOne(petId);
+    // const pet = await this.findOne(petId);
 
     // const updateData: any = { ...data };
 
