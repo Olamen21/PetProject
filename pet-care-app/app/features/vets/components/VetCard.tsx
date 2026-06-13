@@ -1,7 +1,6 @@
 import { Colors } from "@/app/constants/Colors";
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
 
 type VetCardProps = {
   id?: number;
@@ -11,6 +10,7 @@ type VetCardProps = {
   online?: boolean;
   bio?: string | null;
   degree?: string | null;
+  onPress?: () => void;
 };
 
 const VetCard: React.FC<VetCardProps> = ({
@@ -20,17 +20,12 @@ const VetCard: React.FC<VetCardProps> = ({
   avatarUrl,
   bio,
   degree,
+  onPress
 }) => {
-  const router = useRouter();
 
   return (
     <TouchableOpacity
-      onPress={() =>
-        router.push({
-          pathname: "/(tabs)/AppointmentPage",
-          params: { vetId: id },
-        })
-      }
+      onPress = {onPress}
     >
       <View style={styles.card}>
         {/* Avatar */}
