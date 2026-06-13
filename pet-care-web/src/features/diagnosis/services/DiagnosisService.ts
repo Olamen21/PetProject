@@ -22,7 +22,20 @@ export const getAppointmentByVetId = async (vetId: number) => {
     const res = await api.get(`/appointment/vet/${vetId}`);
     return res.data;
 }
-export const createMedicalRecord = async (data: FormData) => {
+
+export const createMedicalRecord = async (data: {
+    pet_id: number;
+    appointment_id?: number;
+    symptoms: string;
+    diagnosis: string;
+    weight_at_exam?: number | null;
+    vet_notes?: string;
+    medications: Array<{
+        medication_name: string;
+        dosage: string;
+        duration: number | "";
+    }>;
+}) => {
     return await api.post('/medical-record/create-medical-record', data, {
         headers: {
             "Content-Type": "application/json",

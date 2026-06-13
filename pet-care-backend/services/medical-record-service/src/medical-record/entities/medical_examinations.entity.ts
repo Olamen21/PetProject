@@ -2,9 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Prescription } from './prescriptions.entity';
@@ -23,11 +21,8 @@ export class MedicalExamination {
   @Column({ nullable: true })
   appointment_id!: number;
 
-  @ManyToMany(() => Prescription)
-  @JoinTable({
-    name: 'examination_prescriptions',
-    joinColumn: { name: 'examination_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'prescription_id', referencedColumnName: 'id' },
+  @OneToMany(() => Prescription, (prescription) => prescription.examination, {
+    cascade: true,
   })
   prescriptions!: Prescription[];
 

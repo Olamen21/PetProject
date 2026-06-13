@@ -55,3 +55,7 @@ export const getAppointmentByVetId = async (vetId: string) => {
   const res = await api.get(`/appointment/vet/` + vetId);
   return res.data;
 }
+export const getPrescriptionDisplayItem = async (petId: string) => {
+  const res = await api.get('/medical-record/pet/' + petId + '/current-medications');
+  return res.data;
+}
