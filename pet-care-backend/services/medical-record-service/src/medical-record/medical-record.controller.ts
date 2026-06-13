@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -11,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { MedicalRecordService } from './medical-record.service';
 import { CreateMedicalRecordDto } from './dto/create-medical-record.dto';
-import { UpdateMedicalRecordDto } from './dto/update-medical-record.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
@@ -62,16 +60,25 @@ export class MedicalRecordController {
     return this.medicalRecordService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateMedicalRecordDto: UpdateMedicalRecordDto,
-  ) {
-    return this.medicalRecordService.update(+id, updateMedicalRecordDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateMedicalRecordDto: UpdateMedicalRecordDto,
+  // ) {
+  //   return this.medicalRecordService.update(+id, updateMedicalRecordDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.medicalRecordService.remove(+id);
+  }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.VET, Role.USER)
+  @ApiOperation({
+    summary: 'Lấy danh sách thuốc hiện tại của thú cưng theo Pet ID',
+  })
+  @Get('pet/:petId/current-medications')
+  async getCurrentMedications(@Param('petId') petId: string) {
+    return this.medicalRecordService.findCurrentMedications(+petId);
   }
 }
