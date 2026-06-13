@@ -20,13 +20,14 @@ import {
   getAppointmentsByUserId,
   getProfile,
 } from "../services/vetService";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import AppointmentCard from "./AppointmentCard";
 import { Appointment } from "../types/Appointment";
 
 export default function VeterinariansComponent() {
   const [vets, setVets] = useState<Vets[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const router = useRouter();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -74,10 +75,19 @@ export default function VeterinariansComponent() {
       fetchVets();
     }, []),
   );
-  const handleReview = (id: number) => {
-    console.log(`Điều hướng sang màn hình viết Review cho cuộc hẹn ID: ${id}`);
-    // Bạn có thể dùng navigation.navigate('ReviewScreen', { id }) tại đây
+  const handleReview = (vetId: number | undefined) => {
+    router.push({
+      pathname: "/(tabs)/GiveFeedbackPage",
+      params: {vetId: vetId}
+    })
   };
+
+  const handleBooking = (vetId: number | undefined) => {
+    router.push({
+      pathname: "/(tabs)/AppointmentPage",
+      params: { vetId: vetId },
+    });
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.reminderCardHeader}>
@@ -132,6 +142,32 @@ export default function VeterinariansComponent() {
         </View>
       )}
 
+      {/* Feedback */}
+      <View style={styles.cardHeader}>
+        <Text style={styles.textCard}>Feedback</Text>
+        <TouchableOpacity style={styles.buttonViewAll}>
+          <Text style={styles.textViewAll}>View all</Text>
+          <Ionicons
+            name="chevron-forward-outline"
+            color={Colors.primary}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {vets.map((vet) => (
+        <VetCard
+          key={vet.id}
+          id={vet.id}
+          full_name={vet.full_name}
+          role={vet.role}
+          avatarUrl={vet.avatar_url}
+          bio={vet.doctorProfile?.bio}
+          degree={vet.doctorProfile?.degree}
+          onPress={() => handleReview(vet.id)}
+        />
+      ))}
+
       {/* Veterinarians */}
       <View style={styles.cardHeader}>
         <Text style={styles.textCard}>Veterinarians</Text>
@@ -153,6 +189,7 @@ export default function VeterinariansComponent() {
           avatarUrl={vet.avatar_url}
           bio={vet.doctorProfile?.bio}
           degree={vet.doctorProfile?.degree}
+          onPress={() => handleBooking(vet.id)}
         />
       ))}
 
@@ -239,6 +276,6 @@ const styles = StyleSheet.create({
   },
   tipScrollView: {
     marginLeft: 10,
-    marginBottom: 20,
+    marginBottom: 130,
   },
 });
