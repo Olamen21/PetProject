@@ -1,8 +1,8 @@
 import api from "../../../../api/axiosInstance";
 
 export const getPetById = async (id: string) => {
-    const res = await api.get('/pets/' + id);
-    return res.data;
+  const res = await api.get('/pets/' + id);
+  return res.data;
 }
 export const getAllBreed = async () => {
   const res = await api.get('/breeds');
@@ -11,11 +11,11 @@ export const getAllBreed = async () => {
 export const createVaccine = async (payload: any) => {
   return await api.post('/vaccine-pet/create-vaccine', payload, {
     headers: {
-      'Content-Type': 'application/json', 
+      'Content-Type': 'application/json',
     },
   });
 };
-export const getAllVaccineCategory = async() => {
+export const getAllVaccineCategory = async () => {
   const res = await api.get('/vaccine-category');
   return res.data;
 }
@@ -35,7 +35,7 @@ export const getVetById = async (id: string) => {
 export const bookAppointment = async (payload: any) => {
   return await api.post('/appointment/create-appointment', payload, {
     headers: {
-      'Content-Type': 'application/json', 
+      'Content-Type': 'application/json',
     },
   });
 }
@@ -44,7 +44,7 @@ export const getAppointmentsByUserId = async (userId: string) => {
   return res.data;
 }
 export const getProfile = async () => {
-  const res = await api.get(`/users/profile`); 
+  const res = await api.get(`/users/profile`);
   return res.data;
 };
 export const getAllPetUser = async () => {
@@ -57,5 +57,9 @@ export const getAppointmentByVetId = async (vetId: string) => {
 }
 export const getPrescriptionDisplayItem = async (petId: string) => {
   const res = await api.get('/medical-record/pet/' + petId + '/current-medications');
+  return res.data;
+}
+export const getMedicalRecordByPetID = async (petId: string) => {
+  const res = await api.get('/medical-record/pet/medical-record/' + petId);
   return res.data;
 }

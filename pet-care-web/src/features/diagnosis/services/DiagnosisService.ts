@@ -35,6 +35,7 @@ export const createMedicalRecord = async (data: {
         dosage: string;
         duration: number | "";
     }>;
+    title: string;
 }) => {
     return await api.post('/medical-record/create-medical-record', data, {
         headers: {

@@ -18,6 +18,9 @@ export class MedicalExamination {
   @Column()
   vet_id!: number;
 
+  @Column()
+  title!: string;
+
   @Column({ nullable: true })
   appointment_id!: number;
 

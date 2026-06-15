@@ -39,9 +39,16 @@ export class MedicalRecordService {
     return this.medicalExaminationRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} medicalRecord`;
+  async remove(id: number): Promise<void> {
+    await this.prescriptionRepository.delete({ examination: { id } });
+
+    const result = await this.medicalExaminationRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new Error(`Medical examination with id ${id} not found`);
+    }
   }
+
   async findCurrentMedications(petId: number) {
     const now = new Date();
 
@@ -70,6 +77,16 @@ export class MedicalRecordService {
         end_date: expirationDate,
         status: isActive ? 'Active' : 'Expired',
       };
+    });
+  }
+
+  async findByPetId(petId: number) {
+    return this.medicalExaminationRepository.find({
+      where: { pet_id: petId },
+      relations: {
+        prescriptions: true,
+      },
+      order: { created_at: 'DESC' },
     });
   }
 }
