@@ -8,16 +8,23 @@ export class CreateMedicalRecordDto {
   })
   pet_id!: number;
 
-//   @ApiProperty({
-//     example: 1,
-//     description: 'ID của bác sĩ thú y',
-//   })
-//   vet_id!: number;
+  //   @ApiProperty({
+  //     example: 1,
+  //     description: 'ID của bác sĩ thú y',
+  //   })
+  //   vet_id!: number;
   @ApiPropertyOptional({
     example: 1,
     description: 'ID của cuộc hẹn (nếu có)',
   })
   appointment_id?: number;
+
+  @ApiPropertyOptional({
+    example: 'Điều trị tiêu chảy',
+    description: 'tiêu đề của buổi khám',
+  })
+  title?: string;
+
   @ApiProperty({
     example: 'Chó bị tiêu chảy và nôn mửa',
     description: 'Triệu chứng của thú cưng tại thời điểm khám',

@@ -116,7 +116,8 @@ export default function DiagnosisPage() {
       diagnosis: diagnosisData.diagnosis,
       weight_at_exam: diagnosisData.weight_at_exam ? Number(diagnosisData.weight_at_exam) : null,
       vet_notes: diagnosisData.vet_notes,
-      medications: diagnosisData.medications 
+      medications: diagnosisData.medications,
+      title: diagnosisData.title,
     };
 
     const res = await createMedicalRecord(data);

@@ -21,6 +21,7 @@ export default function DiagnosisFormModal({ appointment, onClose, onSave }: Pro
     weight_at_exam: "",
     medications: [{ medication_name: "", dosage: "", duration: "" }],
     appointment_id: appointment.id,
+    title: ""
   });
 
   const handleBaseChange = (
@@ -123,6 +124,16 @@ export default function DiagnosisFormModal({ appointment, onClose, onSave }: Pro
           </div>
 
           {/* Triệu chứng */}
+           <div style={styles.formGroup}>
+            <label style={styles.label}>Tiêu đề</label>
+            <textarea
+              value={formData.title}
+              onChange={(e) => handleBaseChange("title", e.target.value)}
+              placeholder="Tiêu đề của buổi khám...."
+              style={styles.textarea}
+              rows={2}
+            />
+          </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Triệu chứng lâm sàng</label>
             <textarea

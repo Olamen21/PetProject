@@ -81,4 +81,14 @@ export class MedicalRecordController {
   async getCurrentMedications(@Param('petId') petId: string) {
     return this.medicalRecordService.findCurrentMedications(+petId);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.VET, Role.USER)
+  @ApiOperation({
+    summary: 'Lấy tất cả hồ sơ y tế của thú cưng theo Pet ID',
+  })
+  @Get('pet/medical-record/:petId')
+  async getAllMedicalRecordByPetID(@Param('petId') petId: string) {
+    return this.medicalRecordService.findByPetId(+petId);
+  }
 }

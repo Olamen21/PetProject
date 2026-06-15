@@ -11,4 +11,5 @@ export interface DiagnosisData {
   weight_at_exam: number | "";
   medications: MedicationItem[];
   appointment_id: number;
+  title: string;
 }

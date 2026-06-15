@@ -25,4 +25,6 @@ export interface MedicalRecord {
   vet_notes?: string | null;
   created_at: string;            
   prescriptions: MedicationItem[];
+  vet_name: string;
+  title: string;
 }

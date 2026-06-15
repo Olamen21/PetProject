@@ -8,13 +8,11 @@ import {
 } from '@expo/vector-icons';
 import { Colors } from '@/app/constants/Colors';
 
-export type DocumentIconType = 'document' | 'doctor' | 'insurance' | 'dental' | 'bone';
 
 interface DocumentItemProps {
   date: string;
   title: string;
   subtitle: string;
-  iconType: DocumentIconType;
   onViewPress?: () => void;
   containerStyle?: ViewStyle;
 }
@@ -23,37 +21,19 @@ const DocumentItem: React.FC<DocumentItemProps> = ({
   date,
   title,
   subtitle,
-  iconType,
   onViewPress,
   containerStyle,
 }) => {
   
-    const renderLeftIcon = () => {
-        const iconColor = Colors.black;
-        const iconSize = 24;
-
-        switch (iconType) {
-        case 'document':
-            return <Ionicons name="document-text-outline" size={iconSize} color={iconColor} />;
-        case 'doctor':
-            return <FontAwesome6 name="user-doctor" size={22} color={iconColor} />;
-        case 'insurance':
-            return <MaterialCommunityIcons name="hand-heart-outline" size={iconSize} color={iconColor} />;
-        case 'dental':
-            return <MaterialCommunityIcons name="tooth-outline" size={26} color={iconColor} />;
-        case 'bone':
-            return <MaterialCommunityIcons name="bone" size={24} color={iconColor} />;
-        default:
-            return <Ionicons name="document-text-outline" size={iconSize} color={iconColor} />;
-        }
-    };
+    
 
   return (
     <View style={[styles.cardContainer, containerStyle]}>
 
       <View style={styles.leftSection}>
         <View style={styles.iconCircle}>
-          {renderLeftIcon()}
+          <Ionicons name="document-text-outline" size={24} color={Colors.black} />
+
         </View>
 
         {/* Thông tin văn bản */} 

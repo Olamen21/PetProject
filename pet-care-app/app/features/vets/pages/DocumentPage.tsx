@@ -1,183 +1,185 @@
 import { Colors } from "@/app/constants/Colors";
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import BasicInfoCard from "../components/BasicInfoCard";
 import { useCallback, useState } from "react";
 import { Pet } from "@/app/shared/types/Pet";
 import { Breed } from "../types/Breed";
-import { getAllBreed, getPetById } from "../services/vetService";
+import {
+  getAllBreed,
+  getAllVets,
+  getMedicalRecordByPetID,
+  getPetById,
+} from "../services/vetService";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalButton } from "../components/MedicalButton";
-import DocumentItem, { DocumentIconType } from "../components/DocumentItem";
+import DocumentItem from "../components/DocumentItem";
+import { MedicalRecord } from "../types/Prescriptions";
 
-interface DocumentData {
-  id: string;
-  date: string;
-  title: string;
-  subtitle: string;
-  iconType: DocumentIconType;
-}
+const formatDate = (isoString: string) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("en-GB", options);
+};
 
 export default function DocumentPage() {
-    const router = useRouter();
-    const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
-    const [breeds, setBreeds] = useState<Breed[]>([]);
-    const { petId } = useLocalSearchParams<{ petId: string }>();
-    const [selected, setSelected] = useState<string>("Documents");
+  const router = useRouter();
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+  const [breeds, setBreeds] = useState<Breed[]>([]);
+  const { petId } = useLocalSearchParams<{ petId: string }>();
+  const [selected, setSelected] = useState<string>("Documents");
+  const [documents, setDocuments] = useState<MedicalRecord[]>([]);
 
-    const documents: DocumentData[] = [
-        {
-            id: '1',
-            date: '14 Sep, 2025',
-            title: 'Rabies Vaccination Certificate',
-            subtitle: 'Elisabeth Clinic',
-            iconType: 'document',
-        },
-        {
-            id: '2',
-            date: '02 Aug, 2025',
-            title: 'Referral to physiotherapy',
-            subtitle: 'Dr. Mike Muller',
-            iconType: 'doctor',
-        },
-        {
-            id: '3',
-            date: '27 Sep, 2025',
-            title: 'Insurance contract',
-            subtitle: 'TK health insurance company',
-            iconType: 'insurance',
-        },
-        {
-            id: '4',
-            date: '27 Apr, 2025',
-            title: 'Dental X-ray',
-            subtitle: 'Maria Clinic',
-            iconType: 'dental',
-        },
-        {
-            id: '5',
-            date: '07 Feb, 2025',
-            title: 'Foot CT scan',
-            subtitle: 'Maria Clinic',
-            iconType: 'bone',
-        },
-    ];
+  const handleView = (item: MedicalRecord) => {
+    router.push({
+      pathname: "/(tabs)/DocumentDetailPage",
+      params: {
+        id: item.id.toString(),
+        title: item.title,
+        date: formatDate(item.created_at),
+        vetName: item.vet_name,
+        diagnosis: item.diagnosis,
+        weight: item.weight_at_exam?.toString() || "",
+        symptoms: item.symptoms,
+        notes: item.vet_notes || "",
+        prescriptionsData: JSON.stringify(item.prescriptions || []),
+      },
+    });
+  };
 
-    const handleView = (title: string) => {
-        router.push("/(tabs)/DocumentDetailPage");
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchPetProfile = async () => {
+        try {
+          console.log("petId: " + petId);
+          if (!petId) return;
+          const dataPet = await getPetById(petId);
+          setSelectedPet(dataPet);
+          const breeds = await getAllBreed();
+          setBreeds(breeds);
+          const vetData = await getAllVets();
+          const records = await getMedicalRecordByPetID(petId);
 
-    useFocusEffect(
-        useCallback(() => {
-            const fetchPetProfile = async () => {
-            try {
-                console.log("petId: " + petId);
-                if (!petId) return;
-                const dataPet = await getPetById(petId);
-                setSelectedPet(dataPet);
-                const breeds = await getAllBreed();
-                setBreeds(breeds);
-            } catch (error) {
-                console.error("Không thể tải pet:", error);
-            }
-            };
-            fetchPetProfile();
-        }, []),
-    );
+          const enrichedRecords: MedicalRecord[] = records.map(
+            (record: MedicalRecord) => {
+              const vet = vetData.find((v: any) => v.id === record.vet_id);
+              return {
+                ...record,
+                vet_name: vet ? vet.full_name : undefined,
+              };
+            },
+          );
 
-    return (
-        <View style={styles.container}>
-            <HeaderBar
-                title="Documents"
-                leftIcons={[
-                    {
-                    type: "ion",
-                    name: "chevron-back-outline",
-                    onPress: () => router.push("/(tabs)/VetPage"),
-                    },
-                ]}
-            />
+          setDocuments(enrichedRecords);
+        } catch (error) {
+          console.error("Không thể tải pet:", error);
+        }
+      };
+      fetchPetProfile();
+    }, []),
+  );
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <BasicInfoCard
-                    pet={selectedPet}
-                    setPet={setSelectedPet}
-                    breeds={breeds}
-                />
+  return (
+    <View style={styles.container}>
+      <HeaderBar
+        title="Documents"
+        leftIcons={[
+          {
+            type: "ion",
+            name: "chevron-back-outline",
+            onPress: () => router.push("/(tabs)/VetPage"),
+          },
+        ]}
+      />
 
-                {/* Medical record */}
-                <View style={styles.reminderCardHeader}>
-                    <Text style={styles.textReminder}>Medical records</Text>
-                    <TouchableOpacity
-                        style={styles.buttonAdd}
-                        onPress={() => {
-                            if (selected === "Vaccination") {
-                                router.push({
-                                    pathname: "/(tabs)/AddVaccinationPage",
-                                    params: { petId: selectedPet?.id },
-                                });
-                            }
-                        }}
-                        >
-                        <Ionicons name="add-outline" color={Colors.white} size={24} />
-                    </TouchableOpacity>
-                </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <BasicInfoCard
+          pet={selectedPet}
+          setPet={setSelectedPet}
+          breeds={breeds}
+        />
 
-                <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                    <MedicalButton
-                        icon="medkit-outline"
-                        label="Vaccination"
-                        selected={selected === "Vaccination"}
-                        onPress={() => setSelected("Vaccination")}
-                    />
-                    <MedicalButton
-                        icon="clipboard-outline"
-                        label="Prescriptions"
-                        selected={selected === "Prescriptions"}
-                        onPress={() => setSelected("Prescriptions")}
-                    />
-                    <MedicalButton
-                        icon="document-text-outline"
-                        label="Documents"
-                        selected={selected === "Documents"}
-                        onPress={() => setSelected("Documents")}
-                    />
-                    <MedicalButton
-                        icon="chatbox-outline"
-                        label="Consultations"
-                        selected={selected === "Consultations"}
-                        onPress={() => setSelected("Consultations")}
-                    />
-                </View>
-
-                <View style={styles.cardHeader}>
-                    <Text style={styles.textCard}>Current medications</Text>
-                    <TouchableOpacity style={styles.buttonViewAll}>
-                        <Text style={styles.textViewAll}>View all</Text>
-                        <Ionicons
-                        name="chevron-forward-outline"
-                        color={Colors.primary}
-                        size={20}
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                {documents.map((item) => (
-                    <DocumentItem
-                        key={item.id} 
-                        date={item.date}
-                        title={item.title}
-                        subtitle={item.subtitle}
-                        iconType={item.iconType}
-                        onViewPress={() => handleView(item.title)}
-                    />
-                ))}
-
-
-            </ScrollView>
+        {/* Medical record */}
+        <View style={styles.reminderCardHeader}>
+          <Text style={styles.textReminder}>Medical records</Text>
+          <TouchableOpacity
+            style={styles.buttonAdd}
+            onPress={() => {
+              if (selected === "Vaccination") {
+                router.push({
+                  pathname: "/(tabs)/AddVaccinationPage",
+                  params: { petId: selectedPet?.id },
+                });
+              }
+            }}
+          >
+            <Ionicons name="add-outline" color={Colors.white} size={24} />
+          </TouchableOpacity>
         </View>
-    )
+
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <MedicalButton
+            icon="medkit-outline"
+            label="Vaccination"
+            selected={selected === "Vaccination"}
+            onPress={() => setSelected("Vaccination")}
+          />
+          <MedicalButton
+            icon="clipboard-outline"
+            label="Prescriptions"
+            selected={selected === "Prescriptions"}
+            onPress={() => setSelected("Prescriptions")}
+          />
+          <MedicalButton
+            icon="document-text-outline"
+            label="Documents"
+            selected={selected === "Documents"}
+            onPress={() => setSelected("Documents")}
+          />
+          <MedicalButton
+            icon="chatbox-outline"
+            label="Consultations"
+            selected={selected === "Consultations"}
+            onPress={() => setSelected("Consultations")}
+          />
+        </View>
+
+        <View style={styles.cardHeader}>
+          <Text style={styles.textCard}>Current medications</Text>
+          <TouchableOpacity style={styles.buttonViewAll}>
+            <Text style={styles.textViewAll}>View all</Text>
+            <Ionicons
+              name="chevron-forward-outline"
+              color={Colors.primary}
+              size={20}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {documents.map((item) => (
+          <DocumentItem
+            key={item.id}
+            date={formatDate(item.created_at)}
+            title={item.title}
+            subtitle={item.vet_name}
+            onViewPress={() => handleView(item)}
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
