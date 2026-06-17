@@ -13,4 +13,5 @@ export interface Appointment {
   time: string;
   vet_image: string;
   appointment_date: string;
+  is_reviewed: boolean;
 }

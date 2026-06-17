@@ -34,8 +34,8 @@ export class Appointment {
   @Column({ nullable: true })
   user_note!: string;
 
-  // @Column({ nullable: true })
-  // vet_note!: string;
+  @Column({ default: false })
+  is_reviewed!: boolean;
 
   @CreateDateColumn()
   create_at!: Date;

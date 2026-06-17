@@ -63,3 +63,13 @@ export const getMedicalRecordByPetID = async (petId: string) => {
   const res = await api.get('/medical-record/pet/medical-record/' + petId);
   return res.data;
 }
+export const createReview = async ( payload: any) => {
+    return await api.post('/review/create-review', payload, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+export const markCompleteReview = async (id: string) => {
+  return await api.patch('/appointment/review/complete/' + id);
+}

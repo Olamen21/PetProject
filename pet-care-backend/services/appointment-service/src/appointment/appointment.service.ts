@@ -90,4 +90,17 @@ export class AppointmentService {
       where: { user_id: userId },
     });
   }
+  async markCompleteReview(id: number) {
+    const appointment = await this.appointmentRepository.findOne({
+      where: { id },
+    });
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+    if (appointment.is_reviewed == true) {
+      throw new Error('Review appointment is already completed');
+    }
+    appointment.is_reviewed = true;
+    return await this.appointmentRepository.save(appointment);
+  }
 }

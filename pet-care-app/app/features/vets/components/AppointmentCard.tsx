@@ -7,11 +7,13 @@ type AppointmentCardProps = {
   id: number;
   date: string;
   time: string;
+  vet_id: number;
   vet_name: string;
   vet_image: string | number;
   pet_name: string;
+  is_reviewed: boolean;
   status: string;
-  onReviewPress?: (id: number) => void;
+  onReviewPress?: (id: number, vet_id: number) => void;
 };
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({
@@ -22,6 +24,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
   status,
   date,
   time,
+  is_reviewed,
+  vet_id,
   onReviewPress,
 }) => {
   return (
@@ -69,12 +73,14 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
           </Text>
         </View>
 
-        <TouchableOpacity
-          style={styles.reviewButton}
-          onPress={() => onReviewPress && onReviewPress(id)}
-        >
-          <Text style={styles.reviewButtonText}>Review</Text>
-        </TouchableOpacity>
+        {status === "COMPLETED" &&  is_reviewed === false && (
+          <TouchableOpacity
+            style={styles.reviewButton}
+            onPress={() => onReviewPress && onReviewPress(id, vet_id)}
+          >
+            <Text style={styles.reviewButtonText}>Review</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

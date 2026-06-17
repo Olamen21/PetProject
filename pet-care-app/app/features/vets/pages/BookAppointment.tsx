@@ -131,7 +131,7 @@ const BookAppointment = () => {
         role={vet?.role}
         avatarUrl={vet?.avatar_url}
         degree={vet?.doctorProfile?.degree}
-        bio={vet?.doctorProfile?.bio}
+        bio={vet?.doctorProfile?.tags}
       />
 
       <View style={styles.cardHeader}>

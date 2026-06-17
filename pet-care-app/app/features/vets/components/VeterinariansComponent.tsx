@@ -51,12 +51,14 @@ export default function VeterinariansComponent() {
               const timeUTC = appointmentDate.toISOString().split("T")[1].slice(0, 5);
               return {
                 id: appointment.id,
+                vet_id: vet.id,
                 pet_name: pet ? pet.name : "Unknown Pet",
                 vet_name: vet ? vet.full_name : "Unknown Vet",
                 vet_image: vet ? vet.avatar_url : null,
                 date: dateUTC,
                 time: timeUTC,
                 status: appointment.status,
+                is_reviewed: appointment.is_reviewed,
               };
             },
           );
@@ -75,10 +77,10 @@ export default function VeterinariansComponent() {
       fetchVets();
     }, []),
   );
-  const handleReview = (vetId: number | undefined) => {
+  const handleReview = (appointment_id: number, vet_id: number) => {
     router.push({
       pathname: "/(tabs)/GiveFeedbackPage",
-      params: {vetId: vetId}
+      params: {vetId: vet_id, appointment_id: appointment_id}
     })
   };
 
@@ -98,12 +100,13 @@ export default function VeterinariansComponent() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={styles.tipScrollView}
+            style={styles.appointmentScrollView}
           >
             {appointments.map((appointment) => (
               <AppointmentCard
                 key={appointment.id}
                 id={appointment.id}
+                vet_id = {appointment.vet_id}
                 pet_name={appointment.pet_name}
                 vet_name={appointment.vet_name}
                 vet_image={appointment.vet_image}
@@ -111,6 +114,7 @@ export default function VeterinariansComponent() {
                 time={appointment.time}
                 status={appointment.status}
                 onReviewPress={handleReview}
+                is_reviewed={appointment.is_reviewed}
               />
             ))}
           </ScrollView>
@@ -128,7 +132,7 @@ export default function VeterinariansComponent() {
             You don’t have any appointments yet. Book a vet call to keep your
             pet on track
           </Text>
-          <CommonButton
+          {/* <CommonButton
             title="Book appointment"
             onPress={() => console.log("Book appointment")}
             iconName="timer-outline"
@@ -138,12 +142,12 @@ export default function VeterinariansComponent() {
               paddingVertical: 12,
               marginHorizontal: 90,
             }}
-          />
+          /> */}
         </View>
       )}
 
       {/* Feedback */}
-      <View style={styles.cardHeader}>
+      {/* <View style={styles.cardHeader}>
         <Text style={styles.textCard}>Feedback</Text>
         <TouchableOpacity style={styles.buttonViewAll}>
           <Text style={styles.textViewAll}>View all</Text>
@@ -162,11 +166,11 @@ export default function VeterinariansComponent() {
           full_name={vet.full_name}
           role={vet.role}
           avatarUrl={vet.avatar_url}
-          bio={vet.doctorProfile?.bio}
+          bio={vet.doctorProfile?.tags}
           degree={vet.doctorProfile?.degree}
           onPress={() => handleReview(vet.id)}
         />
-      ))}
+      ))} */}
 
       {/* Veterinarians */}
       <View style={styles.cardHeader}>
@@ -187,7 +191,7 @@ export default function VeterinariansComponent() {
           full_name={vet.full_name}
           role={vet.role}
           avatarUrl={vet.avatar_url}
-          bio={vet.doctorProfile?.bio}
+          bio={vet.doctorProfile?.tags}
           degree={vet.doctorProfile?.degree}
           onPress={() => handleBooking(vet.id)}
         />
@@ -217,7 +221,7 @@ export default function VeterinariansComponent() {
             rating={4.8}
             name={vet.full_name}
             degree={vet.doctorProfile?.degree}
-            bio={vet.doctorProfile?.bio}
+            bio={vet.doctorProfile?.tags}
             avatarUrl={vet.avatar_url}
           />
         ))}
@@ -258,6 +262,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 10,
     marginTop: 20,
+    marginBottom: 10,
   },
   textCard: {
     fontSize: 18,
@@ -274,8 +279,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 12,
   },
-  tipScrollView: {
+ tipScrollView: {
     marginLeft: 10,
-    marginBottom: 130,
+    marginTop: 10,
+    marginBottom: 100, 
+  },
+  appointmentScrollView: {
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 10, 
   },
 });
