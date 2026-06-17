@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   const Config = new DocumentBuilder()
-    .setTitle('Pet Care - Medical Record Service')
-    .setDescription('Tài liệu API cho dịch vụ quản lý hồ sơ y tế')
+    .setTitle('Pet Care - Review Service')
+    .setDescription('Tài liệu API cho dịch vụ quản lý đánh giá')
     .setVersion('1.0')
     .addBearerAuth(
       {

@@ -124,4 +124,12 @@ export class AppointmentController {
 
     return this.appointmentService.findByUserId(+currentUserId);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @ApiOperation({ summary: 'Xác nhận đã đánh giá' })
+  @Patch('review/complete/:id')
+  completeReview(@Param('id') id: string) {
+    return this.appointmentService.markCompleteReview(+id);
+  }
 }

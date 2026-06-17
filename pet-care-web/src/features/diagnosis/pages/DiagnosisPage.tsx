@@ -102,39 +102,41 @@ export default function DiagnosisPage() {
     }
   };
 
- const handleSaveDiagnosis = async (
-  id: number,
-  diagnosisData: DiagnosisData,
-) => {
-  console.log("Lưu thông tin bệnh án cho ca hẹn:", id, diagnosisData);
+  const handleSaveDiagnosis = async (
+    id: number,
+    diagnosisData: DiagnosisData,
+  ) => {
+    console.log("Lưu thông tin bệnh án cho ca hẹn:", id, diagnosisData);
 
-  try {
-    const data = {
-      pet_id: id,
-      appointment_id: diagnosisData.appointment_id,
-      symptoms: diagnosisData.symptoms,
-      diagnosis: diagnosisData.diagnosis,
-      weight_at_exam: diagnosisData.weight_at_exam ? Number(diagnosisData.weight_at_exam) : null,
-      vet_notes: diagnosisData.vet_notes,
-      medications: diagnosisData.medications,
-      title: diagnosisData.title,
-    };
+    try {
+      const data = {
+        pet_id: id,
+        appointment_id: diagnosisData.appointment_id,
+        symptoms: diagnosisData.symptoms,
+        diagnosis: diagnosisData.diagnosis,
+        weight_at_exam: diagnosisData.weight_at_exam
+          ? Number(diagnosisData.weight_at_exam)
+          : null,
+        vet_notes: diagnosisData.vet_notes,
+        medications: diagnosisData.medications,
+        title: diagnosisData.title,
+      };
 
-    const res = await createMedicalRecord(data);
-    
-    await markCompleteAppointment(diagnosisData.appointment_id);
+      const res = await createMedicalRecord(data);
 
-    if (res && (res.status === 200 || res.status === 201)) {
-      alert("Cập nhật thành công!");
-      setAppointments(appointments.filter((v) => v.id !== id));
-    } else {
-      alert("Cập nhật thất bại, bạn hãy kiểm tra lại nhé!");
+      if (res && (res.status === 200 || res.status === 201)) {
+        alert("Cập nhật thành công!");
+        await markCompleteAppointment(diagnosisData.appointment_id);
+        
+        setAppointments(appointments.filter((v) => v.id !== id));
+      } else {
+        alert("Cập nhật thất bại, bạn hãy kiểm tra lại nhé!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi update:", error);
+      alert("Đã có lỗi xảy ra khi kết nối server!");
     }
-  } catch (error) {
-    console.error("Lỗi khi update:", error);
-    alert("Đã có lỗi xảy ra khi kết nối server!");
-  }
-};
+  };
 
   const filteredVaccines = vaccinePets.filter(
     (v: PetVaccine) =>
@@ -176,7 +178,9 @@ export default function DiagnosisPage() {
               <AppointmentSection
                 appointments={filteredAppointments}
                 onRowClick={(pet) => setSelectedPet(pet)}
-                onOpenDiagnosis={(appointment) => setDiagnosisAppointment(appointment)}
+                onOpenDiagnosis={(appointment) =>
+                  setDiagnosisAppointment(appointment)
+                }
               />
             </div>
           </div>

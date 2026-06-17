@@ -69,9 +69,9 @@ const ConfirmPage = () => {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Image
-            source={{
-              uri: "https://tse2.mm.bing.net/th/id/OIP.lcqX70iqkSZrE-H4Pqo_lAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-            }}
+            source={
+            typeof vet?.avatar_url === "string" ? { uri: vet?.avatar_url } : vet?.avatar_url
+          }
             style={styles.avatar}
           />
           <View style={styles.info}>
