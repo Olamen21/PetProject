@@ -1,0 +1,380 @@
+[
+    {
+        "food_id": "1",
+        "food_name": "beef",
+        "calories": "169",
+        "protein": "27.6",
+        "fat": "6.5",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "2",
+        "food_name": "pork",
+        "calories": "242",
+        "protein": "27.3",
+        "fat": "13.9",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "3",
+        "food_name": "chicken meat",
+        "calories": "239",
+        "protein": "27.3",
+        "fat": "13.6",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "4",
+        "food_name": "shrimp",
+        "calories": "119",
+        "protein": "22.78",
+        "fat": "1.7",
+        "carb": "1.52",
+        "species": "Dog"
+    },
+    {
+        "food_id": "5",
+        "food_name": "Anchovies",
+        "calories": "131",
+        "protein": "20.35",
+        "fat": "4.84",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "6",
+        "food_name": "Carp",
+        "calories": "162",
+        "protein": "22.86",
+        "fat": "7.17",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "7",
+        "food_name": "banana",
+        "calories": "89",
+        "protein": "1.1",
+        "fat": "0.3",
+        "carb": "22.8",
+        "species": "Dog"
+    },
+    {
+        "food_id": "8",
+        "food_name": "watermelon",
+        "calories": "30",
+        "protein": "0.6",
+        "fat": "0.2",
+        "carb": "7.6",
+        "species": "Dog"
+    },
+    {
+        "food_id": "9",
+        "food_name": "Strawberry",
+        "calories": "32",
+        "protein": "0.7",
+        "fat": "0.3",
+        "carb": "7.7",
+        "species": "Dog"
+    },
+    {
+        "food_id": "10",
+        "food_name": "peanut",
+        "calories": "567",
+        "protein": "25.8",
+        "fat": "49.2",
+        "carb": "16.1",
+        "species": "Dog"
+    },
+    {
+        "food_id": "11",
+        "food_name": "Corn",
+        "calories": "96",
+        "protein": "3.4",
+        "fat": "1.5",
+        "carb": "21",
+        "species": "Dog"
+    },
+    {
+        "food_id": "12",
+        "food_name": "rice",
+        "calories": "130",
+        "protein": "2.7",
+        "fat": "0.3",
+        "carb": "28.2",
+        "species": "Dog"
+    },
+    {
+        "food_id": "13",
+        "food_name": "oats",
+        "calories": "389",
+        "protein": "16.9",
+        "fat": "6.9",
+        "carb": "66.3",
+        "species": "Dog"
+    },
+    {
+        "food_id": "14",
+        "food_name": "carrot",
+        "calories": "41",
+        "protein": "0.9",
+        "fat": "0.2",
+        "carb": "9.6",
+        "species": "Dog"
+    },
+    {
+        "food_id": "15",
+        "food_name": "mung beans",
+        "calories": "105",
+        "protein": "7",
+        "fat": "0.4",
+        "carb": "19.2",
+        "species": "Dog"
+    },
+    {
+        "food_id": "16",
+        "food_name": "egg",
+        "calories": "155",
+        "protein": "12.6",
+        "fat": "10.6",
+        "carb": "1.1",
+        "species": "Dog"
+    },
+    {
+        "food_id": "17",
+        "food_name": "yogurt",
+        "calories": "59",
+        "protein": "10.2",
+        "fat": "0.4",
+        "carb": "3.6",
+        "species": "Dog"
+    },
+    {
+        "food_id": "18",
+        "food_name": "peanut butter",
+        "calories": "598",
+        "protein": "22.2",
+        "fat": "51.4",
+        "carb": "22.3",
+        "species": "Dog"
+    },
+    {
+        "food_id": "19",
+        "food_name": "pumpkin",
+        "calories": "20",
+        "protein": "0.7",
+        "fat": "0.1",
+        "carb": "4.9",
+        "species": "Dog"
+    },
+    {
+        "food_id": "20",
+        "food_name": "Coconut",
+        "calories": "354",
+        "protein": "3.3",
+        "fat": "33.5",
+        "carb": "15.2",
+        "species": "Dog"
+    },
+    {
+        "food_id": "21",
+        "food_name": "honey",
+        "calories": "304",
+        "protein": "0.3",
+        "fat": "0",
+        "carb": "82.4",
+        "species": "Dog"
+    },
+    {
+        "food_id": "22",
+        "food_name": "Butter cookie",
+        "calories": "467",
+        "protein": "6.1",
+        "fat": "18.8",
+        "carb": "68.9",
+        "species": "Dog"
+    },
+    {
+        "food_id": "23",
+        "food_name": "chicken meat",
+        "calories": "239",
+        "protein": "27.3",
+        "fat": "13.6",
+        "carb": "0",
+        "species": "Dog"
+    },
+    {
+        "food_id": "24",
+        "food_name": "pork",
+        "calories": "242",
+        "protein": "27.3",
+        "fat": "13.9",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "25",
+        "food_name": "beef",
+        "calories": "169",
+        "protein": "27.6",
+        "fat": "6.5",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "26",
+        "food_name": "duck meat",
+        "calories": "337",
+        "protein": "19",
+        "fat": "28.4",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "27",
+        "food_name": "zucchini",
+        "calories": "21.1",
+        "protein": "1.2",
+        "fat": "0.3",
+        "carb": "3.1",
+        "species": "Cat"
+    },
+    {
+        "food_id": "28",
+        "food_name": "chicken breast",
+        "calories": "165",
+        "protein": "33.4",
+        "fat": "4.7",
+        "carb": "0.5",
+        "species": "Cat"
+    },
+    {
+        "food_id": "29",
+        "food_name": "pumpkin",
+        "calories": "20",
+        "protein": "0.7",
+        "fat": "0.1",
+        "carb": "4.9",
+        "species": "Cat"
+    },
+    {
+        "food_id": "30",
+        "food_name": "oats",
+        "calories": "389",
+        "protein": "16.9",
+        "fat": "6.9",
+        "carb": "66.3",
+        "species": "Cat"
+    },
+    {
+        "food_id": "31",
+        "food_name": "Cheese",
+        "calories": "404",
+        "protein": "22.9",
+        "fat": "33.3",
+        "carb": "3.1",
+        "species": "Cat"
+    },
+    {
+        "food_id": "32",
+        "food_name": "mackerel",
+        "calories": "262",
+        "protein": "23.9",
+        "fat": "17.8",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "33",
+        "food_name": "brown rice",
+        "calories": "123",
+        "protein": "2.7",
+        "fat": "1",
+        "carb": "25.6",
+        "species": "Cat"
+    },
+    {
+        "food_id": "34",
+        "food_name": "tuna",
+        "calories": "130",
+        "protein": "29.2",
+        "fat": "0.6",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "35",
+        "food_name": "carrot",
+        "calories": "41",
+        "protein": "0.9",
+        "fat": "0.2",
+        "carb": "9.6",
+        "species": "Cat"
+    },
+    {
+        "food_id": "36",
+        "food_name": "milk",
+        "calories": "42",
+        "protein": "3.4",
+        "fat": "1",
+        "carb": "5",
+        "species": "Cat"
+    },
+    {
+        "food_id": "37",
+        "food_name": "salmon",
+        "calories": "206",
+        "protein": "22.1",
+        "fat": "12.4",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "38",
+        "food_name": "chicken liver",
+        "calories": "119",
+        "protein": "16.9",
+        "fat": "4.8",
+        "carb": "0.7",
+        "species": "Cat"
+    },
+    {
+        "food_id": "39",
+        "food_name": "sardines",
+        "calories": "208",
+        "protein": "24.6",
+        "fat": "11.5",
+        "carb": "0",
+        "species": "Cat"
+    },
+    {
+        "food_id": "40",
+        "food_name": "shrimp",
+        "calories": "119",
+        "protein": "22.78",
+        "fat": "1.7",
+        "carb": "1.52",
+        "species": "Cat"
+    },
+    {
+        "food_id": "41",
+        "food_name": "egg",
+        "calories": "155",
+        "protein": "12.6",
+        "fat": "10.6",
+        "carb": "1.1",
+        "species": "Cat"
+    },
+    {
+        "food_id": "42",
+        "food_name": "olive oil",
+        "calories": "884",
+        "protein": "0",
+        "fat": "100",
+        "carb": "0",
+        "species": "Cat"
+    }
+]
