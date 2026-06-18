@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Vaccine 7 bệnh",
+    "target_species": "Dog",
+    "quantity": 100,
+    "max_doses": 3
+  },
+  {
+    "name": "Vaccine 4 bệnh",
+    "target_species": "Cat",
+    "quantity": 100,
+    "max_doses": 3
+  },
+  {
+    "name": "Dại",
+    "target_species": "Dog",
+    "quantity": 100,
+    "max_doses": 1
+  },
+  {
+    "name": "Dại",
+    "target_species": "Cat",
+    "quantity": 100,
+    "max_doses": 1
+  }
+]
