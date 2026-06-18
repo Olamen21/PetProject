@@ -74,4 +74,12 @@ export class ReviewController {
   remove(@Param('id') id: string) {
     return this.reviewService.remove(+id);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @ApiOperation({ summary: 'Xem tất cả đánh giá theo vet_id' })
+  @Get('review-vet/:id')
+  findByVetId(@Param('id') id: string) {
+    return this.reviewService.findByVetId(+id);
+  }
 }
