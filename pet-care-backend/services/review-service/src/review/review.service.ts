@@ -45,4 +45,9 @@ export class ReviewService {
     const review = await this.findOne(id);
     await this.reviewRepository.remove(review);
   }
+  async findByVetId(id: number): Promise<Review[]> {
+    return await this.reviewRepository.find({
+      where: { vet_id: id },
+    });
+  }
 }

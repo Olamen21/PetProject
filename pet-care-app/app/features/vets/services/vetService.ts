@@ -73,3 +73,11 @@ export const createReview = async ( payload: any) => {
 export const markCompleteReview = async (id: string) => {
   return await api.patch('/appointment/review/complete/' + id);
 }
+export const getAllReviewByVetId = async (id: string) => {
+  const res = await api.get('/review//review-vet/' + id);
+  return res.data;
+}
+export const getAllUser = async () => {
+  const res = await api.get('/users/all-users');
+  return res.data;
+}
