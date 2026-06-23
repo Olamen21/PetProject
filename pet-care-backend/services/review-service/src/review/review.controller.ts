@@ -82,4 +82,11 @@ export class ReviewController {
   findByVetId(@Param('id') id: string) {
     return this.reviewService.findByVetId(+id);
   }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER, Role.VET)
+  @ApiOperation({ summary: 'Xem trung bình đánh giá theo vet_id' })
+  @Get('calculate-vet-rating/:id')
+  calculateVetRating(@Param('id') id: string) {
+    return this.reviewService.calculateVetRating(+id);
+  }
 }

@@ -51,14 +51,6 @@ export default function GiveFeedbackPage() {
     }, []),
   );
 
-  const [review, setReview] = useState<Review>();
-  const doctor: DoctorData = {
-    name: "Dr. Sara Fredo Jay",
-    title: "DVM, Veterinary Dermatologist",
-    avatarUrl:
-      "https://tse3.mm.bing.net/th/id/OIP.JW_4m4RVV4ywf0aiB6TWrgHaLH?cb=thfvnextfalcon2&rs=1&pid=ImgDetMain&o=7&rm=3",
-  };
-
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
   const WORD_LIMIT = 120;
@@ -122,10 +114,10 @@ export default function GiveFeedbackPage() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
           >
             <Text style={styles.headerTitle}>Your Review </Text>
             <Text style={styles.headerSubtitle}>
@@ -210,7 +202,6 @@ export default function GiveFeedbackPage() {
               />
             </View>
           </ScrollView>
-        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </View>
   );

@@ -1,23 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Colors } from "../../../../constants/Colors";
+import type { Rating } from "../../types/Rating";
+import {
+  calculateVetRating,
+  countCompletedAppointments,
+} from "../../services/profileService";
 
 interface ProfileStatsProps {
   tags: string[];
-  experience_start_date?: string;
+  years_of_experience?: string | null;
+  id?: number | null;
 }
 
-const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date }) => {
+const ProfileStats: React.FC<ProfileStatsProps> = ({
+  tags,
+  id,
+  years_of_experience,
+}) => {
   const colorStyles = [styles.tagGreen, styles.tagBlue, styles.tagOrange];
+  const [rating, setRating] = useState<Rating | null>(null);
+  const [countAppointment, setCountAppointment] = useState();
 
-  const calculateYears = (startDate: string | undefined) => {
-    if (!startDate) return 0;
-    const start = new Date(startDate);
-    const now = new Date();
-    const diffInMs = now.getTime() - start.getTime();
-    const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
-    return Math.floor(diffInYears);
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      if (!id) return;
 
+      try {
+        const dataRating = await calculateVetRating(String(id));
+        setRating(dataRating);
+        const dataCount = await countCompletedAppointments(String(id));
+        setCountAppointment(dataCount);
+      } catch (error) {
+        console.error("Lỗi khi lấy rating:", error);
+      }
+    };
+
+    loadData();
+  }, [id]);
 
   return (
     <div style={styles.section}>
@@ -32,18 +51,38 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date
           );
         })}
       </div>
-      
 
       {/* RATING */}
       <div style={styles.ratingRow}>
-        <div style={styles.stars}>★★★★★</div>
-        <div style={styles.ratingText}>4.9 • From 312 reviews</div>
+        <div style={styles.stars}>
+          {Array.from({ length: 5 }, (_, i) => {
+            const ratingValue = i + 1;
+            if (
+              rating?.averageRating &&
+              ratingValue <= Math.floor(rating.averageRating) 
+            ) {
+              return <span key={i}>★</span>; 
+            } else if (
+              rating?.averageRating &&
+              ratingValue === Math.ceil(rating.averageRating) &&
+              !Number.isInteger(rating.averageRating)
+            ) {
+              return <span key={i}>☆</span>; 
+            } else {
+              return <span key={i}>☆</span>; 
+            }
+          })}
+        </div>
+        <div style={styles.ratingText}>
+          {rating?.averageRating?.toFixed(1)} • From {rating?.totalReviews}{" "}
+          reviews
+        </div>
       </div>
 
       {/* STATS */}
       <div style={styles.stats}>
         <div style={styles.statBox}>
-          <div style={styles.statNumber}>1.2k</div>
+          <div style={styles.statNumber}>{countAppointment}</div>
           <div style={styles.statLabel}>Patients</div>
         </div>
 
@@ -53,7 +92,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({ tags, experience_start_date
         </div>
 
         <div style={styles.statBox}>
-          <div style={styles.statNumber}>{calculateYears(experience_start_date)}</div>
+          <div style={styles.statNumber}>{years_of_experience}</div>
           <div style={styles.statLabel}>Years of Experience</div>
         </div>
       </div>

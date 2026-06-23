@@ -81,3 +81,12 @@ export const getAllUser = async () => {
   const res = await api.get('/users/all-users');
   return res.data;
 }
+export const calculateVetRating = async (id: string) => {
+  const res = await api.get('/review/calculate-vet-rating/'+ id);
+  return res.data;
+}
+export const countCompletedAppointments = async (id: string) => {
+  const res = await api.get('/appointment/count-appointment/' + id);
+  return res.data;
+
+}

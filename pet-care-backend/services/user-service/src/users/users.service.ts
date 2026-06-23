@@ -22,8 +22,22 @@ export class UsersService {
     private doctorProfileRepository: Repository<DoctorProfile>,
   ) {}
 
+  private calculateYearsOfExperience(
+    startDate: Date | string | undefined | null,
+  ): number {
+    if (!startDate) return 0;
+    const start = new Date(startDate);
+    const now = new Date();
+
+    if (start.getTime() > now.getTime()) return 0;
+
+    const diffInMs = now.getTime() - start.getTime();
+    const diffInYears = diffInMs / (1000 * 60 * 60 * 24 * 365.25);
+    return Math.floor(diffInYears);
+  }
+
   //lấy thông tin người dùng theo ID
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<any> {
     const user = await this.usersRepository.findOne({
       where: { id },
       relations: ['doctorProfile'],
@@ -31,6 +45,14 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`Không tìm thấy người dùng có ID ${id}`);
     }
+
+    if (user.role === Role.VET && user.doctorProfile) {
+      user.doctorProfile['years_of_experience'] =
+        this.calculateYearsOfExperience(
+          user.doctorProfile.experience_start_date,
+        );
+    }
+
     return user;
   }
 
@@ -118,20 +140,43 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
-  async findAllVets(): Promise<User[]> {
-    return this.usersRepository.find({
+  async findAllVets(): Promise<any[]> {
+    const vets = await this.usersRepository.find({
       where: { role: Role.VET },
       relations: ['doctorProfile'],
     });
+
+    // Map qua danh sách để tiêm thêm trường động years_of_experience
+    return vets.map((vet) => ({
+      ...vet,
+      doctorProfile: vet.doctorProfile
+        ? {
+            ...vet.doctorProfile,
+            years_of_experience: this.calculateYearsOfExperience(
+              vet.doctorProfile.experience_start_date,
+            ),
+          }
+        : null,
+    }));
   }
-  async findVetById(id: number): Promise<User> {
+  async findVetById(id: number): Promise<any> {
     const vet = await this.usersRepository.findOne({
       where: { id, role: Role.VET },
       relations: ['doctorProfile'],
     });
+
     if (!vet) {
       throw new NotFoundException(`Không tìm thấy bác sĩ thú y có ID ${id}`);
     }
+
+    // Trả về kèm trường tính toán động
+    if (vet.doctorProfile) {
+      vet.doctorProfile['years_of_experience'] =
+        this.calculateYearsOfExperience(
+          vet.doctorProfile.experience_start_date,
+        );
+    }
+
     return vet;
   }
 

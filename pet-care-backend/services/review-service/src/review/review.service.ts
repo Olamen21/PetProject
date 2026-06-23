@@ -50,4 +50,26 @@ export class ReviewService {
       where: { vet_id: id },
     });
   }
+  async calculateVetRating(
+    vetId: number,
+  ): Promise<{ averageRating: number; totalReviews: number }> {
+    const result = await this.reviewRepository
+      .createQueryBuilder('review')
+      .select('AVG(review.rating)', 'average')
+      .addSelect('COUNT(review.id)', 'count')
+      .where('review.vet_id = :vetId', { vetId })
+      .getRawOne<{ average: string | null; count: string }>();
+
+    if (!result || result.average === null) {
+      return {
+        averageRating: 0.0,
+        totalReviews: 0,
+      };
+    }
+
+    return {
+      averageRating: parseFloat(parseFloat(result.average).toFixed(1)),
+      totalReviews: parseInt(result.count, 10),
+    };
+  }
 }

@@ -76,14 +76,14 @@ const Header: React.FC<HeaderProps> = ({
         {/* User profile */}
         <div style={styles.userProfile}>
           <div style={styles.userDetails}>
-            <span style={{ fontWeight: "bold" }}>{user.name}</span>
-            <span style={{ fontSize: "0.8rem", color: "#666" }}>{user.role}</span>
+            <span style={{ fontWeight: "bold" }}>Nguyễn Phong Vũ</span>
+            <span style={{ fontSize: "0.8rem", color: "#666" }}>Vet</span>
           </div>
-          <img
+          {/* <img
             src={user.avatarUrl}
             alt={user.name}
             style={styles.avatar}
-          />
+          /> */}
         </div>
       </div>
     </header>

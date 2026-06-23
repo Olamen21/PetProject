@@ -6,10 +6,10 @@ import ProfileStats from "../components/ProfilePage/ProfileStats";
 import ProfileDetail from "../components/ProfilePage/ProfileDetails";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader";
 import { getProfile } from "../../../api/UserApi";
-
+import type { User } from "../types/User";
 
 function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -106,7 +106,8 @@ function ProfilePage() {
                   ? user.doctorProfile.tags
                   : []
             }
-            experience_start_date={user?.doctorProfile?.experience_start_date}
+            years_of_experience={user?.doctorProfile?.years_of_experience}
+            id={user?.id}
           />
 
           <ProfileDetail

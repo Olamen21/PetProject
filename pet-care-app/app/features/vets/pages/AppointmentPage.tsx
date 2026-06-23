@@ -15,12 +15,14 @@ import CommonButton from "@/app/shared/components/CommonButton";
 import { useFocusEffect } from "expo-router";
 import { Vets } from "../types/Vets";
 import {
+  calculateVetRating,
+  countCompletedAppointments,
   getAllReviewByVetId,
   getAllUser,
   getProfile,
   getVetById,
 } from "../services/vetService";
-import { Review } from "../types/Review";
+import { Rating, Review } from "../types/Review";
 
 const AppointmentPage = () => {
   const router = useRouter();
@@ -28,6 +30,8 @@ const AppointmentPage = () => {
   const [vet, setVet] = useState<Vets | null>(null);
   const { vetId } = useLocalSearchParams<{ vetId: string }>();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [rating, setRating] = useState<Rating | null>(null);
+  const [countAppointment, setCountAppointment] = useState();
   useFocusEffect(
     useCallback(() => {
       const fetchVetDetails = async () => {
@@ -46,6 +50,10 @@ const AppointmentPage = () => {
           });
 
           setReviews(reviewsWithUser);
+          const dataRating = await calculateVetRating(vetId);
+          setRating(dataRating);
+          const dataCount = await countCompletedAppointments(vetId);
+          setCountAppointment(dataCount);
         } catch (error) {
           console.error("Error fetching vet details:", error);
         }
@@ -104,18 +112,18 @@ const AppointmentPage = () => {
             />
             <Text style={styles.statLabel}>Experience </Text>
             <Text style={styles.statText}>
-              {calculateYears(vet?.doctorProfile?.experience_start_date)} years
+              {vet?.doctorProfile?.years_of_experience} years
             </Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons name="people-outline" size={20} color={Colors.primary} />
             <Text style={styles.statLabel}>Patients</Text>
-            <Text style={styles.statText}>1200+</Text>
+            <Text style={styles.statText}>{countAppointment}</Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons name="star-outline" size={20} color={Colors.primary} />
             <Text style={styles.statLabel}>Rating</Text>
-            <Text style={styles.statText}>4.5/5</Text>
+            <Text style={styles.statText}>{rating?.averageRating}/5</Text>
           </View>
         </View>
       </View>

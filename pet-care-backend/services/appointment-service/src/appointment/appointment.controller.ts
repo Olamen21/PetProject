@@ -132,4 +132,12 @@ export class AppointmentController {
   completeReview(@Param('id') id: string) {
     return this.appointmentService.markCompleteReview(+id);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER, Role.VET)
+  @ApiOperation({ summary: 'Số lượt khám' })
+  @Get('count-appointment/:id')
+  countCompletedAppointments(@Param('id') id: string) {
+    return this.appointmentService.countCompletedAppointments(+id);
+  }
 }

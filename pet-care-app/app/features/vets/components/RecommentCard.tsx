@@ -1,20 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors } from "@/app/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { calculateVetRating } from "../services/vetService";
+import { Rating } from '../types/Review';
 
 type RecommentCardProps = {
   id?: number;
-  rating: number;
   name: string;
   bio?: string | null;
-  avatarUrl: number | string;
+  avatarUrl?: string | string;
   degree?: string | null;
 };
 
-const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, bio, avatarUrl, degree, id }) => {
+const RecommentCard: React.FC<RecommentCardProps> = ({ name, bio, avatarUrl, degree, id }) => {
   const router = useRouter();
+  const [cardRating, setCardRating] = useState<Rating |  null>(null);
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const score = await calculateVetRating(String(id));
+        setCardRating(score); 
+      } catch (error) {
+        console.error("Lỗi fetch rating cho vet " + id, error);
+      }
+    };
+    if (id) fetchRating();
+  }, [id]);
   return (
     <TouchableOpacity onPress={() => router.push({ pathname: "/(tabs)/AppointmentPage", params: { vetId: id } })}>
       <View
@@ -31,7 +45,7 @@ const RecommentCard: React.FC<RecommentCardProps> = ({ rating, name, bio, avatar
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={14} color="#F77B4E" /> 
           <Text style={styles.rating}>
-            {rating.toFixed(1)}
+            {cardRating?.averageRating}
           </Text>
         </View>
         <Text style={styles.name}>{name}</Text>

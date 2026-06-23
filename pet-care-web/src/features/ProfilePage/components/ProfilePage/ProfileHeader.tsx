@@ -7,7 +7,7 @@ interface ProfileHeaderProps {
   name: string;
   role: string;
   bio?: string;
-  avatar: string;
+  avatar?: string;
   onEditProfile?: () => void;
   onChangePassword?: () => void;
 }

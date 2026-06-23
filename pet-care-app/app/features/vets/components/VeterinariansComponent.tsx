@@ -15,6 +15,7 @@ import VetCard from "./VetCard";
 import RecommentCard from "./RecommentCard";
 import { Vets } from "../types/Vets";
 import {
+  calculateVetRating,
   getAllPetUser,
   getAllVets,
   getAppointmentsByUserId,
@@ -23,11 +24,13 @@ import {
 import { useFocusEffect, useRouter } from "expo-router";
 import AppointmentCard from "./AppointmentCard";
 import { Appointment } from "../types/Appointment";
+import type { Rating } from "../types/Review";
 
 export default function VeterinariansComponent() {
   const [vets, setVets] = useState<Vets[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const router = useRouter();
+  const [rating, setRating] = useState<Rating | null>(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -38,17 +41,20 @@ export default function VeterinariansComponent() {
           const getAllPetByUserId = await getAllPetUser();
           const userId = getUser.id;
           const appointmentsData = await getAppointmentsByUserId(userId);
-          
 
           const mergedAppointments = appointmentsData.map(
             (appointment: Appointment) => {
               const pet = getAllPetByUserId.find(
-                (p: { id: number; name: string }) => p.id === appointment.pet_id,
+                (p: { id: number; name: string }) =>
+                  p.id === appointment.pet_id,
               );
               const vet = data.find((v: Vets) => v.id === appointment.vet_id);
               const appointmentDate = new Date(appointment.appointment_date);
               const dateUTC = appointmentDate.toISOString().split("T")[0];
-              const timeUTC = appointmentDate.toISOString().split("T")[1].slice(0, 5);
+              const timeUTC = appointmentDate
+                .toISOString()
+                .split("T")[1]
+                .slice(0, 5);
               return {
                 id: appointment.id,
                 vet_id: vet.id,
@@ -67,6 +73,8 @@ export default function VeterinariansComponent() {
             "Fetching appointments..." + JSON.stringify(mergedAppointments),
           );
           setVets(data);
+          const dataRating = await calculateVetRating(data.id);
+          setRating(dataRating);
         } catch (error) {
           console.error("Không thể tải vets:", error);
         }
@@ -80,8 +88,8 @@ export default function VeterinariansComponent() {
   const handleReview = (appointment_id: number, vet_id: number) => {
     router.push({
       pathname: "/(tabs)/GiveFeedbackPage",
-      params: {vetId: vet_id, appointment_id: appointment_id}
-    })
+      params: { vetId: vet_id, appointment_id: appointment_id },
+    });
   };
 
   const handleBooking = (vetId: number | undefined) => {
@@ -89,7 +97,7 @@ export default function VeterinariansComponent() {
       pathname: "/(tabs)/AppointmentPage",
       params: { vetId: vetId },
     });
-  }
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.reminderCardHeader}>
@@ -106,7 +114,7 @@ export default function VeterinariansComponent() {
               <AppointmentCard
                 key={appointment.id}
                 id={appointment.id}
-                vet_id = {appointment.vet_id}
+                vet_id={appointment.vet_id}
                 pet_name={appointment.pet_name}
                 vet_name={appointment.vet_name}
                 vet_image={appointment.vet_image}
@@ -218,7 +226,6 @@ export default function VeterinariansComponent() {
           <RecommentCard
             key={vet.id}
             id={vet.id}
-            rating={4.8}
             name={vet.full_name}
             degree={vet.doctorProfile?.degree}
             bio={vet.doctorProfile?.tags}
@@ -279,14 +286,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 12,
   },
- tipScrollView: {
+  tipScrollView: {
     marginLeft: 10,
     marginTop: 10,
-    marginBottom: 100, 
+    marginBottom: 100,
   },
   appointmentScrollView: {
     marginLeft: 10,
     marginTop: 10,
-    marginBottom: 10, 
+    marginBottom: 10,
   },
 });

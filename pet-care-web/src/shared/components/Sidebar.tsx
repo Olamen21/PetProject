@@ -16,12 +16,12 @@ import { Colors } from "../../constants/Colors";
 import { getProfile } from "../../api/UserApi";
 const MENU_CONFIG = [
   { title: "GENERAL", isTitle: true },
-  {
-    title: "Dashboard",
-    path: "/dashboard",
-    icon: <FaHome />,
-    roles: ["VET", "ADMIN"],
-  },
+  // {
+  //   title: "Dashboard",
+  //   path: "/dashboard",
+  //   icon: <FaHome />,
+  //   roles: ["VET", "ADMIN"],
+  // },
   {
     title: "Appointments",
     path: "/vet/appointments",
@@ -63,12 +63,6 @@ const MENU_CONFIG = [
     title: "My Profile",
     path: "/profile",
     icon: <FaUser />,
-    roles: ["VET", "ADMIN"],
-  },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: <FaCog />,
     roles: ["VET", "ADMIN"],
   },
   {
