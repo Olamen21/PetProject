@@ -9,7 +9,7 @@ interface Props {
 
 const UserHeader: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
 
-const styles: any = {
+const styles: Record<string, React.CSSProperties> = {
   content: {
     display: "flex",
     justifyContent: "space-between",

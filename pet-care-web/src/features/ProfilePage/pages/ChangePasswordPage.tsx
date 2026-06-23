@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Sidebar from "../../../shared/components/Sidebar";
 import { Colors } from "../../../constants/Colors";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
 import CommonButton from "../../../shared/components/CommonButton";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FaLock, FaArrowLeft } from "react-icons/fa";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { changePassword } from "../services/profileService";

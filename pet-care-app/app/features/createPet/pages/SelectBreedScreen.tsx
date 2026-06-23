@@ -7,8 +7,8 @@ import CommonSelector from "@/app/shared/components/CommonSelector";
 import CommonSelectModal from "@/app/shared/components/CommonSelectModal";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import StepHeader from "../components/StepHeader";
-import { Breed } from "../../petProfile/types/Breed";
-import { getAllBreed } from "../../petProfile/services/PetApi";
+import { Breed } from "../../home/types/Breed";
+import { getAllBreed } from "../../home/services/PetApi";
 
 export default function SelectBreedScreen() {
   const { petName, petType } = useLocalSearchParams<{ 

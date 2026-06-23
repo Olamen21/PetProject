@@ -9,12 +9,14 @@ import { MdCreate } from "react-icons/md";
 import type { Breed } from "../types/Breed";
 import { createPet, getAllBreed } from "../services/petService";
 import { useNavigate } from "react-router-dom";
-
+export interface PetForm extends Pet {
+  imageFile?: File;
+}
 function NewPetPage() {
   const [breeds, setBreeds] = useState<Breed[]>([]);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState<Pet>({
+  const [form, setForm] = useState<PetForm>({
     avatar_url: "",
     name: "",
     species: "",
@@ -48,6 +50,10 @@ function NewPetPage() {
     }
     console.log(form.avatar_url);
 
+    if(form.name == "" || form.species == "" || String(form.breed_id) == "" || form.gender == "" || form.dob == "" ){
+      alert("Vui lòng điền đầy đủ thông tin");
+    }
+ 
     try {
       const dataForm = new FormData();
       dataForm.append("name", form.name);
@@ -57,8 +63,8 @@ function NewPetPage() {
       dataForm.append("date_of_birth", form.dob);
       dataForm.append("weight", String(form.weight || 0));
       dataForm.append("height", String(form.height || 0));
-      if ((form as any).imageFile) {
-        dataForm.append("file", (form as any).imageFile);
+       if (form.imageFile) {
+        dataForm.append("file", form.imageFile);
       }
 
       dataForm.append("neutered", String(form.neutered));

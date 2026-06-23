@@ -1,6 +1,11 @@
-import { FiMail, FiPhone, FiMapPin, FiCalendar, FiHome } from "react-icons/fi";import { Colors } from "../../../../constants/Colors";
+import { FiPhone, FiMapPin, FiCalendar, FiHome } from "react-icons/fi";import { Colors } from "../../../../constants/Colors";
 import CommonTextInput from "../../../../shared/components/CommonTextInput";
-function EditProfileContactInfo({ form, handleChange }) {
+import type { FormState } from "../../pages/EditProfilePage";
+
+function EditProfileContactInfo({ form, handleChange }:{
+ form: FormState, 
+  handleChange: (key: string, value: string) => void, 
+}) {
   return (
     <div style={styles.sectionCard}>
       <div style={styles.sectionTitle}>Contact Info</div>

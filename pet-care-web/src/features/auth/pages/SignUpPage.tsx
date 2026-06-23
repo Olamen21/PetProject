@@ -9,10 +9,11 @@ import Divider from "../components/Divider";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../services/AuthApi";
+import type { SignUp } from "../types/SignUpPayload";
 
 const SignUpPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    userName: "",
+  const [formData, setFormData] = useState<SignUp>({
+    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -50,7 +51,7 @@ const SignUpPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateUsername(formData.userName)) {
+    if (!validateUsername(formData.full_name)) {
       setMessage({ type: "error", text: "Username cannot be empty!" });
       return;
     }
@@ -77,7 +78,7 @@ const SignUpPage: React.FC = () => {
       const result = await signUp({
         email: formData.email,
         password: formData.password,
-        full_name: formData.userName,
+        full_name: formData.full_name,
       });
 
       if (result) {
@@ -86,15 +87,17 @@ const SignUpPage: React.FC = () => {
           navigate("/signup-upload");
         }, 1000);
       }
-    } catch (err: any) {
-      console.error("SignUp error:", err);
-
-      const errorMsg =
-        err.response?.data?.message || "Sign up failed, please try again!";
-      setMessage({
-        type: "error",
-        text: errorMsg,
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else if (typeof error === "object" && error && "response" in error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        alert(
+          err.response?.data?.message || "Sign up failed, please try again!",
+        );
+      } else {
+        alert("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

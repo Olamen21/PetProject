@@ -10,6 +10,9 @@ import type { Pet } from "../types/Pet";
 import { getPetById, getAllBreed, updatePet } from "../services/petService";
 import type { Breed } from "../types/Breed";
 import { useNavigate } from "react-router-dom";
+export interface PetForm extends Pet {
+  imageFile?: File;
+}
 
 function EditPetPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +20,7 @@ function EditPetPage() {
   const [breeds, setBreeds] = useState<Breed[]>([]);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState<Pet>({
+  const [form, setForm] = useState<PetForm>({
     avatar_url: "",
     name: "",
     species: "",
@@ -45,7 +48,7 @@ function EditPetPage() {
             : "",
           allergies:
             typeof data.allergies === "string"
-              ? data.allergies.split(",").map((item) => item.trim())
+              ? data.allergies.split(",").map((item: string) => item.trim())
               : Array.isArray(data.allergies)
                 ? data.allergies
                 : [],
@@ -82,8 +85,8 @@ function EditPetPage() {
       dataForm.append("date_of_birth", form.dob);
       dataForm.append("weight", String(form.weight || 0));
       dataForm.append("height", String(form.height || 0));
-      if ((form as any).imageFile) {
-        dataForm.append("file", (form as any).imageFile);
+      if (form.imageFile) {
+        dataForm.append("file", form.imageFile);
       }
 
       dataForm.append("neutered", String(form.neutered));

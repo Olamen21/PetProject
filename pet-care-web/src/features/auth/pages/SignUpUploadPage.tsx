@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   FaPhone,
@@ -11,10 +10,10 @@ import {
 import { Colors } from "../../../constants/Colors";
 import UploadHeader from "../components/SignUpUploadPage/UploadHeader";
 import UploadArea from "../components/SignUpUploadPage/UploadArea";
-import InputField from "../components/SignUpUploadPage/InputField";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/useAuth";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { applyVet } from "../services/AuthApi";
+import CommonTextInput from "../../../shared/components/CommonTextInput";
 
 const SignUpUploadPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,13 +26,13 @@ const SignUpUploadPage: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (userFromAuth?.role === "PENDING_VET") {
+    if (userFromAuth.user?.role === "PENDING_VET") {
       alert(
         "The doctor’s profile has been submitted! Please wait for the Admin’s approval.",
       );
       navigate("/login");
     }
-    if (userFromAuth?.role === "VET") {
+    if (userFromAuth.user?.role === "VET") {
       navigate("/vet-dashboard");
     }
   }, [userFromAuth]);
@@ -63,7 +62,7 @@ const SignUpUploadPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-   console.log(formData.date_of_birth);
+    console.log(formData.date_of_birth);
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
       setMessage({
@@ -144,11 +143,18 @@ const SignUpUploadPage: React.FC = () => {
         "The doctor’s profile has been submitted! Please wait for the Admin’s approval.",
       );
       navigate("/login");
-    } catch (error: any) {
-      alert(
-        error.response?.data?.message ||
-          "An error occurred while submitting the profile.",
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else if (typeof error === "object" && error && "response" in error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        alert(
+          err.response?.data?.message ||
+            "An error occurred while submitting the profile.",
+        );
+      } else {
+        alert("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
@@ -164,72 +170,92 @@ const SignUpUploadPage: React.FC = () => {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "20px",
+              marginBottom: "20px",
             }}
           >
-            <InputField
+            <CommonTextInput
               label="Phone Number"
-              icon={<FaPhone />}
+              Icon={FaPhone}
               type="text"
               name="phone"
               placeholder="090..."
-              onChange={handleChange}
+              value={formData.phone}
+              onChangeText={handleChange}
               required
             />
-            <InputField
+            <CommonTextInput
               label="Date of Birth"
-              icon={<FaCalendarAlt />}
+              Icon={FaCalendarAlt}
               type="date"
               name="date_of_birth"
-              onChange={handleChange}
+              placeholder=""
+              value={formData.date_of_birth}
+              onChangeText={handleChange}
               required
             />
           </div>
-
-          <InputField
-            label="Clinic Address"
-            icon={<FaMapMarkerAlt />}
-            type="text"
-            name="address"
-            placeholder="House number, street name..."
-            onChange={handleChange}
-            required
-          />
+          <div
+            style={{
+              marginBottom: "20px",
+            }}
+          >
+            <CommonTextInput
+              label="Clinic Address"
+              Icon={FaMapMarkerAlt}
+              type="text"
+              name="address"
+              placeholder="House number, street name..."
+              value={formData.address}
+              onChangeText={handleChange}
+              required
+            />
+          </div>
 
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "20px",
+              marginBottom: "20px",
             }}
           >
-            <InputField
+            <CommonTextInput
               label="Degree"
-              icon={<FaIdCard />}
+              Icon={FaIdCard}
               type="text"
               name="degree"
               placeholder="Master's, Doctorate..."
-              onChange={handleChange}
+              value={formData.degree}
+              onChangeText={handleChange}
               required
             />
-            <InputField
+            <CommonTextInput
               label="Clinic Room Name"
-              icon={<FaHospital />}
+              Icon={FaHospital}
               type="text"
               name="clinic_room"
               placeholder="Room number..."
-              onChange={handleChange}
+              value={formData.clinic_room}
+              onChangeText={handleChange}
               required
             />
           </div>
-
-          <InputField
-            label="Experience Start Date"
-            icon={<FaCalendarAlt />}
-            type="date"
-            name="experience_start_date"
-            onChange={handleChange}
-            required
-          />
+          <div
+            style={{
+              marginBottom: "20px",
+            }}
+          >
+            <CommonTextInput
+              label="Experience Start Date"
+              Icon={FaCalendarAlt}
+              type="date"
+              name="experience_start_date"
+              placeholder=""
+              value={formData.experience_start_date}
+              onChangeText={handleChange}
+              required
+            />
+          </div>
 
           <label
             style={{ fontWeight: "bold", marginBottom: "8px", color: "#555" }}

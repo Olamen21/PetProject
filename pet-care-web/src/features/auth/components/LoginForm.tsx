@@ -1,14 +1,15 @@
 import { Colors } from "../../../constants/Colors";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
+import type { SignUpPayload } from "../types/SignUpPayload";
 
 const LoginForm: React.FC<{
-  formData: any;
+  formData: SignUpPayload;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
   loading: boolean;
 }> = ({ formData, handleChange, handleSubmit, loading }) => (
   <form onSubmit={handleSubmit} style={styles.form}>
-    <CommonTextInput name="userName" placeholder="User Name" value={formData.userName} onChangeText={handleChange} />
+    <CommonTextInput name="full_name" placeholder="User Name" value={formData.full_name} onChangeText={handleChange} />
     <CommonTextInput type="email" name="email" placeholder="Email" value={formData.email} onChangeText={handleChange} />
     <CommonTextInput type="password" name="password" placeholder="Password" value={formData.password} onChangeText={handleChange} />
     
@@ -17,14 +18,14 @@ const LoginForm: React.FC<{
             <input
                 type="checkbox"
                 name="rememberMe"
-                checked={formData.rememberMe || false}
+                checked={ false}
                 onChange={handleChange}
             />
             Remember me
         </label>
-        <a href="/forgot-password" style={styles.forgotLink}>
+        {/* <a href="/forgot-password" style={styles.forgotLink}>
             Forgot Password?
-        </a>
+        </a> */}
     </div>
     
     <button type="submit" style={styles.button} disabled={loading}>

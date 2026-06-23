@@ -1,13 +1,20 @@
 import CommonTextInput from "../../../../shared/components/CommonTextInput";
 import CommonButton from "../../../../shared/components/CommonButton";
 import { Colors } from "../../../../constants/Colors";
+import type { FormState } from "../../pages/EditProfilePage";
 
-function EditProfileSpecialties({ form, setForm, newTag, setNewTag }) {
+interface Props {
+  form: FormState;
+  setForm: React.Dispatch<React.SetStateAction<FormState>>;
+  newTag: string;
+  setNewTag: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function EditProfileSpecialties({ form, setForm, newTag, setNewTag }: Props) {
   const currentTags = Array.isArray(form.tags) ? form.tags : [];
 
   const addTag = () => {
     if (!newTag.trim()) return;
-    // Thêm vào mảng
     setForm({ ...form, tags: [...currentTags, newTag.trim()] });
     setNewTag("");
   };
@@ -57,24 +64,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginBottom: 20,
     boxShadow: "0 4px 12px " + Colors.border,
   },
-
   sectionTitle: {
     fontSize: 16,
     fontWeight: 600,
     marginBottom: 16,
-  },
-
-  row: {
-    display: "flex",
-    gap: 16,
-    alignItems: "center",
-  },
-
-  avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: "50%",
-    objectFit: "cover",
   },
   tagContainer: {
     display: "flex",
@@ -82,7 +75,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: 10,
     marginBottom: 10,
   },
-
   tag: {
     padding: "6px 12px",
     borderRadius: 999,
@@ -91,11 +83,5 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     alignItems: "center",
     gap: 6,
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2,1fr)",
-    gap: 16,
   },
 };

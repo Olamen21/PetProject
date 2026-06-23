@@ -1,10 +1,5 @@
 import api from "../../../api/axiosInstance";
-
-export interface SignUpPayload {
-  email: string;
-  password: string;
-  full_name: string;
-}
+import type { SignUpPayload } from "../types/SignUpPayload";
 
 export const signUp = async (data: SignUpPayload) => {
   const res = await api.post("/auth/register", data);

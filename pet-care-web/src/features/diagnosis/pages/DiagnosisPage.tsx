@@ -19,7 +19,7 @@ import type { PetVaccine } from "../types/PetVaccine";
 import { getAllUser, getProfile } from "../../../api/UserApi";
 import type { Vaccine } from "../types/Vaccine";
 import type { Pet } from "../types/Pet";
-import type { User } from "../types/User";
+import type { User } from "../../../shared/types/User";
 import type { Appointment } from "../types/Appointment";
 import type { DiagnosisData } from "../types/DiagnosisData";
 

@@ -6,7 +6,7 @@ import ProfileStats from "../components/ProfilePage/ProfileStats";
 import ProfileDetail from "../components/ProfilePage/ProfileDetails";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader";
 import { getProfile } from "../../../api/UserApi";
-import type { User } from "../types/User";
+import type { User } from "../../../shared/types/User";
 
 function ProfilePage() {
   const [user, setUser] = useState<User>();
@@ -25,8 +25,6 @@ function ProfilePage() {
     };
 
     loadData();
-
-    return () => {};
   }, []);
 
   const styles: { [key: string]: React.CSSProperties } = {
@@ -37,7 +35,6 @@ function ProfilePage() {
     main: {
       flex: 1,
       padding: "24px",
-
       minHeight: "100vh",
     },
     card: {
@@ -55,28 +52,23 @@ function ProfilePage() {
         Colors.secondary +
         ")",
     },
-    avatarImage: {
-      width: "80px",
-      height: "80px",
-      borderRadius: "50%",
-      border: "4px solid " + Colors.white,
-      marginTop: "-60px",
-      objectFit: "cover",
-    },
-    avatarFallback: {
-      width: "80px",
-      height: "80px",
-      borderRadius: "50%",
-      background: Colors.secondary,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontWeight: "bold",
-      fontSize: "18px",
-      color: Colors.white,
-      marginTop: "-60px",
-    },
   };
+
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <Sidebar />
+        <main style={styles.main}>
+          <div style={styles.card}>
+            <div style={styles.banner}></div>
+            <div style={{ padding: "24px", textAlign: "center" }}>
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -101,7 +93,7 @@ function ProfilePage() {
           <ProfileStats
             tags={
               typeof user?.doctorProfile?.tags === "string"
-                ? user.doctorProfile.tags.split(",").map((tag) => tag.trim())
+                ? user.doctorProfile.tags.split(",").map((tag: string) => tag.trim())
                 : Array.isArray(user?.doctorProfile?.tags)
                   ? user.doctorProfile.tags
                   : []
@@ -124,12 +116,11 @@ function ProfilePage() {
               user?.doctorProfile?.experience_start_date || "dd/mm/yyyy"
             }
           />
-
-          {/* <ProfileSchedule /> */}
         </div>
       </main>
     </div>
   );
 }
+
 
 export default ProfilePage;

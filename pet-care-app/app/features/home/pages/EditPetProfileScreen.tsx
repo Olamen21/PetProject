@@ -104,7 +104,7 @@ export default function EditPetProfileScreen() {
         type: "success",
         text: "Cập nhật hồ sơ thú cưng thành công!",
       });
-      router.push("/(tabs)/PetProfileScreen");
+      router.push("/(tabs)/HomeScreen");
     } catch (error) {
       console.error("Không thể cập nhật pet:", error);
       setMessage({ type: "error", text: "Có lỗi xảy ra khi lưu thay đổi." });
@@ -119,7 +119,7 @@ export default function EditPetProfileScreen() {
           {
             type: "ion",
             name: "chevron-back-outline",
-            onPress: () => router.push("/(tabs)/PetProfileScreen"),
+            onPress: () => router.push("/(tabs)/HomeScreen"),
           },
         ]}
       />

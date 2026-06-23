@@ -1,5 +1,5 @@
 export interface PetVaccine {
-    id?: number;
+    id: number;
     pet_id: number;
     vaccine_id: number;
     pet_name: string;

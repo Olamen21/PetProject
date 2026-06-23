@@ -9,21 +9,20 @@ interface Props {
 }
 
 const PetHeader: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
-
-const styles: any = {
-  content: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
+  const styles: Record<string, React.CSSProperties> = {
+    content: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 20,
     },
     left: {
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        fontSize: 28,
-        fontWeight: 600,
-        color: Colors.text
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      fontSize: 28,
+      fontWeight: 600,
+      color: Colors.text,
     },
     right: {
       display: "flex",
@@ -31,18 +30,17 @@ const styles: any = {
       gap: 10,
     },
     searchBox: {
-        display: "flex",
-        alignItems: "center",
-        background: Colors.white,
-        border: `1px solid ${Colors.border}`,
-        borderRadius: 10,
-        padding: "8px 14px",
-        width: 280
+      display: "flex",
+      alignItems: "center",
+      background: Colors.white,
+      border: `1px solid ${Colors.border}`,
+      borderRadius: 10,
+      padding: "8px 14px",
+      width: 280,
     },
-};
+  };
   return (
     <div style={styles.content}>
-      
       <div style={styles.left}>
         <FaUserShield color={Colors.primary} />
         Pet List Management
@@ -62,8 +60,8 @@ const styles: any = {
           title="New pet"
           onClick={() => navigation.navigate("/new-pet")}
           Icon={FaPlus}
-          backgroundColor= {Colors.primary}
-          textColor= {Colors.white}
+          backgroundColor={Colors.primary}
+          textColor={Colors.white}
         />
       </div>
     </div>
@@ -71,4 +69,3 @@ const styles: any = {
 };
 
 export default PetHeader;
-       

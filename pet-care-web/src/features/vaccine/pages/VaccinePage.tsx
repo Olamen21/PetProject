@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Sidebar from "../../../shared/components/Sidebar";
 import { Colors } from "../../../constants/Colors";
 import { useEffect, useState } from "react";
 import VaccineHeader from "../components/VaccineHeader";
 import VaccineTable from "../components/VaccineTable";
 import type { Vaccine } from "../types/Vaccine";
-import { mockVaccines } from "../data/MockData";
 import { getAllVaccine } from "../services/vaccineService";
 
 const VaccinePage: React.FC = () => {
@@ -12,24 +12,20 @@ const VaccinePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const loadData = async () => {
-    try {
+const fetchData = async () => {
+      try {
       setLoading(true);
       const dataVaccine = await getAllVaccine();
       setVaccines(dataVaccine);
       setLoading(false);
-    } catch (err: any) {
+    } catch (error: any) {
       setError("Không thể tải dữ liệu vaccine");
       setLoading(false);
+      console.error(error);
     }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await loadData();
     };
-    fetchData();
+  useEffect(() => {
+    queueMicrotask(async()=>await fetchData())
   }, []);
 
   const filteredVaccines = vaccines.filter((v) =>
@@ -55,7 +51,7 @@ const VaccinePage: React.FC = () => {
               {error}
             </div>
           ) : (
-            <VaccineTable vaccines={filteredVaccines} onDeleted={loadData} />
+            <VaccineTable vaccines={filteredVaccines} onDeleted={fetchData} />
           )}
         </div>
       </div>

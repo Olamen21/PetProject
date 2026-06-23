@@ -60,12 +60,12 @@ const PetRow: React.FC<{ pet: Pet }> = ({ pet }) => {
     <tr style={styles.row}>
       <td style={styles.cell}>#{pet.id}</td>
       <td style={styles.cell}>
-        <strong>{pet.owner}</strong>
+        <strong>{pet.owner_name}</strong>
       </td>
       <td style={styles.cell}>
         <strong>{pet.name}</strong>
       </td>
-      <td style={styles.cell}>{pet.breed}</td>
+      <td style={styles.cell}>{pet.breed_name}</td>
       <td style={styles.cell}>{pet.gender}</td>
       <td style={styles.cell}>
       <span style={styles.role}>{pet.species}</span>

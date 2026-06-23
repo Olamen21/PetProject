@@ -11,4 +11,6 @@ export interface Pet {
   neutered: string;
   allergies: string[];
   avatar_url: string;
+  owner_name?: string;
+  breed_name?: string;
 }

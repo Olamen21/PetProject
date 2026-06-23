@@ -5,7 +5,9 @@ import PetHeader from "../components/PetHeader";
 import PetTable from "../components/PetTable";
 import type { Pet } from "../types/Pet";
 import { getAllBreed, getPet } from "../services/petService";
-import {getAllUser } from "../../../api/UserApi"; 
+import { getAllUser } from "../../../api/UserApi";
+import type { Breed } from "../types/Breed";
+import type { User } from "../../../shared/types/User";
 
 const PetListPage: React.FC = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -20,24 +22,27 @@ const PetListPage: React.FC = () => {
 
         const users = await getAllUser();
         const breeds = await getAllBreed();
-
         const dataPet = await getPet();
-        
 
         const petsWithOwner = dataPet.map((p: Pet) => {
-          const ownerUser = users.find((u: any) => u.id === p.owner_id);
-          const breedName = breeds.find((y: any) => y.id === p.breed_id);
+          const ownerUser = users.find((u: User) => u.id === p.owner_id);
+          const breedName = breeds.find((y: Breed) => y.id === p.breed_id);
           return {
             ...p,
-            owner: ownerUser ? ownerUser.full_name : "Không rõ",
-            breed: breedName ? breedName.name : "không rõ",
+            owner_name: ownerUser ? ownerUser.full_name : "Không rõ",
+            breed_name: breedName ? breedName.name : "không rõ",
           };
         });
 
         setPets(petsWithOwner);
         setLoading(false);
-      } catch (err: any) {
-        setError("Không thể tải dữ liệu thú cưng");
+      } catch (err: unknown) {
+        console.error("Lỗi hệ thống:", err);
+
+        const errorObj = err as { response?: { data?: { message?: string } } };
+        setError(
+          errorObj.response?.data?.message || "Không thể tải dữ liệu thú cưng",
+        );
         setLoading(false);
       }
     };
@@ -46,9 +51,8 @@ const PetListPage: React.FC = () => {
   }, []);
 
   const filteredPets = pets.filter(
-    (p) =>
-      p.name?.toLowerCase().includes(searchTerm.toLowerCase()) 
-      // p.breed?.toLowerCase().includes(searchTerm.toLowerCase())
+    (p) => p.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+    // p.breed?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

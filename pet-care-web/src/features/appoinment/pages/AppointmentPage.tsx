@@ -1,9 +1,6 @@
-import Header from "../../../shared/components/Header";
 import Sidebar from "../../../shared/components/Sidebar";
-import avatar from "../../../assets/avatar_doctor.jpg";
 import { useEffect, useState } from "react";
-import SettingItem from "../../../shared/components/SettingItem";
-import NotificationItem from "../../../shared/components/NotificationItem";
+
 import WeeklyCalendar from "../components/AppointmentPage/WeeklyCalendar";
 import PendingRequests from "../components/AppointmentPage/PendingRequests";
 import {
@@ -18,9 +15,6 @@ import type { Pet } from "../../diagnosis/types/Pet";
 import type { User } from "../../ManagementUser/types/User";
 
 function AppointmentPage() {
-  const [openSettings, setOpenSettings] = useState(false);
-  const [openNotifications, setOpenNotifications] = useState(false);
-  const [openSidebar, setOpenSidebar] = useState(true);
   const [pendingList, setPendingList] = useState<AppointmentList[]>([]);
 
   useEffect(() => {
@@ -36,7 +30,7 @@ function AppointmentPage() {
           const owner = users.find((u: User) => u.id === pet?.owner_id);
 
           const appointmentDate = new Date(al.appointment_date);
-          const dateUTC = appointmentDate.toISOString().split("T")[0]; 
+          const dateUTC = appointmentDate.toISOString().split("T")[0];
           const timeUTC = appointmentDate
             .toISOString()
             .split("T")[1]
@@ -63,7 +57,6 @@ function AppointmentPage() {
     };
     loadData();
   }, []);
-
 
   const weeklySchedule = pendingList.map((apt) => ({
     id: apt.id,
@@ -105,7 +98,7 @@ function AppointmentPage() {
         minHeight: "100vh",
       }}
     >
-      {openSidebar && <Sidebar />}
+     <Sidebar />
 
       <main
         style={{
@@ -116,21 +109,6 @@ function AppointmentPage() {
           overflow: "hidden",
         }}
       >
-        <Header
-          user={{
-            name: "Johen Doe",
-            role: "ADMIN",
-            avatarUrl: avatar,
-          }}
-          onToggleMenu={() => setOpenSidebar(!openSidebar)}
-          onSearch={(q) => console.log("Search:", q)}
-          onOpenNotifications={() => setOpenNotifications(!openNotifications)}
-          onOpenSettings={() => setOpenSettings(!openSettings)}
-        />
-
-        {openSettings && <SettingItem />}
-        {openNotifications && <NotificationItem />}
-
         <div style={styles.row}>
           <div style={styles.leftColumn}>
             <WeeklyCalendar weeklySchedule={weeklySchedule} />
