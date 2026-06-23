@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './auth/entities/user.entity';
@@ -24,10 +24,10 @@ export class AppService {
       where: { email: dto.email },
     });
     if (existingUser) {
-      throw new Error('User đã tồn tại');
+      throw new BadRequestException('User đã tồn tại');
     }
 
-    const hashedPassword = await this.hashPassword(dto.password!);
+    const hashedPassword = await this.hashPassword(dto.password);
 
     const newUser = new User();
     newUser.email = dto.email;
@@ -55,7 +55,7 @@ export class AppService {
       where: { email: dto.email },
     });
     if (!user) {
-      throw new UnauthorizedException('Email không tồn tại!');
+      throw new BadRequestException('Email không tồn tại!');
     }
     console.log('Password nhập:', dto.password);
     console.log('Hash trong DB:', user.password_hash);
@@ -63,7 +63,7 @@ export class AppService {
     console.log('Kết quả so sánh:', isMatch);
 
     if (!isMatch) {
-      throw new UnauthorizedException('Sai mật khẩu!');
+      throw new BadRequestException('Sai mật khẩu!');
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };

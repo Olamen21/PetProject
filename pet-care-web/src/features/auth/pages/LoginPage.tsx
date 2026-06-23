@@ -9,10 +9,11 @@ import CommonMessage from "../../../shared/components/CommonMessage";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import { login } from "../services/AuthApi";
+import type { SignUpPayload } from "../types/SignUpPayload";
 
 const LoginPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    userName: "",
+  const [formData, setFormData] = useState<SignUpPayload>({
+    full_name: "",
     email: "",
     password: "",
   });
@@ -37,7 +38,7 @@ const LoginPage: React.FC = () => {
     if (
       formData.email.trim() === "" ||
       formData.password.trim() === "" ||
-      formData.userName.trim() === ""
+      formData.full_name.trim() === ""
     ) {
       setMessage({
         type: "error",
@@ -53,7 +54,7 @@ const LoginPage: React.FC = () => {
       const result = await login({
         email: formData.email,
         password: formData.password,
-        full_name: formData.userName,
+        full_name: formData.full_name,
       });
 
       if (result && result.user) {
@@ -79,12 +80,15 @@ const LoginPage: React.FC = () => {
           text: "Incorrect login information!",
         });
       }
-    } catch (err: any) {
-      console.error("Login component error:", err);
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Email or password is incorrect!",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else if (typeof error === "object" && error && "response" in error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        alert(err.response?.data?.message || "Email or password is incorrect!");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }

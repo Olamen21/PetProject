@@ -1,22 +1,22 @@
 import React from "react";
 import PetRow from "./PetRow";
-import { Colors } from "../../../constants/Colors"; 
+import { Colors } from "../../../constants/Colors";
 import type { Pet } from "../types/Pet";
 
 const PetTable: React.FC<{ pets: Pet[] }> = ({ pets }) => {
-    const styles: any = {
-        table: {
-            width: "100%",
-            borderCollapse: "separate",
-            borderSpacing: "0 10px"
-        },  
-        headerCell: {
-            fontSize: 18, 
-            color: Colors.text_secondary,
-            textAlign: "left",
-            paddingBottom: 12
-        }
-    };
+  const styles: Record<string, React.CSSProperties> = {
+    table: {
+      width: "100%",
+      borderCollapse: "separate",
+      borderSpacing: "0 10px",
+    },
+    headerCell: {
+      fontSize: 18,
+      color: Colors.text_secondary,
+      textAlign: "left",
+      paddingBottom: 12,
+    },
+  };
   return (
     <table style={styles.table}>
       <thead>

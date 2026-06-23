@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { InfoRow } from "./InfoRow";
 import { Pet } from "../../../shared/types/Pet";
 import type { Breed } from "../types/Breed";
-import PetAvatar from "../../petProfile/components/PetAvatar";
+import PetAvatar from "../../home/components/PetAvatar";
 interface BasicInfoCardProps {
   pet: Pet | null;
   setPet: (value: Pet) => void;

@@ -9,9 +9,20 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../services/profileService";
 import CommonMessage from "../../../shared/components/CommonMessage";
 import { getProfile } from "../../../api/UserApi";
+export interface FormState {
+  name: string;
+  role: string;
+  bio: string;
+  avatar: string | null;   
+  avatarFile?: File | null;    
+  tags: string[];
+  phone: string;
+  dob: string;
+  address: string;
+  clinicRoom: string;
+}
 
 function EditProfilePage() {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   const [message, setMessage] = useState<{
@@ -20,11 +31,12 @@ function EditProfilePage() {
   } | null>(null);
 
   const navigate = useNavigate();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     name: "",
     role: "",
     bio: "",
-    avatar: null as File | null,
+    avatar: null,
+    avatarFile: null,
     tags: [],
     phone: "",
     dob: "",
@@ -35,8 +47,6 @@ function EditProfilePage() {
     const loadData = async () => {
       try {
         const data = await getProfile();
-
-        setUser(data);
 
         setForm({
           name: data.full_name || "",
@@ -139,7 +149,6 @@ function EditProfilePage() {
 
       if (res.status === 200 || res.status === 201) {
         alert("Cập nhật thành công");
-        if (setUser) setUser(res.data);
         navigate("/profile");
       }
     } catch (error) {
@@ -165,7 +174,8 @@ function EditProfilePage() {
     },
   };
 
-  return (
+ if(loading){
+   return (
     <div style={styles.container}>
       <Sidebar />
 
@@ -173,7 +183,6 @@ function EditProfilePage() {
         <EditProfileBasicInfo
           form={form}
           handleChange={handleChange}
-          setForm={setForm}
           handleFileChange={handleFileChange}
         />
         <EditProfileSpecialties
@@ -205,6 +214,7 @@ function EditProfilePage() {
       </main>
     </div>
   );
+ }
 }
 
 export default EditProfilePage;

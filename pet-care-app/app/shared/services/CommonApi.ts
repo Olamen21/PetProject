@@ -1,4 +1,5 @@
-import petApi from "@/app/features/petProfile/services/PetApi";
+import api from "@/api/axios";
+import petApi from "@/app/features/home/services/PetApi";
 import { Pet } from "@/app/shared/types/Pet";
 
 export const getPetList = async (): Promise<Pet[]> => {
@@ -10,3 +11,7 @@ export const getPetList = async (): Promise<Pet[]> => {
     throw error;
   }
 };
+// export const getPetList = async (): Promise<Pet[]> => {
+//   const res = await api.get('/pets/pets');
+//   return res.data;
+// };

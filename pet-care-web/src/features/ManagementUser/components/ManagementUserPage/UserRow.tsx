@@ -2,13 +2,7 @@ import React from "react";
 import { FaTrashAlt, FaCheckCircle } from "react-icons/fa";
 import { Colors } from "../../../../constants/Colors";
 import { approveVet } from "../../services/ManagementUser";
-interface User {
-  id: number;
-  full_name: string;
-  email: string;
-  role: string;
-  is_active: boolean;
-}
+import type { User } from "../../../../shared/types/User";
 
 interface Props {
   user: User;
@@ -42,10 +36,8 @@ const UserRow: React.FC<Props> = ({ user }) => {
     padding: "4px 10px",
     borderRadius: "20px",
     fontSize: "14px",
-    background: user.is_active ? Colors.bg_verified : "#fdecea",
-    color: user.is_active ? Colors.text_verified : Colors.error,
   };
-  const styles: any = {
+  const styles: Record<string, React.CSSProperties> = {
     row: {
       background: Colors.white,
       boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
@@ -73,13 +65,15 @@ const UserRow: React.FC<Props> = ({ user }) => {
       await approveVet(selectedUserId);
 
       alert("Approval successful!");
-
       window.location.reload();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Lỗi approve:", error);
-      alert(
-        error.response?.data?.message || "An error occurred during approval",
-      );
+
+      const errMsg =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "An error occurred during approval";
+
+      alert(errMsg);
     }
   };
 

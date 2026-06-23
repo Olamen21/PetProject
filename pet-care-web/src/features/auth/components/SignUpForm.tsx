@@ -1,14 +1,15 @@
 import { Colors } from "../../../constants/Colors";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
+import type { SignUp } from "../types/SignUpPayload";
 
 const SignUpForm: React.FC<{
-  formData: any;
+  formData: SignUp;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
   loading: boolean;
 }> = ({ formData, handleChange, handleSubmit, loading }) => (
   <form onSubmit={handleSubmit} style={styles.form}>
-    <CommonTextInput name="userName" placeholder="User Name" value={formData.userName} onChangeText={handleChange} />
+    <CommonTextInput name="full_name" placeholder="User Name" value={formData.full_name} onChangeText={handleChange} />
     <CommonTextInput type="email" name="email" placeholder="Email" value={formData.email} onChangeText={handleChange} />
     <CommonTextInput type="password" name="password" placeholder="Password" value={formData.password} onChangeText={handleChange} />
     <CommonTextInput type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChangeText={handleChange} />

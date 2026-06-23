@@ -4,22 +4,14 @@ import { Colors } from "../../../constants/Colors";
 import UserHeader from "../components/ManagementUserPage/UserHeader";
 import UserTable from "../components/ManagementUserPage/UserTable";
 import { getProfile } from "../../../api/UserApi";
-import {getAllUser } from "../../../api/UserApi";
-
-interface User {
-  id: number;
-  full_name: string;
-  email: string;
-  role: string;
-  is_active: boolean;
-}
+import { getAllUser } from "../../../api/UserApi";
+import type { User } from "../../../shared/types/User";
 
 const ManagementUserPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -27,19 +19,20 @@ const ManagementUserPage: React.FC = () => {
         setLoading(true);
 
         const userData = await getProfile();
-        setUser(userData);
 
         if (userData.role !== "ADMIN") {
           setError("Bạn không có quyền truy cập trang này.");
-          return; 
+          return;
         }
 
         const allUsers = await getAllUser();
         setUsers(allUsers);
         setError(null);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Lỗi hệ thống:", err);
-        setError(err.response?.data?.message || "Không thể tải dữ liệu.");
+
+        const errorObj = err as { response?: { data?: { message?: string } } };
+        setError(errorObj.response?.data?.message || "Không thể tải dữ liệu.");
       } finally {
         setLoading(false);
       }

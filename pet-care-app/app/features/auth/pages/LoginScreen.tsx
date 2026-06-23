@@ -17,6 +17,7 @@ import DividerWithText from "../components/DividerWithText";
 import CommonTextInput from "../../../shared/components/CommonTextInput";
 import { login } from "../services/AuthApi";
 import CommonMessage from "@/app/shared/components/CommonMessage";
+import * as SecureStore from 'expo-secure-store';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -103,12 +104,12 @@ export default function LoginScreen() {
           }
         />
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.forgotContainer}
           onPress={() => router.replace("./ForgotPasswordScreen")}
         >
           <Text style={styles.forgot}>Forgot Password </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <CommonButton
           title={loading ? "Loading..." : "Login"}

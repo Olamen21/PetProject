@@ -1,27 +1,22 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  FaHome,
   FaCalendarAlt,
   FaDog,
   FaStethoscope,
   FaUser,
-  FaCog,
   FaUsers,
   FaSignOutAlt,
+  FaBars,
 } from "react-icons/fa";
 import { MdOutlineVaccines } from "react-icons/md";
 import logo from "../../assets/logo.png";
 import { Colors } from "../../constants/Colors";
 import { getProfile } from "../../api/UserApi";
+import type { User } from "../types/User";
+
 const MENU_CONFIG = [
   { title: "GENERAL", isTitle: true },
-  // {
-  //   title: "Dashboard",
-  //   path: "/dashboard",
-  //   icon: <FaHome />,
-  //   roles: ["VET", "ADMIN"],
-  // },
   {
     title: "Appointments",
     path: "/vet/appointments",
@@ -34,8 +29,6 @@ const MENU_CONFIG = [
     icon: <FaDog />,
     roles: ["VET", "ADMIN"],
   },
-
-  // Chỉ Admin thấy những mục này
   { title: "MANAGEMENT", isTitle: true, roles: ["ADMIN"] },
   {
     title: "All Users",
@@ -43,7 +36,6 @@ const MENU_CONFIG = [
     icon: <FaUsers />,
     roles: ["ADMIN"],
   },
-
   { title: "CLINICAL", isTitle: true, roles: ["VET"] },
   {
     title: "Diagnosis",
@@ -57,7 +49,6 @@ const MENU_CONFIG = [
     icon: <MdOutlineVaccines />,
     roles: ["VET", "ADMIN"],
   },
-
   { title: "ACCOUNT", isTitle: true },
   {
     title: "My Profile",
@@ -72,10 +63,11 @@ const MENU_CONFIG = [
     roles: ["VET", "ADMIN"],
   },
 ];
+
 const Sidebar: React.FC = () => {
   const location = useLocation();
-
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User>();
+  const [isOpen, setIsOpen] = useState(true);
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -84,43 +76,33 @@ const Sidebar: React.FC = () => {
         setUser(data);
       } catch (error) {
         console.error("Lỗi khi lấy profile:", error);
-      } finally {
-        // setLoading(false);
       }
     };
-
     loadData();
-
-    return () => {};
   }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
   const baseStyles: { [key: string]: React.CSSProperties } = {
     sidebar: {
-      width: "250px",
+      width: isOpen ? "250px" : "60px",
       backgroundColor: Colors.sidebar,
       height: "100vh",
       padding: "16px",
       borderRight: `1px solid ${Colors.border}`,
       fontFamily: "sans-serif",
-
-      top: 0,
-      left: 0,
+      transition: "width 0.3s ease",
+      overflow: "hidden",
     },
-
     logo: {
       display: "flex",
       alignItems: "center",
       gap: "10px",
     },
-
-    title: {
-      fontSize: "16px",
-      fontWeight: 600,
-    },
-    subtitle: {
-      fontSize: "12px",
+    toggleBtn: {
+      cursor: "pointer",
+      marginBottom: "16px",
+      fontSize: "20px",
       color: Colors.text,
     },
     sectionTitle: {
@@ -129,81 +111,17 @@ const Sidebar: React.FC = () => {
       color: Colors.text,
       marginTop: "20px",
       marginBottom: "10px",
+      display: isOpen ? "block" : "none",
     },
-    navLink: {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      textDecoration: "none",
-      color: Colors.text,
-      fontSize: "14px",
-    },
-    badge: {
-      backgroundColor: Colors.primary,
-      color: "white",
-      borderRadius: "50%",
-      width: "22px",
-      height: "22px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: "12px",
-    },
-    doctorBox: {
-      background: Colors.sidebar,
-      borderRadius: "12px",
-      padding: "16px",
-      marginTop: "16px",
-      marginBottom: "16px",
-      color: Colors.text,
-      border: `1px solid ${Colors.border}`,
-    },
-    divider: {
-      borderTop: `1px solid ${Colors.border}`,
-      margin: "16px 0",
-    },
-
-    doctorRow: {
-      display: "flex",
-      alignItems: "center",
-      gap: "12px",
-    },
-
-    avatar: {
-      width: "60px",
-      height: "60px",
-      borderRadius: "50%",
-      background: Colors.primary,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontWeight: "bold",
-      fontSize: "18px",
-    },
-
-    doctorName: {
-      fontSize: "14px",
-      fontWeight: 600,
-    },
-
-    doctorRole: {
-      fontSize: "12px",
-      opacity: 0.8,
-    },
-
-    status: {
-      width: "8px",
-      height: "8px",
-      borderRadius: "50%",
-      backgroundColor: Colors.success,
-      marginLeft: "4px",
+    navLinkText: {
+      display: isOpen ? "inline" : "none",
     },
   };
 
   const navItemStyle = (active: boolean): React.CSSProperties => ({
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: isOpen ? "space-between" : "center",
     padding: "10px 12px",
     borderRadius: "8px",
     marginBottom: "6px",
@@ -213,47 +131,68 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside style={baseStyles.sidebar}>
-      <div style={baseStyles.logo}>
-        {" "}
-        <img src={logo} alt="logo" style={{ width: 80, height: 80 }} />
-        <div>
-          <div style={baseStyles.title}>PetCare</div>
-          <div style={baseStyles.subtitle}>Vet Portal</div>
-        </div>
+      {/* Toggle button */}
+      <div style={baseStyles.toggleBtn} onClick={() => setIsOpen(!isOpen)}>
+        <FaBars />
       </div>
-      <div style={baseStyles.divider}></div>
-      {/* DOCTOR INFO */}
-      <div style={baseStyles.doctorBox}>
-        {user ? (
-          <div style={baseStyles.doctorRow}>
-            {user.avatar_url ? (
-              <img
-                src={user.avatar_url}
-                alt="avatar"
-                style={baseStyles.avatar}
-              />
-            ) : (
-              <div style={baseStyles.avatar}>
-                {user.full_name?.charAt(0).toUpperCase() || "U"}
-              </div>
-            )}
 
-            <div>
-              <div>{user.full_name}</div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div>{user.role}</div>
-                <span style={baseStyles.status}></span>
-              </div>
+      {/* Logo */}
+      <div style={baseStyles.logo}>
+        <img src={logo} alt="logo" style={{ width: 60, height: 60 }} />
+        {isOpen && (
+          <div>
+            <div style={{ fontSize: "16px", fontWeight: 600 }}>PetCare</div>
+            <div style={{ fontSize: "12px", color: Colors.text }}>
+              Vet Portal
             </div>
           </div>
-        ) : (
-          <div>Loading...</div>
         )}
       </div>
-      <div style={baseStyles.divider}></div>
 
+      {/* Doctor Info */}
+      {isOpen && (
+        <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+          {user ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              {user.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt="avatar"
+                  style={{ width: "80px", height: "90px", borderRadius: "50%" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: Colors.primary,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user.full_name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
+              <div>
+                <div>{user.full_name}</div>
+                <div style={{ fontSize: "12px", opacity: 0.8 }}>
+                  {user.role}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
+      )}
+
+      {/* Menu */}
       {MENU_CONFIG.map((item, index) => {
-        if (item.roles && !item.roles.includes(user?.role)) return null;
+        if (item.roles && user && !item.roles.includes(user.role)) return null;
+
 
         if (item.isTitle) {
           return (
@@ -263,10 +202,12 @@ const Sidebar: React.FC = () => {
           );
         }
 
+        if (!item.path) return null;
+
         return (
           <Link
             key={index}
-            to={item.path}
+            to={item.path as string}
             style={{
               ...navItemStyle(isActive(item.path)),
               textDecoration: "none",
@@ -276,7 +217,8 @@ const Sidebar: React.FC = () => {
             <span
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
-              {item.icon} {item.title}
+              {item.icon}{" "}
+              <span style={baseStyles.navLinkText}>{item.title}</span>
             </span>
           </Link>
         );

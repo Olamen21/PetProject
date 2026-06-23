@@ -2,8 +2,14 @@ import React from "react";
 import { FiUser } from "react-icons/fi";
 import { Colors } from "../../../../constants/Colors";
 import CommonTextInput from "../../../../shared/components/CommonTextInput";
+import type { FormState } from "../../pages/EditProfilePage";
+interface EditProfileBasicInfoProps {
+  form: FormState, 
+  handleChange: (key: string, value: string) => void, 
+  handleFileChange: (file: File) => void, 
+}
 
-function EditProfileBasicInfo({ form, handleChange, setForm, handleFileChange }) {
+function EditProfileBasicInfo({ form, handleChange, handleFileChange }:EditProfileBasicInfoProps) {
   return (
     <div style={styles.sectionCard}>
       <div style={styles.sectionTitle}>Basic Info</div>
@@ -17,7 +23,7 @@ function EditProfileBasicInfo({ form, handleChange, setForm, handleFileChange })
           />
         ) : (
           <div style={styles.avatarFallback}>
-            {form?.full_name?.charAt(0).toUpperCase() || "U"}
+            {form?.name?.charAt(0).toUpperCase() || "U"}
           </div>
         )}
 
@@ -51,6 +57,7 @@ function EditProfileBasicInfo({ form, handleChange, setForm, handleFileChange })
           <input
             type="file"
             accept="image/*"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(e: any) => {
               const file = e.target.files[0];
               if (file) {
