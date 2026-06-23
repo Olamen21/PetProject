@@ -1,42 +1,36 @@
+import NutritionCard from "@/app/features/home/components/NutritionCard";
+import AvatarSection from "@/app/shared/components/AvatarSection";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
-import CommonMessage from "@/app/shared/components/CommonMessage";
-import HeaderBar from "@/app/shared/components/HeaderBar";
+import FilterMenu from "@/app/shared/components/FilterMenu";
+import { HeaderBar } from "@/app/shared/components/HeaderBar";
 import { getPetList } from "@/app/shared/services/CommonApi";
-import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import AvatarSection from "../../../shared/components/AvatarSection";
+import React, { useCallback, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Pet } from "../../../shared/types/Pet";
-import InfoCards from "../components/InfoCards";
-import PhotoCard from "../components/PhotoCard";
-import { getAllBreed, getProfile, updatePet } from "../services/PetApi";
-import { Breed } from "../types/Breed";
+import { getProfile } from "../../user/services/userService";
+import TipCard from "../components/TipCard";
 
 export default function HomeScreen() {
-  const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
-  const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
-  const [isNewAvatar, setIsNewAvatar] = useState(false);
   const [user, setUser] = useState<any>(null);
-
-  const [message, setMessage] = useState<{
-    type: "error" | "success" | "warning" | "info";
-    text: string;
-  } | null>(null);
-  const [breeds, setBreeds] = useState<Breed[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchPets = async () => {
         try {
           const data = await getPetList();
-          const breeds = await getAllBreed();
-          const dataUser = await getProfile();
-          setUser(dataUser);
-          setBreeds(breeds);
           setPets(data);
           if (data.length > 0) {
             setSelectedPet(data[0]);
@@ -46,200 +40,174 @@ export default function HomeScreen() {
         }
       };
       fetchPets();
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProfile = async () => {
+        try {
+          const data = await getProfile();
+          setUser(data);
+        } catch (error) {
+          console.error("Lỗi khi lấy profile:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProfile();
+
+      return () => {};
     }, []),
   );
 
-  const handleAddPhoto = async () => {
-    if (!selectedPet) {
-      setMessage({ type: "error", text: "Chưa chọn thú cưng để cập nhật!" });
-      return;
-    }
-
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      setMessage({ type: "error", text: "Bạn cần cấp quyền truy cập ảnh!" });
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      setPhotoUri(uri);
-      setIsNewAvatar(true);
-
-      const uriParts = uri.split(".");
-      const fileExtension = uriParts[uriParts.length - 1].toLowerCase();
-
-      const fileToUpload = {
-        uri,
-        name: `photo.${fileExtension}`,
-        type: `image/${fileExtension === "jpg" ? "jpeg" : fileExtension}`,
-      };
-
-      const formData = new FormData();
-      formData.append("file", fileToUpload as any);
-
-      try {
-        const response = await updatePet(selectedPet.id, formData);
-        setIsNewAvatar(false);
-        setSelectedPet(response.data);
-        setMessage({
-          type: "success",
-          text: "Cập nhật hồ sơ thú cưng thành công!",
-        });
-        const updatedPets = await getPetList();
-        setPets(updatedPets);
-        const updatedPet = updatedPets.find((p) => p.id === selectedPet.id);
-        if (updatedPet) setSelectedPet(updatedPet);
-      } catch (error) {
-        console.error(error);
-        setMessage({ type: "error", text: "Có lỗi khi cập nhật thú cưng!" });
-      }
-    }
-  };
-
-  if (!selectedPet) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <HeaderBar
-            logo={require("../../../../assets/images/logo.png")}
-            rightIcons={[
-              {
-                type: "ion",
-                name: "chatbubble-ellipses-outline",
-                onPress: () => {},
-                showDot: true,
-              },
-              {
-                type: "ion",
-                name: "notifications-outline",
-                onPress: () => router.push("/(tabs)/NotificationPage"),
-              },
-              user?.avatar_url
-                ? {
-                    type: "image",
-                    source: { uri: user.avatar_url },
-                    onPress: () => {},
-                  }
-                : {
-                    type: "image",
-                    source: require("../../../../assets/images/avatarDefault.jpg"),
-                    onPress: () => {},
-                  },
-            ]}
-          />
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={styles.scrollView}
-        >
-          <AvatarSection
-            pets={pets}
-            selectedPet={selectedPet}
-            onSelectPet={setSelectedPet}
-          />
-          {message && (
-            <CommonMessage type={message.type} message={message.text} />
-          )}
-         
-
-          <BottomNavBar />
-        </ScrollView>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <HeaderBar
-          logo={require("../../../../assets/images/logo.png")}
-          title={`${selectedPet.name}'s profile`}
-          rightIcons={[
-            {
-              type: "ion",
-              name: "chatbubble-ellipses-outline",
-              onPress: () => {},
-              showDot: true,
-            },
-            {
-              type: "ion",
-              name: "notifications-outline",
-              onPress: () => router.push("/(tabs)/NotificationPage"),
-            },
-            user?.avatar_url
-              ? {
-                  type: "image",
-                  source: { uri: user.avatar_url },
-                  onPress: () => {},
-                }
-              : {
-                  type: "image",
-                  source: require("../../../../assets/images/avatarDefault.jpg"),
-                  onPress: () => {},
-                },
-          ]}
-        />
-      </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}
-        contentContainerStyle={{ paddingBottom: 120 }}
-      >
-        <AvatarSection
-          pets={pets}
-          selectedPet={selectedPet}
-          onSelectPet={setSelectedPet}
-        />
-        {message && (
-          <CommonMessage type={message.type} message={message.text} />
-        )}
-        <PhotoCard
-          onAddPhoto={handleAddPhoto}
-          photoUri={selectedPet.avatar_url ? selectedPet.avatar_url : photoUri}
-        />
-        <InfoCards pet={selectedPet} breeds={breeds} />
-        <CommonButton
-          title="Complete your pet's profile"
-          onPress={() =>
-            router.push({
-              pathname: "/(tabs)/EditPetProfileScreen",
-              params: { petId: selectedPet.id },
-            })
+      {/* Header Bar */}
+      <HeaderBar
+        logo={require("../../../../assets/images/logo.png")}
+        rightIcons={[
+          {
+            type: "ion",
+            name: "chatbubble-ellipses-outline",
+            onPress: () => {},
+            showDot: true,
+          },
+          { type: "ion", name: "notifications-outline", onPress: () => router.push("/(tabs)/NotificationPage"), },
+          user?.avatar_url ?
+          {
+            type: "image",
+            source: { uri: user.avatar_url },
+            onPress: () => {},
+          } : {
+            type: "image",
+            source: require("../../../../assets/images/avatarDefault.jpg"),
+            onPress: () => {},
           }
-          iconName="clipboard-outline"
-          iconColor="#fff"
-          backgroundColor="#5A7863"
-          textColor="#fff"
-          style={styles.button}
-        />
-       
-      </ScrollView>
+        ]}
+      />
 
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Pet Profile Card */}
+        <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+
+        {/* Today's Reminder */}
+        <View style={styles.reminderCardHeader}>
+          <Text style={styles.textReminder}>Today's Reminder</Text>
+          <TouchableOpacity style={styles.buttonViewAll}>
+            <Text style={styles.textViewAll}>View all</Text>
+            <Ionicons
+              name="chevron-forward-outline"
+              color="#5A7863"
+              size={20}
+            />
+          </TouchableOpacity>
+        </View>
+        <FilterMenu
+          filters={["All", "Meal", "Vitamin", "Pill", "Drops", "Vaccine"]}
+          defaultSelected="All"
+          onSelect={(value) => console.log("Selected:", value)}
+        />
+
+        <View style={styles.icon}>
+          <Ionicons name="calendar-number-outline" color="#5A7863" size={100} />
+        </View>
+        <Text style={styles.noRemindersText}>
+          You don’t have any reminders yet. Add one to keep your pet’s on track!
+        </Text>
+        <CommonButton
+          title="Add Reminder"
+          onPress={() => console.log("Add Reminder")}
+          iconName="timer-outline"
+          backgroundColor="#5A7863"
+          style={{
+            marginBottom: 20,
+            paddingVertical: 12,
+            marginHorizontal: 90,
+          }}
+        />
+
+        {/* Smart Nutrition */}
+        <NutritionCard />
+
+        {/* Tips */}
+        {/* <View style={[styles.reminderCardHeader, { marginBottom: 20 }]}>
+          <Text style={styles.textReminder}>Perfect tips</Text>
+          <TouchableOpacity style={styles.buttonViewAll}>
+            <Text style={styles.textViewAll}>View all</Text>
+            <Ionicons
+              name="chevron-forward-outline"
+              color="#5A7863"
+              size={20}
+            />
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.tipScrollView}
+        >
+          <TipCard />
+          <TipCard />
+          <TipCard />
+        </ScrollView> */}
+      </ScrollView>
+      {/* Bottom Navigation Bar */}
       <BottomNavBar />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FAFAFA" },
-  header: { marginTop: 20 },
-  scrollView: { flex: 1 },
-  button: {
+  container: {
+    flex: 1,
+    backgroundColor: "#FAFAFA",
+    marginBottom: 10,
+  },
+  buttonContainer: {
     flexDirection: "row",
-    paddingVertical: 16,
-    borderRadius: 12,
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginTop: 20,
+  },
+  reminderCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    marginHorizontal: 16,
-    marginBottom: 12,
+    marginHorizontal: 10,
+    marginTop: 20,
+  },
+  textReminder: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#3B4953",
+  },
+  buttonViewAll: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  textViewAll: {
+    color: "#5A7863",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  icon: {
+    alignItems: "center",
+    marginTop: 20,
+  },
+  noRemindersText: {
+    textAlign: "center",
+    color: "#3B4953",
+    fontSize: 16,
+    marginHorizontal: 40,
+    marginTop: 10,
+    fontWeight: "500",
+    marginBottom: 20,
+  },
+  tipScrollView: {
+    marginLeft: 10,
+    marginBottom: 150,
   },
 });
