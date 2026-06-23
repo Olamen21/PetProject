@@ -14,3 +14,12 @@ export const changePassword = async (oldPassword: string, newPassword: string) =
     newPassword,
   });
 };
+export const calculateVetRating = async (id: string) => {
+  const res = await api.get('/review/calculate-vet-rating/'+ id);
+  return res.data;
+}
+export const countCompletedAppointments = async (id: string) => {
+  const res = await api.get('/appointment/count-appointment/' + id);
+  return res.data;
+
+}

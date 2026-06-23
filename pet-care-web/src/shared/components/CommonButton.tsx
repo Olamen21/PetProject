@@ -4,7 +4,7 @@ import { Colors } from "../../constants/Colors";
 
 type Props = {
   title?: string;
-  onClick: () => void;
+  onClick?: () => void;
   Icon?: IconType;
   iconSize?: number;
   iconColor?: string;

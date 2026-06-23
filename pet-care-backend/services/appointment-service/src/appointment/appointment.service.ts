@@ -103,4 +103,14 @@ export class AppointmentService {
     appointment.is_reviewed = true;
     return await this.appointmentRepository.save(appointment);
   }
+  async countCompletedAppointments(vetId: number): Promise<number> {
+    const count = await this.appointmentRepository.count({
+      where: {
+        vet_id: vetId,
+        status: AppointmentStatus.COMPLETED,
+      },
+    });
+
+    return count;
+  }
 }

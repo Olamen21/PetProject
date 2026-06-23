@@ -64,7 +64,7 @@ const LoginPage: React.FC = () => {
           localStorage.setItem("user_role", user.role);
 
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate("/vet/appointments");
           }, 1000);
         } else {
           setMessage({

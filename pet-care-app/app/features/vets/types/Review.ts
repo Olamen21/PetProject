@@ -9,3 +9,7 @@ export interface Review {
     avatar_url: string | null;
     user_id?: number;
 }
+export interface Rating {
+    averageRating: number;
+    totalReviews: number;
+}
