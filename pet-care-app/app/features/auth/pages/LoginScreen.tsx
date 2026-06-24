@@ -3,6 +3,8 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -56,97 +58,103 @@ export default function LoginScreen() {
     };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Image
-          source={require("../../../../assets/images/intro_bg.png")}
-          style={styles.image}
-        />
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Image
+            source={require("../../../../assets/images/intro_bg.png")}
+            style={styles.image}
+          />
 
-        <AuthHeader
-          title="Login"
-          subtitle="Please login to continue."
-          titleColor="#5A7863"
-          titleSize={26}
-          subtitleColor="#4F5E6F"
-          subtitleSize={15}
-        />
+          <AuthHeader
+            title="Login"
+            subtitle="Please login to continue."
+            titleColor="#5A7863"
+            titleSize={26}
+            subtitleColor="#4F5E6F"
+            subtitleSize={15}
+          />
 
-        <CommonTextInput
-          icon="person-outline"
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
+          <CommonTextInput
+            icon="person-outline"
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+          />
 
-        <CommonTextInput
-          icon="mail-outline"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
+          <CommonTextInput
+            icon="mail-outline"
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
 
-        <CommonTextInput
-          icon="lock-closed-outline"
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          rightIcon={
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons
-                name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={20}
-                color="#8B95A5"
-              />
-            </TouchableOpacity>
-          }
-        />
+          <CommonTextInput
+            icon="lock-closed-outline"
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            rightIcon={
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={20}
+                  color="#8B95A5"
+                />
+              </TouchableOpacity>
+            }
+          />
 
-        <TouchableOpacity
-          style={styles.forgotContainer}
-          onPress={() => router.replace("./ForgotPasswordScreen")}
-        >
-          <Text style={styles.forgot}>Forgot Password </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.forgotContainer}
+            onPress={() => router.replace("./ForgotPasswordScreen")}
+          >
+            <Text style={styles.forgot}>Forgot Password </Text>
+          </TouchableOpacity>
 
-        <CommonButton
-          title={loading ? "Loading..." : "Login"}
-          onPress={handleSubmit}
-          backgroundColor="#5A7863"
-          textColor="#ffffff"
-          style={{ margin: 10 }}
-          bordered={true}
-          borderColor="#F2F2F2"
-          borderWidth={2}
-          disabled={loading}
-        />
+          <CommonButton
+            title={loading ? "Loading..." : "Login"}
+            onPress={handleSubmit}
+            backgroundColor="#5A7863"
+            textColor="#ffffff"
+            style={{ margin: 10 }}
+            bordered={true}
+            borderColor="#F2F2F2"
+            borderWidth={2}
+            disabled={loading}
+          />
 
-        {message && (
-          <CommonMessage type={message.type} message={message.text} />
-        )}
+          {message && (
+            <CommonMessage type={message.type} message={message.text} />
+          )}
 
-        <DividerWithText text="or login with " />
-        <CommonButton
-          title="Login with Google"
-          onPress={() => router.replace("./(tabs)/home")}
-          iconName="logo-google"
-          iconColor="#5A7863"
-          backgroundColor="#ffffff"
-          textColor="#5A7863"
-          style={{ margin: 10 }}
-          bordered={true}
-          borderColor="#F2F2F2"
-          borderWidth={2}
-        />
+          <DividerWithText text="or login with " />
+          <CommonButton
+            title="Login with Google"
+            onPress={() => router.replace("./(tabs)/home")}
+            iconName="logo-google"
+            iconColor="#5A7863"
+            backgroundColor="#ffffff"
+            textColor="#5A7863"
+            style={{ margin: 10 }}
+            bordered={true}
+            borderColor="#F2F2F2"
+            borderWidth={2}
+          />
 
-        <AuthFooterLink
-          text="Don't have account?"
-          linkText="Sign Up"
-          onPress={() => router.replace("./SignupScreen")}
-        />
-      </View>
-    </ScrollView>
+          <AuthFooterLink
+            text="Don't have account?"
+            linkText="Sign Up"
+            onPress={() => router.replace("./SignupScreen")}
+          />
+        </View>
+      </ScrollView>
+
+    </KeyboardAvoidingView>
   );
 }
 

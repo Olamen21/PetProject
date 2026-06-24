@@ -14,20 +14,22 @@ export default function InfoCards({ pet, breeds }: InfoCardProps) {
     <>
       <View style={styles.infoCardsRow}>
         <View style={styles.infoCard}>
-          <Text style={styles.infoLabel}>Breed</Text>
-          <Text style={styles.infoValue}>{breedName}</Text>
-        </View>
-        <View style={styles.infoCard}>
-          <Text style={styles.infoLabel}>Born On</Text>
+          <Text style={styles.infoLabel}>Born On </Text>
           <Text style={styles.infoValue}>{pet.date_of_birth}</Text>
         </View>
         <View style={styles.infoCard}>
-          <Text style={styles.infoLabel}>Gender</Text>
+          <Text style={styles.infoLabel}>Gender </Text>
           <Text style={styles.infoValue}>{pet.gender}</Text>
         </View>
       </View>
+      <View style={styles.infoCardsRow}>
+        <View style={styles.infoCard}>
+          <Text style={styles.infoLabel}>Breed </Text>
+          <Text style={styles.infoValue}>{breedName}</Text>
+        </View>
+      </View>
       <View style={styles.reproCard}>
-        <Text style={styles.infoLabel}>Repro Status</Text>
+        <Text style={styles.infoLabel}>Repro Status </Text>
         <Text style={styles.infoValue}>{pet.neutered ? "Neutered" : "None"}</Text>
       </View>
     </>

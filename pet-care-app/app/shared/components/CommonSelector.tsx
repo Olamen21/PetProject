@@ -30,12 +30,12 @@ export default function CommonSelector({
         onPress={onPress}
         activeOpacity={0.6}
       >
-        <Text style={[styles.value, !value && styles.placeholder, disabled && styles.disabledText]}>
+        <Text style={[styles.value, !value && styles.placeholder, disabled && styles.disabledText]} numberOfLines={1} ellipsizeMode="tail">
           {value || placeholder}
         </Text>
         <Ionicons 
           name="chevron-down" 
-          size={20} 
+          size={16} 
           color={value ? Colors.primary : Colors.gray} 
         />
       </TouchableOpacity>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   value: {
+    flex: 1,
     fontSize: 16,
     color: Colors.text,
   },

@@ -24,18 +24,11 @@ export default function BasicInfoCard({
   const speciesList = [
     "Dog",
     "Cat",
-    "Bird",
-    "Fish",
-    "Rabbit",
-    "Hamster",
-    "Turtle",
-    "Other",
   ];
   const [showBreedModal, setShowBreedModal] = useState(false);
-
   const [showGenderModal, setShowGenderModal] = useState(false);
-
   const genders = ["Male", "Female"];
+
   return (
     <View>
       <View style={styles.row}>

@@ -1,2 +1,2 @@
-import EditPetProfileScreen from "../features/petProfile/pages/EditPetProfileScreen";
+import EditPetProfileScreen from "../features/home/pages/EditPetProfileScreen";
 export default EditPetProfileScreen;
