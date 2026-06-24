@@ -93,7 +93,7 @@ export default function PetProfileScreen() {
         });
         const updatedPets = await getPetList();
         setPets(updatedPets);
-        const updatedPet = updatedPets.find((p) => p.id === selectedPet.id);
+        const updatedPet = updatedPets.find((p:Pet) => p.id === selectedPet.id);
         if (updatedPet) setSelectedPet(updatedPet);
       } catch (error) {
         console.error(error);
@@ -120,8 +120,6 @@ export default function PetProfileScreen() {
           {message && (
             <CommonMessage type={message.type} message={message.text} />
           )}
-          <HealthSection />
-          <TasksSection />
 
           <BottomNavBar />
         </ScrollView>
@@ -167,8 +165,6 @@ export default function PetProfileScreen() {
           textColor="#fff"
           style={styles.button}
         />
-        <HealthSection />
-        <TasksSection />
       </ScrollView>
 
       <BottomNavBar />

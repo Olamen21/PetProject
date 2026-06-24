@@ -7,7 +7,7 @@ import CommonSelector from "@/app/shared/components/CommonSelector";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import StepHeader from "../components/StepHeader";
-import { createPet } from "../../petProfile/services/PetApi";
+import { createPet } from "../services/createPetService";
 
 export default function SelectBirthdayScreen() {
   const { petName, petType, breedId, gender } = useLocalSearchParams<{ 
@@ -33,7 +33,7 @@ export default function SelectBirthdayScreen() {
         date_of_birth: birthday ? birthday.toISOString().split("T")[0] : "",
       });
 
-      router.replace("/(tabs)/PetProfileScreen");
+      router.replace("/(tabs)/HomeScreen");
     } catch (error) {
       console.error("Không thể tạo pet:", error);
     }

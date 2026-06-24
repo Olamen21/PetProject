@@ -53,7 +53,7 @@ export default function EditPetProfileScreen() {
 
     if (!result.canceled) {
       setAvatarUri(result.assets[0].uri);
-      setIsNewAvatar(true); // <--- ĐÁNH DẤU ĐÂY LÀ ẢNH MỚI
+      setIsNewAvatar(true); 
     }
   };
 
