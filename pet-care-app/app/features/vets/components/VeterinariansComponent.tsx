@@ -10,12 +10,10 @@ import {
 } from "react-native";
 import { Colors } from "@/app/constants/Colors";
 import React, { useState } from "react";
-import { MockVets } from "../data/MockVet";
 import VetCard from "./VetCard";
 import RecommentCard from "./RecommentCard";
 import { Vets } from "../types/Vets";
 import {
-  calculateVetRating,
   getAllPetUser,
   getAllVets,
   getAppointmentsByUserId,
@@ -30,7 +28,6 @@ export default function VeterinariansComponent() {
   const [vets, setVets] = useState<Vets[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const router = useRouter();
-  const [rating, setRating] = useState<Rating | null>(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -73,8 +70,6 @@ export default function VeterinariansComponent() {
             "Fetching appointments..." + JSON.stringify(mergedAppointments),
           );
           setVets(data);
-          const dataRating = await calculateVetRating(data.id);
-          setRating(dataRating);
         } catch (error) {
           console.error("Không thể tải vets:", error);
         }
@@ -154,31 +149,6 @@ export default function VeterinariansComponent() {
         </View>
       )}
 
-      {/* Feedback */}
-      {/* <View style={styles.cardHeader}>
-        <Text style={styles.textCard}>Feedback</Text>
-        <TouchableOpacity style={styles.buttonViewAll}>
-          <Text style={styles.textViewAll}>View all</Text>
-          <Ionicons
-            name="chevron-forward-outline"
-            color={Colors.primary}
-            size={20}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {vets.map((vet) => (
-        <VetCard
-          key={vet.id}
-          id={vet.id}
-          full_name={vet.full_name}
-          role={vet.role}
-          avatarUrl={vet.avatar_url}
-          bio={vet.doctorProfile?.tags}
-          degree={vet.doctorProfile?.degree}
-          onPress={() => handleReview(vet.id)}
-        />
-      ))} */}
 
       {/* Veterinarians */}
       <View style={styles.cardHeader}>

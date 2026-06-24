@@ -1,7 +1,7 @@
 import api from "../../../../api/axiosInstance";
 
 export const getProfile = async () => {
-  const res = await api.get(`/users/profile`); 
+  const res = await api.get('/users/profile'); 
   return res.data;
 };
 export const updateProfile = async (payload: FormData) => {

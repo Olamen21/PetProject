@@ -28,39 +28,23 @@ export default function HomeScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchPets = async () => {
+      const fetchData = async () => {
         try {
           const data = await getPetList();
           setPets(data);
           if (data.length > 0) {
             setSelectedPet(data[0]);
           }
+           const dataUser = await getProfile();
+          setUser(dataUser);
         } catch (error) {
-          console.error("Không thể tải pets:", error);
+          console.error("Lỗi lấy dữ liệu:", error);
         }
       };
-      fetchPets();
+      fetchData();
     }, [])
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      const fetchProfile = async () => {
-        try {
-          const data = await getProfile();
-          setUser(data);
-        } catch (error) {
-          console.error("Lỗi khi lấy profile:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchProfile();
-
-      return () => {};
-    }, []),
-  );
 
   return (
     <View style={styles.container}>
