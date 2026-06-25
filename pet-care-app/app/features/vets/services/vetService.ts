@@ -5,7 +5,7 @@ export const getPetById = async (id: string) => {
   return res.data;
 }
 export const getAllBreed = async () => {
-  const res = await api.get('/breeds');
+  const res = await api.get('/breeds/all-breeds');
   return res.data;
 }
 export const createVaccine = async (payload: any) => {
