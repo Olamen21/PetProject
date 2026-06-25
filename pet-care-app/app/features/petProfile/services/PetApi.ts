@@ -18,7 +18,7 @@ export const updatePet = async (id: number, payload: FormData) => {
 
 
 export const getAllBreed = async () => {
-  const res = await api.get('/breeds');
+  const res = await api.get('/breeds/all-breeds');
   return res.data;
 }
 

@@ -35,7 +35,7 @@ export default function MedicalRecordPage () {
             <HeaderBar
                 title="Medical Record"
             />
-            <ScrollView style={{marginTop: 20,}} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{marginTop: 20, marginBottom: 100}} showsVerticalScrollIndicator={false}>
                 <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
                 <MedicalChoose pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet}/>
                 <LastestRecordComponent />

@@ -82,10 +82,11 @@ export default function VetPage() {
     });
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <HeaderBar 
         title="Appointment"
       />
+      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <View style={styles.reminderCardHeader}>
         <Text style={styles.textReminder}>Upcoming appointments</Text>
       </View>
@@ -194,9 +195,9 @@ export default function VetPage() {
           />
         ))}
       </ScrollView>
-
-      <BottomNavBar />
     </ScrollView>
+    <BottomNavBar />
+    </View>
   );
 }
 

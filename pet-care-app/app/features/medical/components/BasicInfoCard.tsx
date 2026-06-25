@@ -64,7 +64,7 @@ export default function BasicInfoCard({
             icon="calendar-outline"
             label={
               pet?.date_of_birth
-                ? `${calculateAge(pet.date_of_birth)} years old`
+                ? `${calculateAge(pet.date_of_birth)} years old `
                 : "Unknown"
             }
           />
@@ -72,11 +72,11 @@ export default function BasicInfoCard({
         <View style={styles.row}>
           <InfoRow
             icon="scale-outline"
-            label={pet?.weight ? `${pet.weight} kg` : "Unknown"}
+            label={pet?.weight ? `${pet.weight} kg ` : "Unknown"}
           />
           <InfoRow
             icon="resize-outline"
-            label={pet?.height ? `${pet.height} cm` : "Unknown"}
+            label={pet?.height ? `${pet.height} cm ` : "Unknown"}
           />
         </View>
       </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: Colors.white,
     borderRadius: 16,
-    padding: 16,
+    padding: 10,
     marginHorizontal: 16,
     marginVertical: 8,
     alignItems: "center",

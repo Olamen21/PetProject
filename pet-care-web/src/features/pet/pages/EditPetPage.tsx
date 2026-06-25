@@ -70,7 +70,7 @@ function EditPetPage() {
       const selectedYear = new Date(form.dob).getFullYear();
 
       if (currentYear - selectedYear > 20) {
-        alert("Ngày sinh không hợp lệ (Pet không thể thọ quá 20 tuổi)!");
+        alert("Invalid date of birth (Pets cannot live past 20 years old)!");
         return;
       }
     }

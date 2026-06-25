@@ -17,7 +17,7 @@ export const InfoRow: React.FC<InfoRowProps> = ({ icon, label }) => {
       <View style={styles.iconContainer}>
         <Ionicons name={icon} size={14} color= {Colors.text} />
       </View>
-      <Text style={styles.text} numberOfLines={1}>{label}</Text>
+      <Text style={styles.text} numberOfLines={1}>{label} </Text>
     </View>
   );
 };

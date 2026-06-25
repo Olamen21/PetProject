@@ -46,3 +46,6 @@ export const createMedicalRecord = async (data: {
 export const markCompleteAppointment = async (id: number) => {
     return await api.patch(`/appointment/${id}/complete`);
 }
+export const suggestNextSchedule = async(petId: string, vaccineId: string) => {
+    return await api.get('/vaccine-pet/suggest-next/' + petId + '/' + vaccineId);
+}
