@@ -17,7 +17,7 @@ import {
   getAllVets,
   getMedicalRecordByPetID,
   getPetById,
-} from "../services/vetService";
+} from "../services/MedicalService";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalButton } from "../components/MedicalButton";
 import DocumentItem from "../components/DocumentItem";
@@ -88,7 +88,7 @@ export default function DocumentPage() {
         }
       };
       fetchPetProfile();
-    }, []),
+    }, [petId]),
   );
 
   return (
@@ -99,7 +99,7 @@ export default function DocumentPage() {
           {
             type: "ion",
             name: "chevron-back-outline",
-            onPress: () => router.push("/(tabs)/VetPage"),
+            onPress: () => router.push("/(tabs)/MedicalRecordPage"),
           },
         ]}
       />
@@ -186,7 +186,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FAFAFA",
-    marginBottom: 50,
   },
   reminderCardHeader: {
     flexDirection: "row",

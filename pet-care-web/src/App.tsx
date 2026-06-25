@@ -11,7 +11,6 @@ import ProtectedRoute from "./shared/components/ProtectedRoute";
 import ChangePasswordPage from "./features/ProfilePage/pages/ChangePasswordPage";
 import Logout from "./shared/components/Logout";
 import PetListPage from "./features/pet/pages/PetListPage";
-import NewPetPage from "./features/pet/pages/NewPetPage";
 import EditPetPage from "./features/pet/pages/EditPetPage";
 import VaccinePage from "./features/vaccine/pages/VaccinePage";
 import NewVaccinePage from "./features/vaccine/pages/NewVaccinePage";
@@ -43,7 +42,6 @@ function App() {
           <Route path="/change-password" element={<ChangePasswordPage/>}/>
           <Route path="/logout" element={<Logout/>} />
           <Route path="/pets" element={<PetListPage />} />
-          <Route path="/new-pet" element={<NewPetPage/>}/>
           <Route path="/edit-pet/:id" element={<EditPetPage />}/>
           <Route path="/vaccines" element={<VaccinePage />}/>
           <Route path="/new-vaccine" element={<NewVaccinePage />} />

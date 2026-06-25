@@ -20,7 +20,7 @@ export default function MedicalChoose ({ pets, selectedPet, onSelectPet, }: {
                     <Text style={styles.textViewAll}>View all</Text>
                     <Ionicons
                         name="chevron-forward-outline"
-                        color="#5A7863"
+                        color= {Colors.primary}
                         size={20}
                     />
                 </TouchableOpacity>

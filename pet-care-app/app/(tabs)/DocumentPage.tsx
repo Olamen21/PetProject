@@ -1,2 +1,2 @@
-import DocumentPage from "../features/vets/pages/DocumentPage";
+import DocumentPage from "../features/medical/pages/DocumentPage";
 export default DocumentPage;

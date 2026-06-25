@@ -11,7 +11,7 @@ import BasicInfoCard from "../components/BasicInfoCard";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/app/constants/Colors";
 import { MedicalButton } from "../components/MedicalButton";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ReminderCard } from "@/app/shared/components/ReminderCard";
 import { VaccinationScheduleCard } from "../components/VaccinationScheduleCard";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,7 +20,7 @@ import {
   getAllBreed,
   getVaccineByPetId,
   getAllVaccineCategory,
-} from "../services/vetService";
+} from "../services/MedicalService";
 import { Pet } from "@/app/shared/types/Pet";
 import type { Breed } from "../types/Breed";
 import { VaccineCategory } from "../types/VaccineCategory";
@@ -33,7 +33,7 @@ export default function Vaccination() {
   const [vaccinationSchedule, setVaccinationSchedule] = useState<any>(null);
   const [vaccineCategory, setVaccineCategory] = useState<VaccineCategory[]>([]);
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       const fetchPetProfile = async () => {
         try {
           console.log("petId: " + petId);
@@ -56,7 +56,7 @@ export default function Vaccination() {
         }
       };
       fetchPetProfile();
-    }, []),
+    }, [petId]),
   );
   const renderScheduleCards = () => {
     const historyList = vaccinationSchedule || [];
@@ -161,7 +161,7 @@ export default function Vaccination() {
           {
             type: "ion",
             name: "chevron-back-outline",
-            onPress: () => router.push("/(tabs)/VetPage"),
+            onPress: () => router.push("/(tabs)/MedicalRecordPage"),
           },
         ]}
       />
@@ -202,6 +202,12 @@ export default function Vaccination() {
             label="Prescriptions"
             selected={selected === "Prescriptions"}
             onPress={() => setSelected("Prescriptions")}
+          />
+          <MedicalButton
+            icon="document-text-outline"
+            label="Documents"
+            selected={selected === "Documents"}
+            onPress={() => setSelected("Documents")}
           />
           <MedicalButton
             icon="chatbox-outline"
@@ -247,7 +253,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FAFAFA",
-    marginBottom: 50,
   },
   reminderCardHeader: {
     flexDirection: "row",

@@ -4,19 +4,17 @@ import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import BasicInfoCard from "../components/BasicInfoCard";
 import { Colors } from "@/app/constants/Colors";
 import { useState, useCallback } from "react";
-import CommonToggle from "@/app/shared/components/CommonToggle";
-import FrequencyCard from "../components/FrequencyCard";
 import VaccineInfoCard from "../components/VaccineInfoCard";
-import SelectDateVaccine from "../components/SelectDateVaccine";
+import SelectDateVaccine from "../../vets/components/SelectDateVaccine";
 import CommonButton from "@/app/shared/components/CommonButton";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Pet } from "@/app/shared/types/Pet";
 import {
   getPetById,
   getAllBreed,
   getAllVaccineCategory,
   createVaccine,
-} from "../services/vetService";
+} from "../services/MedicalService";
 import type { Breed } from "../types/Breed";
 import type { VaccineCategory } from "../types/VaccineCategory";
 import type { Vaccine } from "../types/Vaccine";

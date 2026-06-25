@@ -4,7 +4,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/app/constants/Colors";
 import { useState } from "react";
-import type { Vaccine } from "../types/Vaccine";
+import type { Vaccine } from "../../medical/types/Vaccine";
 
 interface SelectDateVaccineProps {
   selectedDate: Date;

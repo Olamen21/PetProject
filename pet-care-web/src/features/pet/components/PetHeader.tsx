@@ -1,7 +1,6 @@
 import React from "react";
 import { FaUserShield, FaSearch, FaPlus } from "react-icons/fa";
 import { Colors } from "../../../constants/Colors";
-import CommonButton from "../../../shared/components/CommonButton";
 
 interface Props {
   searchTerm: string;
@@ -56,13 +55,6 @@ const PetHeader: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
             style={{ border: "none", outline: "none", width: "100%" }}
           />
         </div>
-        <CommonButton
-          title="New pet"
-          onClick={() => navigation.navigate("/new-pet")}
-          Icon={FaPlus}
-          backgroundColor={Colors.primary}
-          textColor={Colors.white}
-        />
       </div>
     </div>
   );

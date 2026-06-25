@@ -15,6 +15,7 @@ import {
   updatePet
 } from "../services/PetApi";
 import type { Breed } from "../types/Breed";
+import { Colors } from "@/app/constants/Colors";
 
 export default function EditPetProfileScreen() {
   const { petId } = useLocalSearchParams<{ petId: string }>();
@@ -58,7 +59,7 @@ export default function EditPetProfileScreen() {
   };
 
   if (!selectedPet) {
-    return <Text>Đang tải dữ liệu thú cưng...</Text>;
+    return <Text>Loading pet data...</Text>;
   }
 
   const handleChangePet = async () => {
@@ -102,7 +103,7 @@ export default function EditPetProfileScreen() {
       setSelectedPet(response.data);
       setMessage({
         type: "success",
-        text: "Cập nhật hồ sơ thú cưng thành công!",
+        text: "Pet's profile updated successfully!",
       });
       router.push("/(tabs)/HomeScreen");
     } catch (error) {
@@ -152,8 +153,8 @@ export default function EditPetProfileScreen() {
         <CommonButton
           title="Save Changes"
           onPress={handleChangePet}
-          backgroundColor="#5A7863"
-          textColor="#fff"
+          backgroundColor= {Colors.primary}
+          textColor= {Colors.white}
           style={{ marginTop: 24 }}
         />
       </ScrollView>
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: "#E2E8F0",
     borderRadius: 10,
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 14,
     color: "#2D3748",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOpacity: 0.05,
     shadowRadius: 3,
     elevation: 1,

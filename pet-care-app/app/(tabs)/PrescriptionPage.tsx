@@ -1,2 +1,2 @@
-import PrescriptionPage from "../features/vets/pages/PrescriptionPage";
+import PrescriptionPage from "../features/medical/pages/PrescriptionPage";
 export default PrescriptionPage;

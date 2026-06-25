@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTrashAlt, FaCheckCircle } from "react-icons/fa";
+import { FaTrashAlt, FaCheckCircle, FaEye } from "react-icons/fa";
 import { Colors } from "../../../../constants/Colors";
 import { approveVet } from "../../services/ManagementUser";
 import type { User } from "../../../../shared/types/User";
@@ -100,6 +100,12 @@ const UserRow: React.FC<Props> = ({ user }) => {
         )}
         <button style={{ ...styles.actionBtn, color: Colors.error }}>
           <FaTrashAlt />
+        </button>
+        <button
+          style={{ ...styles.actionBtn, color: Colors.primary }}
+          onClick={() => {}}
+        >
+          <FaEye />
         </button>
       </td>
     </tr>

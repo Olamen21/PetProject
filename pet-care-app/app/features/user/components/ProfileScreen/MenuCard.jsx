@@ -18,7 +18,7 @@ const MenuCard = () => (
 
     <View style={styles.divider} />
 
-    <TouchableRipple onPress={() => {}}>
+    <TouchableRipple onPress={() => {router.replace("/(tabs)/VetPage")}}>
       <View style={styles.menuItem}>
         <MaterialCommunityIcons name="calendar-check" size={22} color={Colors.primary} />
         <Text style={styles.menuText}>My Appointments</Text>

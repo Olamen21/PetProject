@@ -6,6 +6,7 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Pet } from "../../../shared/types/Pet";
 import type { Breed } from "../types/Breed";
+import { Colors } from "@/app/constants/Colors";
 
 interface BasicInfoCardProps {
   pet: Pet;
@@ -39,7 +40,7 @@ export default function BasicInfoCard({
             placeholder="Name of pet"
             value={pet.name}
             onChangeText={(text) => setPet({ ...pet, name: text })}
-            backgroundColor="#fff"
+            backgroundColor= {Colors.white}
             bordered
           />
         </View>
@@ -120,7 +121,7 @@ export default function BasicInfoCard({
             onChangeText={(text) =>
               setPet({ ...pet, height: isNaN(Number(text)) ? 0 : Number(text) })
             }
-            backgroundColor="#fff"
+            backgroundColor= {Colors.white}
             bordered
           />
         </View>
@@ -134,7 +135,7 @@ export default function BasicInfoCard({
             onChangeText={(text) =>
               setPet({ ...pet, weight: isNaN(Number(text)) ? 0 : Number(text) })
             }
-            backgroundColor="#fff"
+            backgroundColor= {Colors.white}
             bordered
           />
         </View>
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#4A5568",
+    color: Colors.text,
     marginTop: 10,
     marginBottom: 10,
   },

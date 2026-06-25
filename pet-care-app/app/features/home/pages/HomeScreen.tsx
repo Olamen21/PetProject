@@ -2,34 +2,29 @@ import NutritionCard from "@/app/features/home/components/NutritionCard";
 import AvatarSection from "@/app/shared/components/AvatarSection";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import CommonButton from "@/app/shared/components/CommonButton";
-import FilterMenu from "@/app/shared/components/FilterMenu";
 import { HeaderBar } from "@/app/shared/components/HeaderBar";
 import { getPetList } from "@/app/shared/services/CommonApi";
-import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Pet } from "../../../shared/types/Pet";
 import { getProfile } from "../../user/services/userService";
-import TipCard from "../components/TipCard";
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import PhotoCard from "../components/PhotoCard";
 import * as ImagePicker from "expo-image-picker";
 import { getAllBreed, updatePet } from "../services/PetApi";
 import InfoCards from "../components/InfoCards";
 import { Breed } from "../types/Breed";
+import { Colors } from "@/app/constants/Colors";
 
 export default function HomeScreen() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [message, setMessage] = useState<{
       type: "error" | "success" | "warning" | "info";
@@ -62,14 +57,14 @@ export default function HomeScreen() {
 
   const handleAddPhoto = async () => {
     if (!selectedPet) {
-      setMessage({ type: "error", text: "Chưa chọn thú cưng để cập nhật!" });
+      setMessage({ type: "error", text: "You haven't selected a pet to update yet!" });
       return;
     }
 
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      setMessage({ type: "error", text: "Bạn cần cấp quyền truy cập ảnh!" });
+      setMessage({ type: "error", text: "You need to grant permission to access the photos!" });
       return;
     }
 
@@ -101,7 +96,7 @@ export default function HomeScreen() {
         setSelectedPet(response.data);
         setMessage({
           type: "success",
-          text: "Cập nhật hồ sơ thú cưng thành công!",
+          text: "Pet's profile updated successfully!",
         });
         const updatedPets = await getPetList();
         setPets(updatedPets);
@@ -109,7 +104,7 @@ export default function HomeScreen() {
         if (updatedPet) setSelectedPet(updatedPet);
       } catch (error) {
         console.error(error);
-        setMessage({ type: "error", text: "Có lỗi khi cập nhật thú cưng!" });
+        setMessage({ type: "error", text: "There was an error updating the pet!" });
       }
     }
   };
@@ -160,13 +155,6 @@ export default function HomeScreen() {
       <HeaderBar
         logo={require("../../../../assets/images/logo.png")}
         rightIcons={[
-          {
-            type: "ion",
-            name: "chatbubble-ellipses-outline",
-            onPress: () => {},
-            showDot: true,
-          },
-          { type: "ion", name: "notifications-outline", onPress: () => router.push("/(tabs)/NotificationPage"), },
           user?.avatar_url ?
           {
             type: "image",
@@ -200,9 +188,9 @@ export default function HomeScreen() {
             })
           }
           iconName="clipboard-outline"
-          iconColor="#fff"
-          backgroundColor="#5A7863"
-          textColor="#fff"
+          iconColor= {Colors.white}
+          backgroundColor= {Colors.primary}
+          textColor= {Colors.white}
           style={styles.button}
         />
 

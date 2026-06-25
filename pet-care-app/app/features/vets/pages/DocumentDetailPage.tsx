@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import HeaderBar from '@/app/shared/components/HeaderBar';
 import { Colors } from '@/app/constants/Colors';
 import MedicationCard from '../components/MedicationCard';
-import { MedicationItem } from '../types/Prescriptions'; 
+import { MedicationItem } from '../../medical/types/Prescriptions'; 
 
 export default function DocumentDetailPage() {
   const router = useRouter();
