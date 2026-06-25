@@ -64,9 +64,15 @@ const LoginPage: React.FC = () => {
           setMessage({ type: "success", text: "Login successful!" });
           localStorage.setItem("user_role", user.role);
 
-          setTimeout(() => {
+          if(user.role === "VET"){
+            setTimeout(() => {
             navigate("/vet/appointments");
           }, 1000);
+          } else {
+             setTimeout(() => {
+            navigate("/pets");
+          }, 1000);
+          }
         } else {
           setMessage({
             type: "error",

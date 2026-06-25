@@ -16,7 +16,7 @@ export const createVaccine = async (payload: any) => {
   });
 };
 export const getAllVaccineCategory = async () => {
-  const res = await api.get('/vaccine-category');
+  const res = await api.get('/vaccine-category/all-vaccine-category');
   return res.data;
 }
 export const getVaccineByPetId = async (petId: string) => {
@@ -39,8 +39,8 @@ export const bookAppointment = async (payload: any) => {
     },
   });
 }
-export const getAppointmentsByUserId = async (userId: string) => {
-  const res = await api.get(`/appointment/user/` + userId);
+export const getAppointmentsByUserId = async () => {
+  const res = await api.get(`/appointment/user/current` );
   return res.data;
 }
 export const getProfile = async () => {
@@ -74,7 +74,7 @@ export const markCompleteReview = async (id: string) => {
   return await api.patch('/appointment/review/complete/' + id);
 }
 export const getAllReviewByVetId = async (id: string) => {
-  const res = await api.get('/review//review-vet/' + id);
+  const res = await api.get('/review/review-vet/' + id);
   return res.data;
 }
 export const getAllUser = async () => {

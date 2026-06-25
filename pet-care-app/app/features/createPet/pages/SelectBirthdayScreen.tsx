@@ -8,6 +8,7 @@ import CommonMessage from "@/app/shared/components/CommonMessage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import StepHeader from "../components/StepHeader";
 import { createPet } from "../services/createPetService";
+import { Colors } from "@/app/constants/Colors";
 
 export default function SelectBirthdayScreen() {
   const { petName, petType, breedId, gender } = useLocalSearchParams<{ 
@@ -49,7 +50,7 @@ export default function SelectBirthdayScreen() {
         />
 
         <View style={styles.header}>
-          <Ionicons name="paw" size={28} color="#5A7863" />
+          <Ionicons name="paw" size={28} color= {Colors.primary} />
           <Text style={styles.title}>{"When is your pet's birthday?"}</Text>
         </View>
 
@@ -94,8 +95,8 @@ export default function SelectBirthdayScreen() {
       <CommonButton
         title="Continue"
         onPress={handleCreatePet}
-        backgroundColor={birthday ? "#5A7863" : "#EBF4DD"}
-        textColor={birthday ? "#fff" : "#000"}
+        backgroundColor={birthday ? Colors.primary : "#EBF4DD"}
+        textColor={birthday ? Colors.white : Colors.black}
         style={styles.button}
       />
     </View>
@@ -120,13 +121,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#2D3E50",
+    color: Colors.text,
     marginBottom: 8,
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#5A7863",
+    color: Colors.primary,
   },
   image: {
     marginLeft: -30,

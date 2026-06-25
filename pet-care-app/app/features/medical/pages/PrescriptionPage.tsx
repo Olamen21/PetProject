@@ -16,7 +16,7 @@ import {
   getAllBreed,
   getPetById,
   getPrescriptionDisplayItem,
-} from "../services/vetService";
+} from "../services/MedicalService";
 import { Ionicons } from "@expo/vector-icons";
 import { MedicalButton } from "../components/MedicalButton";
 import MedicalItem from "../components/MedicalItem";
@@ -50,7 +50,7 @@ export default function PrescriptionPage() {
         }
       };
       fetchPetProfile();
-    }, []),
+    }, [petId]),
   );
 
   return (
@@ -61,7 +61,7 @@ export default function PrescriptionPage() {
           {
             type: "ion",
             name: "chevron-back-outline",
-            onPress: () => router.push("/(tabs)/VetPage"),
+            onPress: () => router.push("/(tabs)/MedicalRecordPage"),
           },
         ]}
       />
@@ -103,6 +103,12 @@ export default function PrescriptionPage() {
             label="Prescriptions"
             selected={selected === "Prescriptions"}
             onPress={() => setSelected("Prescriptions")}
+          />
+          <MedicalButton
+            icon="document-text-outline"
+            label="Documents"
+            selected={selected === "Documents"}
+            onPress={() => setSelected("Documents")}
           />
           <MedicalButton
             icon="chatbox-outline"
@@ -147,7 +153,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FAFAFA",
-    marginBottom: 50,
   },
   reminderCardHeader: {
     flexDirection: "row",

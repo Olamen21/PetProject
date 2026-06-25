@@ -3,6 +3,7 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from "r
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../../constants/Colors";
 import CommonButton from "../../../shared/components/CommonButton";
+import { Pet } from "@/app/shared/types/Pet";
 
 type Props = {
   pet: any;
@@ -14,7 +15,7 @@ export default function AllergyInput({ pet, setPet }: Props) {
 
   const addAllergy = () => {
     if (currentAllergy.trim() !== "") {
-      setPet((prev) => ({
+      setPet((prev:Pet) => ({
         ...prev,
         allergies: [...(prev.allergies ?? []), currentAllergy.trim()],
       }));
@@ -23,7 +24,7 @@ export default function AllergyInput({ pet, setPet }: Props) {
   };
 
 const removeAllergy = (index: number) => {
-  setPet((prev) => {
+  setPet((prev:Pet) => {
     const allergiesArray = Array.isArray(prev.allergies)
       ? prev.allergies
       : (prev.allergies ?? "").split(",").map(a => a.trim());

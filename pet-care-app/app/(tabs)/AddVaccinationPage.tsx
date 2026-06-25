@@ -1,2 +1,2 @@
-import AddVaccinationPage from "../features/vets/pages/AddVaccinationPage";
+import AddVaccinationPage from "../features/medical/pages/AddVaccinationPage";
 export default AddVaccinationPage;

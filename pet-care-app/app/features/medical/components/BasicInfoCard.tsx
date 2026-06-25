@@ -1,5 +1,5 @@
 import { Colors } from "@/app/constants/Colors";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { InfoRow } from "./InfoRow";
 import { Pet } from "../../../shared/types/Pet";
 import type { Breed } from "../types/Breed";
@@ -31,6 +31,13 @@ export default function BasicInfoCard({
     return age;
   };
 
+  const getGenderIcon = (gender?: string) => {
+    if (!gender) return "transgender-outline";
+    const g = gender.toLowerCase();
+    if (g === "female") return "female-outline";
+    return "male-outline";
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.column}>
@@ -40,37 +47,37 @@ export default function BasicInfoCard({
           avatarUri={pet?.avatar_url}
           species={pet?.species}
         />
-        {/* <Text style={styles.name}>{pet?.name}</Text> */}
       </View>
 
       {/* Thông tin */}
       <View style={styles.infoSection}>
         <View style={styles.row}>
           <InfoRow icon="paw-outline" label={breedName} />
+        </View>
+
+        <View style={styles.row}>
+          <InfoRow 
+            icon={getGenderIcon(pet?.gender)} 
+            label={pet?.gender ?? ""} 
+          />
           <InfoRow
             icon="calendar-outline"
             label={
               pet?.date_of_birth
-                ? `${calculateAge(pet.date_of_birth)} years old`
+                ? `${calculateAge(pet.date_of_birth)} years old `
                 : "Unknown"
             }
           />
         </View>
-
         <View style={styles.row}>
-          <InfoRow icon="male-outline" label={pet?.gender ?? ""} />
           <InfoRow
             icon="scale-outline"
-            label={pet?.weight ? `${pet.weight} kg` : "Unknown"}
+            label={pet?.weight ? `${pet.weight} kg ` : "Unknown"}
           />
           <InfoRow
             icon="resize-outline"
-            label={pet?.height ? `${pet.height} cm` : "Unknown"}
+            label={pet?.height ? `${pet.height} cm ` : "Unknown"}
           />
-        </View>
-
-        <View style={styles.vaccinRow}>
-          <Text style={styles.text}>Vaccination: Up-to-date  </Text>
         </View>
       </View>
     </View>
@@ -80,11 +87,13 @@ export default function BasicInfoCard({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 12,
-    margin: 10,
-    shadowColor: "#000",
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 10,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    alignItems: "center",
+    shadowColor: Colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
