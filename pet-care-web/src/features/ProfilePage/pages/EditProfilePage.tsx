@@ -174,8 +174,18 @@ function EditProfilePage() {
     },
   };
 
- if(loading){
-   return (
+ if (loading) {
+    return (
+      <div style={styles.container}>
+        <Sidebar />
+        <main style={styles.main}>
+          <p>Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
+  return (
     <div style={styles.container}>
       <Sidebar />
 
@@ -196,14 +206,12 @@ function EditProfilePage() {
           <CommonMessage type={message.type} message={message.text} />
         )}
 
-        {/* 🔹 BUTTON */}
         <div style={styles.footer}>
           <CommonButton
             title="Cancel"
             backgroundColor="#ccc"
             onClick={() => window.history.back()}
           />
-
           <CommonButton
             title="Save Changes"
             backgroundColor={Colors.primary}
@@ -214,7 +222,6 @@ function EditProfilePage() {
       </main>
     </div>
   );
- }
 }
 
 export default EditProfilePage;
