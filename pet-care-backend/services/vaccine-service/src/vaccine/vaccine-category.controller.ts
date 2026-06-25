@@ -9,14 +9,13 @@ import {
   Param,
   Patch,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
 import { VaccineCategoryDto } from './dto/create-vaccine-category.dto';
 
-@ApiTags('Vaccine')
+@ApiTags('Vaccine Category')
 @ApiBearerAuth('token')
 @Controller('vaccine-category')
 export class VaccineCategoryController {
@@ -24,31 +23,41 @@ export class VaccineCategoryController {
     private readonly vaccineCategoryService: VaccineCategoryService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
-  @Post()
+  @Post('create-vaccine-category')
+  @ApiOperation({ summary: 'Create new vaccine category (Admin and Vet only)' })
   async create(@Body() createVaccineCategoryDto: VaccineCategoryDto) {
     return await this.vaccineCategoryService.create(createVaccineCategoryDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get()
+  @UseGuards(RolesGuard)
+  @Get('all-vaccine-category')
+  @ApiOperation({ summary: 'Get all vaccine categories' })
   async findAll() {
     return await this.vaccineCategoryService.findAll();
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
+  @UseGuards(RolesGuard)
   @Get(':id')
+  @ApiOperation({ summary: 'Get vaccine category by ID' })
   async findOne(@Param('id') id: string) {
     return await this.vaccineCategoryService.findOne(+id);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
+  @UseGuards(RolesGuard)
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete vaccine category by ID' })
   async remove(@Param('id') id: string) {
     return await this.vaccineCategoryService.remove(+id);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update vaccine category by ID (Admin and Vet only)',
+  })
   async update(
     @Param('id') id: string,
     @Body() updateVaccineCategoryDto: VaccineCategoryDto,

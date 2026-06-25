@@ -8,7 +8,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VaccineCategoryController } from './vaccine-category.controller';
 import { VaccineCategoryService } from './vaccine-category.service';
-import { JwtStrategy } from '../auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -20,7 +19,7 @@ import { JwtStrategy } from '../auth/jwt.strategy';
     TypeOrmModule.forFeature([PetVaccination, VaccineCategory]),
   ],
   controllers: [VaccineController, VaccineCategoryController],
-  providers: [VaccineService, VaccineCategoryService, JwtStrategy],
+  providers: [VaccineService, VaccineCategoryService],
   exports: [VaccineService, VaccineCategoryService],
 })
 export class VaccineModule {}

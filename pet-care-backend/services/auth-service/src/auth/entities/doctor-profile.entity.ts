@@ -24,7 +24,7 @@ export class DoctorProfile {
   @Column({ type: 'text', nullable: true })
   bio?: string;
   @Column({ type: 'date', nullable: true })
-  experience_start_date!: Date | null;
+  experience_start_date!: Date;
 
   @Column({ nullable: true })
   certificate_url?: string;
@@ -32,4 +32,7 @@ export class DoctorProfile {
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user?: User;
+
+  @Column({ default: 0 })
+  years_of_experience!: number;
 }

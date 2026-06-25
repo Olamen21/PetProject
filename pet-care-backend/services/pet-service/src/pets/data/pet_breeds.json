@@ -35,7 +35,7 @@
     "description": "Quốc khuyển của Nhật Bản, có khuôn mặt hay cười, tính cách độc lập và khá tự tôn."
   },
   {
-    "name": "Becgie (German Shepherd)",
+    "name": "Becgie",
     "species": "Dog",
     "description": "Giống chó nghiệp vụ dũng cảm, có khả năng bảo vệ và canh gác tuyệt vời."
   },
@@ -50,22 +50,22 @@
     "description": "Giống chó mặt xệ, mắt lồi đáng yêu, tính tình tham ăn, thân thiện và vui vẻ."
   },
   {
-    "name": "British Shorthair (Mèo Anh lông ngắn)",
+    "name": "British Shorthair",
     "species": "Cat",
     "description": "Thân hình mũm mĩm, mặt tròn má phúng phính, tính cách điềm tĩnh và rất lười biếng."
   },
   {
-    "name": "British Longhair (Mèo Anh lông dài)",
+    "name": "British Longhair",
     "species": "Cat",
     "description": "Sở hữu bộ lông dài quý phái, tính cách hiền lành, thích được ôm ấp nuông chiều."
   },
   {
-    "name": "Scottish Fold (Mèo tai cụp)",
+    "name": "Scottish Fold",
     "species": "Cat",
     "description": "Đặc trưng với đôi tai cụp sát đầu đáng yêu, tính cách ngọt ngào và cực kỳ quấn người."
   },
   {
-    "name": "Persian Cat (Mèo Ba Tư)",
+    "name": "Persian Cat",
     "species": "Cat",
     "description": "Giống mèo mặt tịt quý tộc, lông siêu dày hai lớp, tính tình lười nhác và thích không gian yên tĩnh."
   },
@@ -75,7 +75,7 @@
     "description": "Giống mèo nhà có kích thước khổng lồ như thợ săn, bờm cổ giống sư tử nhưng tính cách lại như 'gã khổng lồ dịu dàng'."
   },
   {
-    "name": "Sphynx (Mèo không lông)",
+    "name": "Sphynx",
     "species": "Cat",
     "description": "Mèo Ai Cập độc lạ không có lông, da nhăn nheo, tuy ngoại hình có vẻ ngoài lạnh lùng nhưng lại cực kỳ ấm áp và thông minh."
   },
@@ -85,7 +85,7 @@
     "description": "Đôi mắt xanh dương như đại dương, cơ thể mềm nhũn ra khi được bế, tính cách nhẹ nhàng, ngoan ngoãn."
   },
   {
-    "name": "Siamese (Mèo Xiêm)",
+    "name": "Siamese",
     "species": "Cat",
     "description": "Giống mèo cổ xưa với các mảng lông đen điểm xuyết ở mặt và chân, tính cách năng động và thích kêu nhiều."
   },
@@ -95,7 +95,7 @@
     "description": "Sở hữu bộ lông vằn báo hoang dã, cơ thể săn chắc, cực kỳ thích leo trèo và không sợ nước."
   },
   {
-    "name": "Munchkin (Mèo chân ngắn)",
+    "name": "Munchkin",
     "species": "Cat",
     "description": "Nổi bật với bốn chiếc chân ngắn ngủn, dáng đi lạch bạch vô cùng giải trí và tính cách vô cùng tinh nghịch."
   }

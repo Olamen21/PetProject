@@ -5,7 +5,7 @@ export const getAllPetVaccine = async () => {
     return res.data;
 }
 export const getAllVaccine = async () => {
-    const res = await api.get("/vaccine-category");
+    const res = await api.get("/vaccine-category/all-vaccine-category");
     return res.data;
 }
 export const getAllPet = async () => {

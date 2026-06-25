@@ -24,7 +24,7 @@ export class AppService {
       where: { email: dto.email },
     });
     if (existingUser) {
-      throw new BadRequestException('User đã tồn tại');
+      throw new BadRequestException('User already exists');
     }
 
     const hashedPassword = await this.hashPassword(dto.password);
@@ -55,20 +55,17 @@ export class AppService {
       where: { email: dto.email },
     });
     if (!user) {
-      throw new BadRequestException('Email không tồn tại!');
+      throw new BadRequestException('Email does not exist! ');
     }
-    console.log('Password nhập:', dto.password);
-    console.log('Hash trong DB:', user.password_hash);
     const isMatch = await bcrypt.compare(dto.password, user.password_hash);
-    console.log('Kết quả so sánh:', isMatch);
 
     if (!isMatch) {
-      throw new BadRequestException('Sai mật khẩu!');
+      throw new BadRequestException('Wrong password!');
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
-      message: 'Login thành công!',
+      message: 'Login successful!',
       access_token: await this.jwtService.signAsync(payload),
       user: {
         id: user.id,

@@ -9,6 +9,7 @@ import { PetVaccination } from './entities/vaccine.entity';
 import { Repository, In } from 'typeorm';
 import { DoseType, VaccinationStatus } from './constants/enums';
 import { VaccineCategory } from './entities/vaccine-category.entity';
+
 @Injectable()
 export class VaccineService {
   constructor(
@@ -17,23 +18,39 @@ export class VaccineService {
     @InjectRepository(VaccineCategory)
     private readonly categoryRepository: Repository<VaccineCategory>,
   ) {}
+
   async create(createVaccineDto: CreateVaccineDto): Promise<PetVaccination> {
     const category = await this.categoryRepository.findOne({
       where: { id: createVaccineDto.vaccine_id },
     });
     if (!category) {
-      throw new NotFoundException('Không tìm thấy loại vaccine này');
+      throw new NotFoundException('Vaccine category not found');
     }
 
     if (category.quantity <= 0) {
       throw new BadRequestException(
-        `Vaccine "${category.name}" trong kho đã hết!`,
+        `Vaccine "${category.name}" is out of stock!`,
       );
     }
+
+    const existingSchedule = await this.vaccineRepository.findOne({
+      where: {
+        pet_id: createVaccineDto.pet_id,
+        vaccine_id: createVaccineDto.vaccine_id,
+        status: In([VaccinationStatus.PENDING, VaccinationStatus.COMPLETED]),
+      },
+    });
+
+    if (existingSchedule) {
+      throw new BadRequestException(
+        `Your pet already has a scheduled vaccination for "${category.name}" on ${existingSchedule.scheduled_date.toISOString().split('T')[0]}. Please complete or cancel it before creating a new one.`,
+      );
+    }
+
     if (createVaccineDto.dose_type === DoseType.PRIMARY) {
       if (createVaccineDto.dose_number > category.max_doses) {
         throw new BadRequestException(
-          `Vaccine này chỉ có tối đa ${category.max_doses} mũi chính!`,
+          `This vaccine has a maximum of ${category.max_doses} primary doses!`,
         );
       }
 
@@ -52,7 +69,7 @@ export class VaccineService {
           previousDose.status === VaccinationStatus.CANCELLED
         ) {
           throw new BadRequestException(
-            `Bạn phải hoàn thành mũi số ${createVaccineDto.dose_number - 1} trước!`,
+            `You must complete dose number ${createVaccineDto.dose_number - 1} first!`,
           );
         }
       }
@@ -61,7 +78,7 @@ export class VaccineService {
     if (createVaccineDto.dose_type === DoseType.BOOSTER) {
       if (createVaccineDto.dose_number !== 1) {
         throw new BadRequestException(
-          'Mũi nhắc lại hàng năm bắt buộc phải là mũi số 1!',
+          'Annual booster must always be dose number 1!',
         );
       }
 
@@ -77,19 +94,21 @@ export class VaccineService {
 
       if (!finalPrimaryDose) {
         throw new BadRequestException(
-          `Bé pet chưa hoàn thành đủ phác đồ ${category.max_doses} mũi cơ bản của loại vaccine này, chưa thể tiêm mũi nhắc lại hàng năm!`,
+          `Your pet has not completed the full ${category.max_doses} primary doses of this vaccine, so the annual booster cannot be administered yet!`,
         );
       }
     }
+
     if (createVaccineDto.dose_number > category.max_doses) {
       throw new BadRequestException(
-        `Vaccine "${category.name}" chỉ có tối đa ${category.max_doses} mũi chính. Bạn không thể chọn mũi số ${createVaccineDto.dose_number}!`,
+        `Vaccine "${category.name}" only has a maximum of ${category.max_doses} primary doses. You cannot select dose number ${createVaccineDto.dose_number}!`,
       );
     }
 
     await this.categoryRepository.update(category.id, {
       quantity: category.quantity - 1,
     });
+
     const newVaccine = this.vaccineRepository.create({
       ...createVaccineDto,
       status: VaccinationStatus.PENDING,
@@ -126,7 +145,7 @@ export class VaccineService {
       where: { id },
       relations: ['vaccine'],
     });
-    if (!record) throw new NotFoundException('Không tìm thấy lịch tiêm này');
+    if (!record) throw new BadRequestException('Vaccination record not found');
     return record;
   }
 
@@ -174,7 +193,7 @@ export class VaccineService {
 
     if (record.status === VaccinationStatus.COMPLETED) {
       throw new BadRequestException(
-        'Lịch tiêm này đã được xác nhận hoàn thành trước đó!',
+        'This vaccination record has already been marked as completed!',
       );
     }
     await this.vaccineRepository.update(id, {
@@ -183,5 +202,38 @@ export class VaccineService {
     });
 
     return this.findOne(id);
+  }
+
+  async suggestNextSchedule(
+    petId: number,
+    vaccineId: number,
+  ): Promise<Date | null> {
+    const category = await this.categoryRepository.findOne({
+      where: { id: vaccineId },
+    });
+    if (!category) {
+      throw new NotFoundException('Vaccine category not found');
+    }
+
+    const lastDose = await this.vaccineRepository.findOne({
+      where: { pet_id: petId, vaccine_id: vaccineId },
+      order: { scheduled_date: 'DESC' },
+    });
+
+    if (!lastDose) {
+      return null;
+    }
+
+    const lastDate = new Date(lastDose.scheduled_date);
+
+    if (category.max_doses > 1) {
+      const nextDate = new Date(lastDate);
+      nextDate.setDate(nextDate.getDate() + 21);
+      return nextDate;
+    } else {
+      const nextDate = new Date(lastDate);
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      return nextDate;
+    }
   }
 }

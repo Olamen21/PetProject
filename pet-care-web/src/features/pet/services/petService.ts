@@ -11,7 +11,7 @@ export const getPetById = async (id: string) => {
 }
 
 export const getAllBreed = async () => {
-  const res = await api.get('/breeds');
+  const res = await api.get('/breeds/all-breeds');
   return res.data;
 }
 

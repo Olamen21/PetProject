@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MedicalRecordService } from './medical-record.service';
 import { MedicalRecordController } from './medical-record.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtStrategy } from '../auth/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { MedicalExamination } from './entities/medical_examinations.entity';
@@ -17,7 +16,7 @@ import { Prescription } from './entities/prescriptions.entity';
     TypeOrmModule.forFeature([MedicalExamination, Prescription]),
   ],
   controllers: [MedicalRecordController],
-  providers: [MedicalRecordService, JwtStrategy],
+  providers: [MedicalRecordService],
   exports: [MedicalRecordService],
 })
 export class MedicalRecordModule {}
