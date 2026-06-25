@@ -10,14 +10,11 @@ import {
   UseInterceptors,
   Post,
   UnauthorizedException,
-  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/roles.guard';
-import { Role } from '../roles/role.enum';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
   ApiTags,
   ApiOperation,
@@ -28,14 +25,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { CloudinaryService } from './cloudinary.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    email?: string;
-    name?: string;
-  };
-}
+import { Role } from '../roles/role.enum';
+import type { Request } from 'express';
 
 @ApiTags('Users')
 @ApiBearerAuth('token')
@@ -46,104 +37,118 @@ export class UsersController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Get('profile')
-  @ApiOperation({ summary: 'Lấy thông tin cá nhân của User hiện tại' })
-  @ApiResponse({ status: 201, description: 'Thành công', type: User })
-  async getProfile(@Req() req: AuthenticatedRequest) {
-    if (!req.user) {
+  @Roles(Role.ADMIN, Role.VET, Role.USER)
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'Success', type: User })
+  async getProfile(@Req() req: Request) {
+    const userId = req.headers['x-user-id'];
+
+    if (!userId) {
       return {
         success: false,
-        message: 'không tìm thấy User từ Token này!',
+        message: 'User ID not found in request headers!',
       };
     }
 
-    // const userId = req.user.id || req.user.sub;
-    const userId = req.user.id;
-
-    console.log('ID sẽ dùng để tìm trong DB:', userId);
+    console.log('ID used to query DB:', userId);
 
     return this.usersService.findOne(+userId);
   }
 
   @Patch('profile')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor('file'))
   async updateProfile(
-    @Request() req: AuthenticatedRequest,
+    @Req() req: Request,
     @Body() body,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    console.log('User từ Request:', req.user);
-    console.log('--- NHẬN REQUEST ---');
-    console.log('Body:', body);
-    console.log('File:', file);
+    const userId = req.headers['x-user-id'];
 
-    if (!req.user || !req.user.id) {
+    if (!userId) {
       throw new UnauthorizedException(
-        'Không tìm thấy thông tin user trong token',
+        'User information not found in request headers',
       );
     }
-    console.log('File check:', file);
+
     let imageUrl: string | undefined;
     if (file) {
-      const imageUrlFromCloudinary =
-        await this.cloudinaryService.uploadFile(file);
-      imageUrl = imageUrlFromCloudinary;
+      imageUrl = await this.cloudinaryService.uploadFile(file);
     }
 
-    return this.usersService.updateProfile(+req.user.id, body, imageUrl);
+    return this.usersService.updateProfile(+userId, body, imageUrl);
   }
 
   @Get('all-users')
   @Roles(Role.ADMIN, Role.VET, Role.USER)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiOperation({ summary: 'Lấy danh sách tất cả người dùng (Chỉ Admin)' })
+  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: 'Get all users (Admin only)' })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get('all-vets')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiOperation({ summary: 'Lấy danh sách tất cả bác sĩ thú y' })
+  @Roles(Role.ADMIN, Role.VET, Role.USER)
+  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: 'Get all veterinarians' })
   findAllVets() {
     return this.usersService.findAllVets();
   }
 
   @Get('vet/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiOperation({ summary: 'Lấy thông tin bác sĩ thú y theo ID' })
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.VET, Role.USER)
+  @ApiOperation({ summary: 'Get veterinarian by ID' })
   findVetById(@Param('id') id: number) {
     return this.usersService.findVetById(id);
   }
 
   @Patch(':id/assign-role')
   @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async assignRole(@Param('id') id: number, @Body('role') role: Role) {
     return this.usersService.changeRole(id, role);
   }
 
   @Post('apply-vet')
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.USER)
+  @UseGuards(RolesGuard)
   @UseInterceptors(FileInterceptor('file'))
   async applyVet(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: Request,
     @Body() body,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    const userId = req.headers['x-user-id'];
+
+    if (!userId) {
+      throw new UnauthorizedException(
+        'User information not found in request headers',
+      );
+    }
+
     const imageUrl = await this.cloudinaryService.uploadFile(file);
 
-    return this.usersService.applyToBeVet(+req.user.id, body, imageUrl);
+    return this.usersService.applyToBeVet(+userId, body, imageUrl);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Patch('change-password')
   async changePassword(
-    @Request() req: AuthenticatedRequest,
+    @Req() req: Request,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    await this.usersService.changePassword(+req.user.id, changePasswordDto);
-    return { message: 'Đổi mật khẩu thành công!' };
+    const userId = req.headers['x-user-id'];
+
+    if (!userId) {
+      throw new UnauthorizedException(
+        'User information not found in request headers',
+      );
+    }
+
+    await this.usersService.changePassword(+userId, changePasswordDto);
+    return { message: 'Password changed successfully!' };
   }
 }

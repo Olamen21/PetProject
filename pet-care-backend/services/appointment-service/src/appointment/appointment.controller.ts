@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Req,
+  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -18,56 +20,57 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Role } from 'src/roles/role.enum';
+import { Role } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
 import { Appointment } from './entities/appointment.entity';
-import { RolesGuard } from 'src/roles/roles.guard';
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    email?: string;
-    name?: string;
-  };
-}
+import { RolesGuard } from '../roles/roles.guard';
+import type { Request } from 'express';
+
 @ApiTags('Appointment')
 @ApiBearerAuth('token')
 @Controller('appointment')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
   @Post('create-appointment')
-  @ApiOperation({ summary: 'Tạo lịch hẹn khám bệnh' })
-  @ApiResponse({ status: 201, description: 'Thành công', type: Appointment })
+  @ApiOperation({ summary: 'Create a new appointment' })
+  @ApiResponse({ status: 201, description: 'Success', type: Appointment })
   async create(
     @Body() createAppointmentDto: CreateAppointmentDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: Request,
   ) {
-    const userId = req.user.id;
-    return this.appointmentService.create(createAppointmentDto, +userId);
+    const userIdHeader = req.headers['x-user-id'];
+    if (!userIdHeader) {
+      throw new UnauthorizedException('User ID not found in headers');
+    }
+    const userId = Number(userIdHeader);
+    if (isNaN(userId)) {
+      throw new BadRequestException('User ID must be a valid number');
+    }
+    return this.appointmentService.create(createAppointmentDto, userId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiOperation({ summary: 'Xem tất cả lịch hẹn' })
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
+  @ApiOperation({ summary: 'Get all appointments' })
   @Get()
   findAll() {
     return this.appointmentService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Xem chi tiết lịch hẹn theo id' })
+  @ApiOperation({ summary: 'Get appointment details by ID' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.appointmentService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Cập nhật lịch hẹn' })
+  @ApiOperation({ summary: 'Update appointment' })
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -76,66 +79,73 @@ export class AppointmentController {
     return this.appointmentService.update(+id, updateAppointmentDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Xóa lịch hẹn' })
+  @ApiOperation({ summary: 'Delete appointment' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.VET, Role.ADMIN, Role.USER)
-  @ApiOperation({ summary: 'Xem lịch hẹn theo id của bác sĩ' })
+  @ApiOperation({ summary: 'Get appointments by veterinarian ID' })
   @Get('vet/:vetId')
   findByVetId(@Param('vetId') vetId: string) {
     return this.appointmentService.findByVetId(+vetId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.VET, Role.ADMIN)
-  @ApiOperation({ summary: 'Xác nhận lịch hẹn' })
+  @ApiOperation({ summary: 'Confirm appointment' })
   @Patch(':id/confirm')
   confirmAppointment(@Param('id') id: string) {
     return this.appointmentService.confirmAppointment(+id);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
+  @UseGuards(RolesGuard)
   @Roles(Role.VET, Role.ADMIN)
-  @ApiOperation({ summary: 'Hoàn thành lịch hẹn' })
+  @ApiOperation({ summary: 'Complete appointment' })
   @Patch(':id/complete')
   completeAppointment(@Param('id') id: string) {
     return this.appointmentService.completedAppointment(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.VET, Role.ADMIN)
-  @ApiOperation({ summary: 'Hủy lịch hẹn' })
+  @ApiOperation({ summary: 'Cancel appointment' })
   @Patch(':id/cancel')
   cancelAppointment(@Param('id') id: string) {
     return this.appointmentService.cancelAppointment(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.USER)
-  @ApiOperation({ summary: 'Xem lịch hẹn theo id của user hiện tại' })
-  @Get('user/:userId')
-  findByUserId(@Req() req: AuthenticatedRequest) {
-    const currentUserId = req.user.id;
-
-    return this.appointmentService.findByUserId(+currentUserId);
+  @ApiOperation({ summary: 'Get appointments for current user' })
+  @Get('user/current')
+  findByUserId(@Req() req: Request) {
+    const currentUserIdHeader = req.headers['x-user-id'];
+    if (!currentUserIdHeader) {
+      throw new UnauthorizedException('User ID not found in headers');
+    }
+    const currentUserId = Number(currentUserIdHeader);
+    if (isNaN(currentUserId)) {
+      throw new BadRequestException('User ID must be a valid number');
+    }
+    return this.appointmentService.findByUserId(currentUserId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @ApiOperation({ summary: 'Xác nhận đã đánh giá' })
+  @ApiOperation({ summary: 'Mark review as completed' })
   @Patch('review/complete/:id')
   completeReview(@Param('id') id: string) {
     return this.appointmentService.markCompleteReview(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Số lượt khám' })
+  @ApiOperation({ summary: 'Count completed appointments' })
   @Get('count-appointment/:id')
   countCompletedAppointments(@Param('id') id: string) {
     return this.appointmentService.countCompletedAppointments(+id);

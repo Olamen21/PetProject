@@ -6,7 +6,6 @@ import { Pet } from './entities/pet.entity';
 import { CloudinaryService } from './cloudinary.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from '../auth/jwt.strategy';
 import { Breed } from './entities/breed.entity';
 import { BreedController } from './breed.controller';
 import { BreedService } from './breed.service';
@@ -21,7 +20,7 @@ import { BreedService } from './breed.service';
     TypeOrmModule.forFeature([Pet, Breed]),
   ],
   controllers: [PetsController, BreedController],
-  providers: [PetsService, CloudinaryService, JwtStrategy, BreedService],
+  providers: [PetsService, CloudinaryService, BreedService],
   exports: [PetsService, CloudinaryService, BreedService],
 })
 export class PetsModule {}

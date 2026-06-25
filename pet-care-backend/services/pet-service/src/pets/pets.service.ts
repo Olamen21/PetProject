@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Pet } from './entities/pet.entity';
@@ -12,15 +16,12 @@ export class PetsService {
     private readonly petRepository: Repository<Pet>,
   ) {}
 
-  async create(
-    createPetDto: CreatePetDto,
-    ownerId: number,
-    imageUrl?: string,
-  ): Promise<Pet> {
-    // const createData = { ...createPetDto };
-
-    if (imageUrl) {
-      createPetDto.avatar_url = imageUrl;
+  async create(createPetDto: CreatePetDto, ownerId: number): Promise<Pet> {
+    const existingPet = await this.petRepository.findOne({
+      where: { name: createPetDto.name, owner_id: ownerId },
+    });
+    if (existingPet) {
+      throw new BadRequestException('You already have a pet with this name');
     }
 
     if (typeof createPetDto.neutered === 'string') {
@@ -32,9 +33,7 @@ export class PetsService {
       owner_id: ownerId,
     });
 
-    const savedPet = await this.petRepository.save(newPet);
-
-    return savedPet;
+    return await this.petRepository.save(newPet);
   }
 
   async findAllByOwner(ownerId: number): Promise<Pet[]> {

@@ -1,17 +1,13 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateProfileDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { Role } from '../roles/role.enum';
 import { DoctorProfile } from './entities/doctor-profile.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ApplyToBeVetDto } from './entities/apply-to-be-vet.dto';
+import { Role } from '../roles/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -36,23 +32,15 @@ export class UsersService {
     return Math.floor(diffInYears);
   }
 
-  //lấy thông tin người dùng theo ID
-  async findOne(id: number): Promise<any> {
+  // lấy user theo id
+  async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
       relations: ['doctorProfile'],
     });
     if (!user) {
-      throw new NotFoundException(`Không tìm thấy người dùng có ID ${id}`);
+      throw new BadRequestException(`User with ID ${id} not found`);
     }
-
-    if (user.role === Role.VET && user.doctorProfile) {
-      user.doctorProfile['years_of_experience'] =
-        this.calculateYearsOfExperience(
-          user.doctorProfile.experience_start_date,
-        );
-    }
-
     return user;
   }
 
@@ -66,7 +54,7 @@ export class UsersService {
       relations: ['doctorProfile'],
     });
     if (!user) {
-      throw new NotFoundException(`Không tìm thấy người dùng có ID ${id}`);
+      throw new BadRequestException(`User with ID ${id} not found`);
     }
     if (updateProfileDto.full_name) user.full_name = updateProfileDto.full_name;
     if (updateProfileDto.phone) user.phone = updateProfileDto.phone;
@@ -96,6 +84,7 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
   async applyToBeVet(
     userId: number,
     updateData: ApplyToBeVetDto,
@@ -106,7 +95,7 @@ export class UsersService {
       relations: ['doctorProfile'],
     });
     if (!user) {
-      throw new NotFoundException('Không tìm thấy người dùng');
+      throw new BadRequestException('User not found');
     }
 
     user.phone = updateData.phone;
@@ -122,71 +111,58 @@ export class UsersService {
 
     user.doctorProfile.degree = updateData.degree;
     user.doctorProfile.clinic_room = updateData.clinic_room;
-    if (user.doctorProfile && updateData.experience_start_date) {
+
+    if (updateData.experience_start_date) {
       user.doctorProfile.experience_start_date = new Date(
         updateData.experience_start_date,
       );
+
+      user.doctorProfile.years_of_experience = this.calculateYearsOfExperience(
+        user.doctorProfile.experience_start_date,
+      );
     }
+
     if (fileUrl) {
       user.doctorProfile.certificate_url = fileUrl;
     }
 
-    console.log('Dữ liệu sắp lưu:', updateData);
     await this.doctorProfileRepository.save(user.doctorProfile);
     return this.usersRepository.save(user);
   }
 
-  //lấy tất cả người dùng (chỉ admin mới có quyền)
+  // lấy tất cả user
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
-  async findAllVets(): Promise<any[]> {
-    const vets = await this.usersRepository.find({
+
+  //lấy tất cả vets
+  async findAllVets(): Promise<User[]> {
+    return this.usersRepository.find({
       where: { role: Role.VET },
       relations: ['doctorProfile'],
     });
-
-    // Map qua danh sách để tiêm thêm trường động years_of_experience
-    return vets.map((vet) => ({
-      ...vet,
-      doctorProfile: vet.doctorProfile
-        ? {
-            ...vet.doctorProfile,
-            years_of_experience: this.calculateYearsOfExperience(
-              vet.doctorProfile.experience_start_date,
-            ),
-          }
-        : null,
-    }));
   }
-  async findVetById(id: number): Promise<any> {
+
+  async findVetById(id: number): Promise<User> {
     const vet = await this.usersRepository.findOne({
       where: { id, role: Role.VET },
       relations: ['doctorProfile'],
     });
 
     if (!vet) {
-      throw new NotFoundException(`Không tìm thấy bác sĩ thú y có ID ${id}`);
-    }
-
-    // Trả về kèm trường tính toán động
-    if (vet.doctorProfile) {
-      vet.doctorProfile['years_of_experience'] =
-        this.calculateYearsOfExperience(
-          vet.doctorProfile.experience_start_date,
-        );
+      throw new BadRequestException(`Veterinarian with ID ${id} not found`);
     }
 
     return vet;
   }
 
-  //hàm băm mật khẩu
+  // Hash password
   async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
   }
 
-  //thay đổi vai trò người dùng (chỉ admin mới có quyền)
+  // chuyển role của user
   async changeRole(id: number, newRole: Role): Promise<User> {
     const user = await this.findOne(id);
     user.role = newRole;
@@ -201,19 +177,19 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('Không tìm thấy người dùng');
+      throw new BadRequestException('User not found');
     }
 
     const isMatch = await bcrypt.compare(dto.oldPassword, user.password_hash);
 
     if (!isMatch) {
-      throw new BadRequestException('Mật khẩu hiện tại không chính xác');
+      throw new BadRequestException('Current password is incorrect');
     }
 
     const isSame = await bcrypt.compare(dto.newPassword, user.password_hash);
     if (isSame) {
       throw new BadRequestException(
-        'Mật khẩu mới phải khác mật khẩu hiện tại.',
+        'New password must be different from the current password.',
       );
     }
 

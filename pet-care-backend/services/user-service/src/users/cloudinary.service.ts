@@ -19,6 +19,7 @@ export class CloudinaryService {
         { folder: 'pet_care_certificates' },
         (error, result) => {
           if (error || !result)
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
             return reject(error || new Error('Upload failed'));
           resolve(result.secure_url);
         },

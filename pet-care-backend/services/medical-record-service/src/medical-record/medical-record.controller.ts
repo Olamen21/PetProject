@@ -7,45 +7,44 @@ import {
   Delete,
   UseGuards,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { MedicalRecordService } from './medical-record.service';
 import { CreateMedicalRecordDto } from './dto/create-medical-record.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../roles/roles.guard';
 import { Role } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
 import { ApiBearerAuth, ApiTags, ApiOperation } from '@nestjs/swagger';
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    email?: string;
-    name?: string;
-  };
-}
+import type { Request } from 'express';
+
 @ApiTags('Medical Records')
 @ApiBearerAuth('token')
 @Controller('medical-record')
 export class MedicalRecordController {
   constructor(private readonly medicalRecordService: MedicalRecordService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
   @ApiOperation({
-    summary: 'Tạo mới hồ sơ y tế cho thú cưng (chỉ Admin và Vet)',
+    summary: 'Create new medical record for pet (Admin and Vet only)',
   })
   @Post('create-medical-record')
   create(
     @Body() createMedicalRecordDto: CreateMedicalRecordDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: Request,
   ) {
-    const vetId = req.user.id;
-    return this.medicalRecordService.create(createMedicalRecordDto, +vetId);
+    const vetIdHeader = req.headers['x-user-id'];
+    if (!vetIdHeader) {
+      throw new UnauthorizedException('Vet ID not found in request headers');
+    }
+    const vetId = Number(vetIdHeader);
+    return this.medicalRecordService.create(createMedicalRecordDto, vetId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
   @ApiOperation({
-    summary: 'Lấy danh sách tất cả hồ sơ y tế (chỉ Admin và Vet)',
+    summary: 'Get all medical records (Admin and Vet only)',
   })
   @Get('all')
   findAll() {
@@ -53,39 +52,33 @@ export class MedicalRecordController {
   }
 
   @ApiOperation({
-    summary: 'Lấy thông tin hồ sơ y tế theo ID',
+    summary: 'Get medical record by ID',
   })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medicalRecordService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateMedicalRecordDto: UpdateMedicalRecordDto,
-  // ) {
-  //   return this.medicalRecordService.update(+id, updateMedicalRecordDto);
-  // }
-
+  @UseGuards(RolesGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.medicalRecordService.remove(+id);
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET, Role.USER)
   @ApiOperation({
-    summary: 'Lấy danh sách thuốc hiện tại của thú cưng theo Pet ID',
+    summary: 'Get current medications of pet by Pet ID',
   })
   @Get('pet/:petId/current-medications')
   async getCurrentMedications(@Param('petId') petId: string) {
     return this.medicalRecordService.findCurrentMedications(+petId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET, Role.USER)
   @ApiOperation({
-    summary: 'Lấy tất cả hồ sơ y tế của thú cưng theo Pet ID',
+    summary: 'Get all medical records of pet by Pet ID',
   })
   @Get('pet/medical-record/:petId')
   async getAllMedicalRecordByPetID(@Param('petId') petId: string) {

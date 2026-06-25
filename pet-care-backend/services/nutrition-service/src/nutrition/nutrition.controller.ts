@@ -12,10 +12,9 @@ import { NutritionService } from './nutrition.service';
 import { CreateNutritionDto } from './dto/create-nutrition.dto';
 import { UpdateNutritionDto } from './dto/update-nutrition.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/roles/role.enum';
+import { RolesGuard } from '../roles/roles.guard';
+import { Roles } from '../roles/roles.decorator';
+import { Role } from '../roles/role.enum';
 
 @ApiTags('Nutrition')
 @ApiBearerAuth('token')
@@ -23,33 +22,33 @@ import { Role } from 'src/roles/role.enum';
 export class NutritionController {
   constructor(private readonly nutritionService: NutritionService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
   @Post('create-nutrition')
-  @ApiOperation({ summary: 'Tạo dinh dưỡng' })
+  @ApiOperation({ summary: 'Create nutrition record' })
   create(@Body() createNutritionDto: CreateNutritionDto) {
     return this.nutritionService.create(createNutritionDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Xem tất cả' })
+  @ApiOperation({ summary: 'Get all nutrition records' })
   @Get('all-nutrition')
   findAll() {
     return this.nutritionService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Xem theo id' })
-  @Get('nutrition/:id')
+  @ApiOperation({ summary: 'Get nutrition record by ID' })
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.nutritionService.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Cập nhật theo id' })
+  @ApiOperation({ summary: 'Update nutrition record by ID' })
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -58,9 +57,9 @@ export class NutritionController {
     return this.nutritionService.update(+id, updateNutritionDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER, Role.VET)
-  @ApiOperation({ summary: 'Xóa theo id' })
+  @ApiOperation({ summary: 'Delete nutrition record by ID' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.nutritionService.remove(+id);

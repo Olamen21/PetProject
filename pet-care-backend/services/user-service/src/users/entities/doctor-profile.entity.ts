@@ -32,4 +32,7 @@ export class DoctorProfile {
   @OneToOne(() => User, (user) => user.doctorProfile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user?: User;
+
+  @Column({ default: 0 })
+  years_of_experience!: number;
 }

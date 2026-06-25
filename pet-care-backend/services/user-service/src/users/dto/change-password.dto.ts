@@ -5,6 +5,8 @@ export class ChangePasswordDto {
   oldPassword!: string;
 
   @IsString()
-  @MinLength(8, { message: 'Mật khẩu mới phải có ít nhất 8 ký tự' })
+  @MinLength(8, {
+    message: 'The new password must be at least 8 characters long.',
+  })
   newPassword!: string;
 }

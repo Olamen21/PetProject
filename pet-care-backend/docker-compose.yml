@@ -72,21 +72,6 @@ services:
       - postgresdb
     networks:
       - pet-network 
-
-  notification-service:
-    build: ./services/notification-service
-    env_file:
-      - .env
-    ports:
-      - "3004:3004"
-    volumes:
-      - ./services/notification-service:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - postgresdb
-      - redis
-    networks:
-      - pet-network 
   
   vaccine-service:
     build: ./services/vaccine-service

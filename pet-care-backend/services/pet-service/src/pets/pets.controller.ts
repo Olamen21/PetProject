@@ -1,5 +1,4 @@
 import { RolesGuard } from '../roles/roles.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CloudinaryService } from './cloudinary.service';
 import {
   Controller,
@@ -13,6 +12,8 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PetsService } from './pets.service';
 import {
@@ -25,16 +26,8 @@ import { Pet } from './entities/pet.entity';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { Role } from '../roles/role.enum';
 import { Roles } from '../roles/roles.decorator';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    email?: string;
-    name?: string;
-  };
-}
 
 @ApiTags('Pets')
 @ApiBearerAuth('token')
@@ -45,90 +38,97 @@ export class PetsController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Get('pets')
-  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng của user hiện tại' })
-  async getMyPets(@Req() req: AuthenticatedRequest) {
-    const userId = req.user.id;
-
-    return this.petsService.findAllByOwner(+userId);
+  @ApiOperation({ summary: 'Get all pets of current user' })
+  async getMyPets(@Req() req: Request) {
+    const userIdHeader = req.headers['x-user-id'];
+    if (!userIdHeader) {
+      throw new UnauthorizedException('User ID not found in request headers');
+    }
+    const userId = Number(userIdHeader);
+    return this.petsService.findAllByOwner(userId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
   @Get('all-pets')
-  @ApiOperation({ summary: 'lấy danh sách tất cả thú cưng (chỉ Admin và Vet)' })
+  @ApiOperation({ summary: 'Get all pets (Admin and Vet only)' })
   findAll() {
     return this.petsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.VET)
   @Get('user/:userId')
-  @ApiOperation({
-    summary: 'lấy danh sách thú cưng theo user (chỉ Admin và Vet)',
-  })
+  @ApiOperation({ summary: 'Get pets by user ID (Admin and Vet only)' })
   async findByOwner(@Param('userId') userId: string) {
-    return this.petsService.findAllByOwner(+userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
-  @UseInterceptors(FileInterceptor('file'))
-  @Post('create-pet')
-  @ApiOperation({ summary: 'Tạo hồ sơ thú cưng mới' })
-  @ApiResponse({ status: 201, description: 'Thành công', type: Pet })
-  async create(
-    @Body() createPetDto: CreatePetDto,
-    @Req() req: AuthenticatedRequest,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
-    const ownerId = req.user.id;
-    let imageUrl: string | undefined;
-    if (file) {
-      const imageUrlFromCloudinary =
-        await this.cloudinaryService.uploadFile(file);
-      imageUrl = imageUrlFromCloudinary;
+    const id = Number(userId);
+    if (isNaN(id)) {
+      throw new BadRequestException('User ID must be a valid number');
     }
-    return this.petsService.create(createPetDto, +ownerId, imageUrl);
+    return this.petsService.findAllByOwner(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Tìm thông tin hồ sơ của thú cưng' })
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @Post('create-pet')
+  @ApiOperation({ summary: 'Create new pet profile' })
+  @ApiResponse({ status: 201, description: 'Success', type: Pet })
+  async create(@Body() createPetDto: CreatePetDto, @Req() req: Request) {
+    const ownerIdHeader = req.headers['x-user-id'];
+    if (!ownerIdHeader) {
+      throw new UnauthorizedException('User ID not found in request headers');
+    }
+    const ownerId = Number(ownerIdHeader);
+    if (isNaN(ownerId)) {
+      throw new BadRequestException('User ID must be a valid number');
+    }
+
+    return this.petsService.create(createPetDto, ownerId);
+  }
+
+  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: 'Get pet profile by ID' })
   @Get(':petId')
   findOne(@Param('petId') petId: string) {
-    return this.petsService.findOne(+petId);
+    const id = Number(petId);
+    if (isNaN(id)) {
+      throw new BadRequestException('Pet ID must be a valid number');
+    }
+    return this.petsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @ApiOperation({ summary: 'xóa hồ sơ thú cưng' })
+  @ApiOperation({ summary: 'Delete pet profile by ID' })
   @Delete(':petId')
   remove(@Param('petId') petId: string) {
-    return this.petsService.remove(+petId);
+    const id = Number(petId);
+    if (isNaN(id)) {
+      throw new BadRequestException('Pet ID must be a valid number');
+    }
+    return this.petsService.remove(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Cập nhật hồ sơ thú cưng' })
+  @ApiOperation({ summary: 'Update pet profile by ID' })
   @Patch(':petId')
   async update(
     @Param('petId') petId: string,
     @Body() body,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    //  console.log('User từ Request:', req.pet);
-    console.log('--- NHẬN REQUEST ---');
-    console.log('Body:', body);
-    console.log('File:', file);
+    const id = Number(petId);
+    if (isNaN(id)) {
+      throw new BadRequestException('Pet ID must be a valid number');
+    }
     let imageUrl: string | undefined;
     if (file) {
-      const imageUrlFromCloudinary =
-        await this.cloudinaryService.uploadFile(file);
-      imageUrl = imageUrlFromCloudinary;
+      imageUrl = await this.cloudinaryService.uploadFile(file);
     }
-
-    return this.petsService.update(+petId, body, imageUrl);
+    return this.petsService.update(id, body, imageUrl);
   }
 }

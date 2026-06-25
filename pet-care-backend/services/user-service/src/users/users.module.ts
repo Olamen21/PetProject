@@ -5,7 +5,6 @@ import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from '../auth/jwt.strategy';
 import { DoctorProfile } from './entities/doctor-profile.entity';
 import { CloudinaryService } from './cloudinary.service';
 
@@ -19,7 +18,7 @@ import { CloudinaryService } from './cloudinary.service';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, JwtStrategy, CloudinaryService],
+  providers: [UsersService, CloudinaryService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

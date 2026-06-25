@@ -1,6 +1,6 @@
 import {
+  BadRequestException,
   Injectable,
-  NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { VaccineCategory } from './entities/vaccine-category.entity';
@@ -29,14 +29,14 @@ export class VaccineCategoryService implements OnApplicationBootstrap {
 
       if (count === 0) {
         console.log(
-          '🔄 [Vaccine Service] DB trống. Đang tự động nạp dữ liệu từ file JSON...',
+          ' [Vaccine Service] DB trống. Đang tự động nạp dữ liệu từ file JSON...',
         );
 
         const jsonPath = path.join(__dirname, 'data', 'vaccine.json');
 
         if (!fs.existsSync(jsonPath)) {
           console.warn(
-            `⚠️ Không tìm thấy file JSON mẫu tại đường dẫn: ${jsonPath}`,
+            ` Không tìm thấy file JSON mẫu tại đường dẫn: ${jsonPath}`,
           );
           return;
         }
@@ -54,17 +54,15 @@ export class VaccineCategoryService implements OnApplicationBootstrap {
         });
 
         await this.vaccineCategoryRepository.save(entities);
-        console.log(
-          `✅ Tự động khởi tạo thành công ${entities.length} vaccine!`,
-        );
+        console.log(` Tự động khởi tạo thành công ${entities.length} vaccine!`);
       } else {
         console.log(
-          `ℹ️ [Vaccine Service] DB đã có sẵn ${count} vaccine, bỏ qua bước khởi tạo.`,
+          `ℹ[Vaccine Service] DB đã có sẵn ${count} vaccine, bỏ qua bước khởi tạo.`,
         );
       }
     } catch (error) {
       console.error(
-        '❌ Lỗi xảy ra trong quá trình tự động khởi tạo dữ liệu:',
+        ' Lỗi xảy ra trong quá trình tự động khởi tạo dữ liệu:',
         error,
       );
     }
@@ -73,6 +71,16 @@ export class VaccineCategoryService implements OnApplicationBootstrap {
   async create(
     createVaccineCategoryDto: VaccineCategoryDto,
   ): Promise<VaccineCategory> {
+    const existingCategory = await this.vaccineCategoryRepository.findOne({
+      where: { name: createVaccineCategoryDto.name },
+    });
+
+    if (existingCategory) {
+      throw new BadRequestException(
+        'A vaccine category with this name already exists',
+      );
+    }
+
     const vaccineCategory = this.vaccineCategoryRepository.create(
       createVaccineCategoryDto,
     );
@@ -87,8 +95,7 @@ export class VaccineCategoryService implements OnApplicationBootstrap {
     const vaccineCategory = await this.vaccineCategoryRepository.findOneBy({
       id,
     });
-    if (!vaccineCategory)
-      throw new NotFoundException('Không tìm thấy vaccine này');
+    if (!vaccineCategory) throw new BadRequestException('Vaccine not found.');
     return vaccineCategory;
   }
 
