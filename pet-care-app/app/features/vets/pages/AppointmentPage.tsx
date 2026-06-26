@@ -99,8 +99,8 @@ const AppointmentPage = () => {
           }
           style={styles.avatar}
         />
-        <Text style={styles.name}>{vet?.full_name}</Text>
-        <Text style={styles.role}>{vet?.doctorProfile?.degree}</Text>
+        <Text style={styles.name}>{vet?.full_name} </Text>
+        <Text style={styles.role}>{vet?.doctorProfile?.degree} </Text>
 
         {/* Stats */}
         <View style={styles.statsContainer}>
@@ -112,17 +112,16 @@ const AppointmentPage = () => {
             />
             <Text style={styles.statLabel}>Experience </Text>
             <Text style={styles.statText}>
-              {vet?.doctorProfile?.years_of_experience} years
-            </Text>
+              {vet?.doctorProfile?.years_of_experience} years </Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons name="people-outline" size={20} color={Colors.primary} />
-            <Text style={styles.statLabel}>Patients</Text>
+            <Text style={styles.statLabel}>Patients </Text>
             <Text style={styles.statText}>{countAppointment}</Text>
           </View>
           <View style={styles.statItem}>
             <Ionicons name="star-outline" size={20} color={Colors.primary} />
-            <Text style={styles.statLabel}>Rating</Text>
+            <Text style={styles.statLabel}>Rating </Text>
             <Text style={styles.statText}>{rating?.averageRating}/5</Text>
           </View>
         </View>

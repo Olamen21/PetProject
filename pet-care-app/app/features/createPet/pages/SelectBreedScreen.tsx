@@ -39,7 +39,7 @@ export default function SelectBreedScreen() {
       };
 
       fetchPet();
-    }, []),
+    }, [petName, petType]),
   );
 
   const handleContinue = () => {

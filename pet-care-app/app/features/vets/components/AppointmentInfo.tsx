@@ -20,7 +20,7 @@ const AppointmentInfo: React.FC<AppointmentInfoProps> = ({ date, time }) => {
       {/* Time box */}
       <View style={styles.card}>
         <Ionicons name="time-outline" size={24} color={Colors.black} />
-        <Text style={styles.text}>{time}</Text>
+        <Text style={styles.text}>{time} </Text>
       </View>
     </View>
   );
