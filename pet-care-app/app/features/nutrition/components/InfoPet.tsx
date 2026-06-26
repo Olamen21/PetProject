@@ -18,7 +18,7 @@ export default function InfoPet({ pet }: InfoPetProps) {
               <Text style={styles.infoValue}>{pet.weight}</Text>
             </View>
             <View style={styles.infoCard}>
-              <Text style={styles.infoLabel}>Height</Text>
+              <Text style={styles.infoLabel}>Height </Text>
               <Text style={styles.infoValue}>{pet.height}</Text>
             </View>
           </View>
