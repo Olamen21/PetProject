@@ -8,7 +8,7 @@ import RecommentCard from "../components/RecommentCard";
 import { Vets } from "../types/Vets";
 import { Appointment } from "../types/Appointment";
 import { useFocusEffect, useRouter } from "expo-router";
-import { getAllPetUser, getAllVets, getAppointmentsByUserId, getProfile } from "../services/vetService";
+import { getAllPetUser, getAllVets, getAppointmentsByUserId} from "../services/vetService";
 import BottomNavBar from "@/app/shared/components/BottomNavBar";
 import HeaderBar from "@/app/shared/components/HeaderBar";
 
@@ -22,10 +22,8 @@ export default function VetPage() {
       const fetchVets = async () => {
         try {
           const data = await getAllVets();
-          const getUser = await getProfile();
           const getAllPetByUserId = await getAllPetUser();
-          const userId = getUser.id;
-          const appointmentsData = await getAppointmentsByUserId(userId);
+          const appointmentsData = await getAppointmentsByUserId();
 
           const mergedAppointments = appointmentsData.map(
             (appointment: Appointment) => {

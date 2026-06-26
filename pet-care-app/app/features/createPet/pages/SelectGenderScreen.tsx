@@ -9,10 +9,10 @@ import CommonMessage from "@/app/shared/components/CommonMessage";
 import StepHeader from "../components/StepHeader";
 
 export default function SelectGenderScreen() {
-  const { petName, petType, breedId } = useLocalSearchParams<{ 
-      petName: string,
-      petType: string,
-      breedId: string 
+  const { petName, petType, breedId } = useLocalSearchParams<{
+    petName: string;
+    petType: string;
+    breedId: string;
   }>();
   const router = useRouter();
 
@@ -27,11 +27,11 @@ export default function SelectGenderScreen() {
     if (isFormComplete) {
       router.replace({
         pathname: "/(tabs)/SelectBirthdayScreen",
-        params: { 
+        params: {
           petName,
           petType,
-          breedId, 
-          gender 
+          breedId,
+          gender,
         },
       });
     } else {
@@ -43,9 +43,9 @@ export default function SelectGenderScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <StepHeader
-          onBack={() => router.replace("/(tabs)/SelectBreedScreen")}
+          onBack={() => router.replace("/(tabs)/HomeScreen")}
           totalSteps={4}
-          currentStep={2}
+          currentStep={0}
         />
 
         <View style={styles.header}>

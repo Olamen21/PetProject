@@ -11,12 +11,12 @@ import { createPet } from "../services/createPetService";
 import { Colors } from "@/app/constants/Colors";
 
 export default function SelectBirthdayScreen() {
-  const { petName, petType, breedId, gender } = useLocalSearchParams<{ 
-        petName: string,
-        petType: string,
-        breedId: string,
-        gender: string, 
-    }>();
+  const { petName, petType, breedId, gender } = useLocalSearchParams<{
+    petName: string;
+    petType: string;
+    breedId: string;
+    gender: string;
+  }>();
   const router = useRouter();
 
   const [birthday, setBirthday] = useState<Date | null>(null);
@@ -25,7 +25,7 @@ export default function SelectBirthdayScreen() {
 
   const handleCreatePet = async () => {
     try {
-       await createPet({
+      await createPet({
         name: petName,
         species: petType,
         breed_id: Number(breedId),
@@ -44,13 +44,13 @@ export default function SelectBirthdayScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <StepHeader
-          onBack={() => router.replace("/(tabs)/SelectGenderScreen")}
+          onBack={() => router.replace("/(tabs)/HomeScreen")}
           totalSteps={4}
-          currentStep={3}
+          currentStep={0}
         />
 
         <View style={styles.header}>
-          <Ionicons name="paw" size={28} color= {Colors.primary} />
+          <Ionicons name="paw" size={28} color={Colors.primary} />
           <Text style={styles.title}>{"When is your pet's birthday?"}</Text>
         </View>
 

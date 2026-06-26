@@ -11,9 +11,9 @@ import { Breed } from "../../petProfile/types/Breed";
 import { getAllBreed } from "../../petProfile/services/PetApi";
 
 export default function SelectBreedScreen() {
-  const { petName, petType } = useLocalSearchParams<{ 
-    petName: string,
-    petType: string 
+  const { petName, petType } = useLocalSearchParams<{
+    petName: string;
+    petType: string;
   }>();
   const router = useRouter();
   const [showBreedModal, setShowBreedModal] = useState(false);
@@ -30,7 +30,7 @@ export default function SelectBreedScreen() {
           const breedsData = await getAllBreed();
 
           const filteredBreeds = breedsData.filter(
-            (b: Breed) => b.species?.toLowerCase() === petType?.toLowerCase()
+            (b: Breed) => b.species?.toLowerCase() === petType?.toLowerCase(),
           );
           setBreeds(filteredBreeds);
         } catch (error) {
@@ -39,17 +39,17 @@ export default function SelectBreedScreen() {
       };
 
       fetchPet();
-    },[])
+    }, []),
   );
-  
+
   const handleContinue = () => {
     if (isFormComplete) {
       router.replace({
         pathname: "/(tabs)/SelectGenderScreen",
-        params: { 
+        params: {
           petName,
           petType,
-          breedId 
+          breedId,
         },
       });
     } else {
@@ -61,9 +61,9 @@ export default function SelectBreedScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <StepHeader
-          onBack={() => router.replace("/(tabs)/AddPetScreen")}
+          onBack={() => router.replace("/(tabs)/HomeScreen")}
           totalSteps={4}
-          currentStep={1}
+          currentStep={0}
         />
 
         <View style={styles.header}>
@@ -96,7 +96,7 @@ export default function SelectBreedScreen() {
           selected={breedName}
           onSelect={(name) => {
             setBreedName(name);
-            const breed = breeds.find(b => b.name === name);
+            const breed = breeds.find((b) => b.name === name);
             setBreedId(breed?.id ?? null);
           }}
           title="Select breed"

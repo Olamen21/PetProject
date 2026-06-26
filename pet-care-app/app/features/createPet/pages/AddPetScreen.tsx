@@ -40,7 +40,7 @@ export default function AddPetScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <StepHeader
-          onBack={() => router.replace("/(tabs)/PetProfileScreen")}
+          onBack={() => router.replace("/(tabs)/HomeScreen")}
           totalSteps={4}
           currentStep={0}
         />

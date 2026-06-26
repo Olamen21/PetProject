@@ -12,7 +12,7 @@ import {
 import { getProfile, getAllUser } from "../../../api/UserApi";
 import type { AppointmentList } from "../types/AppoinmentList";
 import type { Pet } from "../../diagnosis/types/Pet";
-import type { User } from "../../ManagementUser/types/User";
+import type { User } from "../../../shared/types/User";
 
 function AppointmentPage() {
   const [pendingList, setPendingList] = useState<AppointmentList[]>([]);

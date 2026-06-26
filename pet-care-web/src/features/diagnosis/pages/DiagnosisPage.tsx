@@ -14,6 +14,7 @@ import {
   markCompleteVaccine,
   createMedicalRecord,
   markCompleteAppointment,
+  suggestNextSchedule,
 } from "../services/DiagnosisService";
 import type { PetVaccine } from "../types/PetVaccine";
 import { getAllUser, getProfile } from "../../../api/UserApi";
@@ -79,19 +80,30 @@ export default function DiagnosisPage() {
     fetchData();
   }, []);
 
-  const handleCompleteVaccine = async (id: number) => {
-    const markCompleteData = await markCompleteVaccine(id);
-    if (markCompleteData) {
-      alert("Đã đánh dấu lịch tiêm vắc-xin hoàn thành!");
-      setVaccinePets(
-        vaccinePets.map((v) =>
-          v.id === id ? { ...v, status: "COMPLETED" } : v,
-        ),
+ const handleCompleteVaccine = async (id: number) => {
+  const markCompleteData = await markCompleteVaccine(id);
+  if (markCompleteData) {
+    alert("Đã đánh dấu lịch tiêm vắc-xin hoàn thành!");
+    setVaccinePets(
+      vaccinePets.map((v) =>
+        v.id === id ? { ...v, status: "COMPLETED" } : v,
+      ),
+    );
+
+    const completedVaccine = vaccinePets.find((v) => v.id === id);
+    if (completedVaccine) {
+      const suggestNext = await suggestNextSchedule(
+        String(completedVaccine.pet_id),
+        String(completedVaccine.vaccine_id),
       );
-    } else {
-      alert("Đánh dấu hoàn thành thất bại. Vui lòng thử lại.");
+      console.log("Gợi ý lịch tiêm tiếp theo:", suggestNext.data);
+      alert(`Lịch tiêm tiếp theo: ${suggestNext.data.next_date}`);
     }
-  };
+  } else {
+    alert("Đánh dấu hoàn thành thất bại. Vui lòng thử lại.");
+  }
+};
+
   const handleCancelVaccine = async (id: number) => {
     const cancelData = await cancelVaccine(id);
     if (cancelData) {
