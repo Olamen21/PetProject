@@ -104,6 +104,13 @@ export class UsersController {
   findVetById(@Param('id') id: number) {
     return this.usersService.findVetById(id);
   }
+  @Get('pending-vet/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Get pending vet by ID' })
+  findPendingVetById(@Param('id') id: number) {
+    return this.usersService.findPendingVetById(id);
+  }
 
   @Patch(':id/assign-role')
   @Roles(Role.ADMIN)

@@ -61,31 +61,31 @@ export default function NutritionPage () {
     );
 
     useFocusEffect(
-    React.useCallback(() => {
-        async function fetchMealPlans() {
-            // 1. Kiểm tra điều kiện đầu vào
-            if (!selectedPet || !activity || !healthCondition) return; 
+        React.useCallback(() => {
+            async function fetchMealPlans() {
+                // 1. Kiểm tra điều kiện đầu vào
+                if (!selectedPet || !activity || !healthCondition) return; 
 
-            try {
-                // 2. Load toàn bộ vectors món ăn thô từ file JSON/Database
-                const foodVectors = await loadFoodVectors();
+                try {
+                    // 2. Load toàn bộ vectors món ăn thô từ file JSON/Database
+                    const foodVectors = await loadFoodVectors();
 
-                // 3. Tính toán nhu cầu năng lượng (MER) và tạo Vector mục tiêu cả ngày của thú cưng
-                const merAvg = calculateMER(selectedPet.weight, selectedPet.species, activity);
-                const petNeedVectorRaw = buildPetNeedVector(merAvg, healthCondition); // [Calories, Protein, Fat, Carb]
+                    // 3. Tính toán nhu cầu năng lượng (MER) và tạo Vector mục tiêu cả ngày của thú cưng
+                    const merAvg = calculateMER(selectedPet.weight, selectedPet.species, activity);
+                    const petNeedVectorRaw = buildPetNeedVector(merAvg, healthCondition); // [Calories, Protein, Fat, Carb]
 
-                // 4. Gọi hàm service đã tối ưu để phân tách bữa ăn và tính số gram
-                const plans = recommendFoodsForMeals(
-                    petNeedVectorRaw, 
-                    foodVectors, 
-                    selectedPet.species
-                );
+                    // 4. Gọi hàm service đã tối ưu để phân tách bữa ăn và tính số gram
+                    const plans = recommendFoodsForMeals(
+                        petNeedVectorRaw, 
+                        foodVectors, 
+                        selectedPet.species
+                    );
 
-                // 5. Cập nhật kết quả vào State để giao diện hiển thị
-                setMealPlans(plans); 
-            } catch (error) {
-                console.error("Lỗi khi tính toán thực đơn theo bữa:", error);
-            }
+                    // 5. Cập nhật kết quả vào State để giao diện hiển thị
+                    setMealPlans(plans); 
+                } catch (error) {
+                    console.error("Lỗi khi tính toán thực đơn theo bữa:", error);
+                }
             }
 
             fetchMealPlans();

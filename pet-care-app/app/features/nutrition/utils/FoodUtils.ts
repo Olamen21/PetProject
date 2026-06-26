@@ -68,31 +68,37 @@ export function recommendFoodsForMeals(
   BASE_GRAM: number = 100
 ): SchedulePlan[] {
   
-  // 1. Định nghĩa cấu trúc các bữa ăn trong ngày (Ví dụ: Sáng 40% - Trưa 30% - Tối 30%)
+  // 1. Định nghĩa cấu trúc các bữa ăn trong ngày
   const mealTemplates = [
     { name: "Bữa Sáng", percentage: 0.4 },
     { name: "Bữa Trưa", percentage: 0.3 },
     { name: "Bữa Tối", percentage: 0.3 },
   ];
 
-  const filteredFoods = foodVectors.filter(
+  // Lọc thực phẩm theo loài trước
+  let filteredFoods = foodVectors.filter(
     food => food.species.toLowerCase() === petSpecies.toLowerCase()
   );
 
+  // Set để lưu trữ các food_id đã được chọn ở các bữa trước
+  const usedFoodIds = new Set<any>();
+
   // 2. Duyệt qua từng bữa ăn để tính toán cụ thể
   const mealPlans: SchedulePlan[] = mealTemplates.map(meal => {
+    // Loại bỏ các món ăn đã được chọn ở các bữa trước đó
+    const availableFoods = filteredFoods.filter(food => !usedFoodIds.has(food.food_id));
+
     // Nhân tỷ lệ phần trăm để tìm mục tiêu dinh dưỡng riêng cho bữa ăn này
     const mealTargetVector = dailyTargetVector.map(val => val * meal.percentage);
     const targetMealCalories = mealTargetVector[0];
 
-    // Tính độ khớp và số gram của tất cả các món đối với bữa ăn này
-    const foodRecommendations = filteredFoods.map(food => {
+    // Tính độ khớp và số gram của tất cả các món khả dụng
+    const foodRecommendations = availableFoods.map(food => {
       const similarity = cosineSimilarity(mealTargetVector, food.vector);
-      const foodBaseCalories = food.vector[0]; // Lượng calo gốc có trong BASE_GRAM (100g)
+      const foodBaseCalories = food.vector[0]; 
 
       let calculatedGram = 0;
       if (foodBaseCalories > 0) {
-        // Công thức: (Calo mục tiêu bữa / Calo gốc của món) * 100g
         calculatedGram = Math.round((targetMealCalories / foodBaseCalories) * BASE_GRAM);
       }
 
@@ -106,10 +112,15 @@ export function recommendFoodsForMeals(
       };
     });
 
-    // Sắp xếp các món ăn khớp nhất từ cao xuống thấp và lấy Top 3 món tốt nhất cho bữa này
+    // Lấy top 3 món phù hợp nhất cho bữa ăn này
     const topFoodsForMeal = foodRecommendations
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, 3);
+
+    // Lưu các món đã chọn vào danh sách loại trừ cho các bữa sau
+    topFoodsForMeal.forEach(food => {
+      usedFoodIds.add(food.food_id);
+    });
 
     return {
       mealName: meal.name,

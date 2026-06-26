@@ -18,6 +18,7 @@ import EditVaccine from "./features/vaccine/pages/EditVaccine";
 import DetailVaccine from "./features/vaccine/pages/DetailVaccine";
 import AppointmentPage from "./features/appoinment/pages/AppointmentPage";
 import DiagnosisPage from "./features/diagnosis/pages/DiagnosisPage";
+import ViewDetailUser from "./features/ManagementUser/pages/ViewDetailUser";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path="/detail-vaccine/:id" element={<DetailVaccine />} />
           <Route path="/vet/appointments" element={<AppointmentPage />} />
           <Route path='/vet/diagnosis' element={<DiagnosisPage />} />
+          <Route path="/edit-user/:id" element={<ViewDetailUser/>} />
         </Routes>
       </AuthProvider>
     </Router>

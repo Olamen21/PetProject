@@ -91,21 +91,24 @@ const UserRow: React.FC<Props> = ({ user }) => {
 
       <td style={styles.cell}>
         {user.role === "PENDING_VET" && (
-          <button
-            style={{ ...styles.actionBtn, color: Colors.success }}
-            onClick={() => handleApprove(user.id.toString())}
-          >
-            <FaCheckCircle />
-          </button>
+          <div style={{display: "inline"}}>
+            <button
+              style={{ ...styles.actionBtn, color: Colors.success }}
+              onClick={() => handleApprove(user.id.toString())}
+            >
+              <FaCheckCircle />
+            </button>
+            <button
+              style={{ ...styles.actionBtn, color: Colors.primary }}
+              onClick={() => navigation.navigate(`/edit-user/${user.id}`)}
+            >
+              <FaEye />
+            </button>
+          </div>
+          
         )}
         <button style={{ ...styles.actionBtn, color: Colors.error }}>
           <FaTrashAlt />
-        </button>
-        <button
-          style={{ ...styles.actionBtn, color: Colors.primary }}
-          onClick={() => {}}
-        >
-          <FaEye />
         </button>
       </td>
     </tr>

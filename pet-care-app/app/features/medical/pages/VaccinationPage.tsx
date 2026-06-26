@@ -174,47 +174,18 @@ export default function Vaccination() {
 
         {/* Medical record */}
         <View style={styles.reminderCardHeader}>
-          <Text style={styles.textReminder}>Medical records</Text>
+          <Text style={styles.textReminder}>Vaccination</Text>
           <TouchableOpacity
             style={styles.buttonAdd}
             onPress={() => {
-              if (selected === "Vaccination") {
-                router.push({
-                  pathname: "/(tabs)/AddVaccinationPage",
-                  params: { petId: selectedPet?.id },
-                });
-              }
+              router.push({
+                pathname: "/(tabs)/AddVaccinationPage",
+                params: { petId: selectedPet?.id },
+              });
             }}
           >
             <Ionicons name="add-outline" color={Colors.white} size={24} />
           </TouchableOpacity>
-        </View>
-
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <MedicalButton
-            icon="medkit-outline"
-            label="Vaccination"
-            selected={selected === "Vaccination"}
-            onPress={() => setSelected("Vaccination")}
-          />
-          <MedicalButton
-            icon="clipboard-outline"
-            label="Prescriptions"
-            selected={selected === "Prescriptions"}
-            onPress={() => setSelected("Prescriptions")}
-          />
-          <MedicalButton
-            icon="document-text-outline"
-            label="Documents"
-            selected={selected === "Documents"}
-            onPress={() => setSelected("Documents")}
-          />
-          <MedicalButton
-            icon="chatbox-outline"
-            label="Consultations"
-            selected={selected === "Consultations"}
-            onPress={() => setSelected("Consultations")}
-          />
         </View>
 
         {/* Upcoming vaccine*/}
