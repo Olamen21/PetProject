@@ -155,6 +155,18 @@ export class UsersService {
 
     return vet;
   }
+  async findPendingVetById(id: number): Promise<User> {
+    const vet = await this.usersRepository.findOne({
+      where: { id, role: Role.PENDING_VET },
+      relations: ['doctorProfile'],
+    });
+
+    if (!vet) {
+      throw new BadRequestException(`Pending vet with ID ${id} not found`);
+    }
+
+    return vet;
+  }
 
   // Hash password
   async hashPassword(password: string): Promise<string> {

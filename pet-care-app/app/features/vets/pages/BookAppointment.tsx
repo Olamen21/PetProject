@@ -1,6 +1,6 @@
 import HeaderBar from "@/app/shared/components/HeaderBar";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import StepIndicator from "../components/StepIndicator";
 import VetCard from "../components/VetCard";
 import { Colors } from "@/app/constants/Colors";
@@ -124,7 +124,11 @@ const BookAppointment = () => {
           },
         ]}
       />
-      <StepIndicator currentStep={1} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }} // thêm khoảng trống cuối
+      >
+        <StepIndicator currentStep={1} />
 
       <VetCard
         full_name={vet?.full_name}
@@ -176,6 +180,7 @@ const BookAppointment = () => {
         onPress={BookAppointment}
         style={styles.nextButton}
       />
+      </ScrollView>
     </View>
   );
 };
