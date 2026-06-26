@@ -64,14 +64,14 @@ const LoginPage: React.FC = () => {
           setMessage({ type: "success", text: "Login successful!" });
           localStorage.setItem("user_role", user.role);
 
-          if(user.role === "VET"){
+          if (user.role === "VET") {
             setTimeout(() => {
-            navigate("/vet/appointments");
-          }, 1000);
+              navigate("/vet/appointments");
+            }, 1000);
           } else {
-             setTimeout(() => {
-            navigate("/pets");
-          }, 1000);
+            setTimeout(() => {
+              navigate("/pets");
+            }, 1000);
           }
         } else {
           setMessage({
@@ -86,17 +86,13 @@ const LoginPage: React.FC = () => {
           text: "Incorrect login information!",
         });
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else if (typeof error === "object" && error && "response" in error) {
-        const err = error as { response?: { data?: { message?: string } } };
-        alert(err.response?.data?.message || "Email or password is incorrect!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        setMessage({ type: "error", text: error.response.data.message });
       } else {
-        alert("An unexpected error occurred.");
+        setMessage({ type: "error", text: "An unexpected error occurred." });
       }
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -87,19 +87,13 @@ const SignUpPage: React.FC = () => {
           navigate("/signup-upload");
         }, 1000);
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else if (typeof error === "object" && error && "response" in error) {
-        const err = error as { response?: { data?: { message?: string } } };
-        alert(
-          err.response?.data?.message || "Sign up failed, please try again!",
-        );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        setMessage({ type: "error", text: error.response.data.message });
       } else {
-        alert("An unexpected error occurred.");
+        setMessage({ type: "error", text: "An unexpected error occurred." });
       }
-    } finally {
-      setLoading(false);
     }
   };
 

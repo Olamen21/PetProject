@@ -2,7 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import CommonMessage from "@/app/shared/components/CommonMessage";
 import { Colors } from "../../../constants/Colors";
@@ -19,7 +26,10 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState<{ type: "error" | "success" | "warning" | "info"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const validateEmail = (email: string) => {
@@ -28,7 +38,8 @@ export default function SignupScreen() {
   };
 
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
 
@@ -37,32 +48,38 @@ export default function SignupScreen() {
 
     try {
       if (!validateEmail(email)) {
-        setMessage({ type: "error", text: "Email không hợp lệ!" });
+        setMessage({ type: "error", text: "Invalid email!" });
         return;
       }
       if (username.trim() === "" || password.trim() === "") {
-        setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin!" });
+        setMessage({
+          type: "error",
+          text: "Please fill in all required fields!",
+        });
         return;
       }
       if (!validatePassword(password)) {
-        setMessage({ type: "error", text: "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!" });
+        setMessage({
+          type: "error",
+          text: "Password must be at least 8 characters long, including uppercase, lowercase, numbers, and special characters!",
+        });
         return;
       }
 
-      await signUp({email: email, password: password, full_name: username});
-      router.replace("./LoginScreen");
+      await signUp({ email: email, password: password, full_name: username });
+      router.replace("/features/createPet/pages/AddPetScreen");
     } catch (err: any) {
-      const errorMsg = err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      const errorMsg =
+        err.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
       setMessage({ type: "error", text: errorMsg });
     } finally {
-          setLoading(false);
-        }
+      setLoading(false);
+    }
   };
 
-
   return (
-    <KeyboardAvoidingView 
-      style={{ flex: 1 }} 
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -75,9 +92,9 @@ export default function SignupScreen() {
             <AuthHeader
               title="Sign Up"
               subtitle="Please sign up to continue."
-              titleColor= {Colors.primary}
+              titleColor={Colors.primary}
               titleSize={26}
-              subtitleColor= {Colors.subtitleColor}
+              subtitleColor={Colors.subtitleColor}
               subtitleSize={15}
             />
           </View>
@@ -101,7 +118,9 @@ export default function SignupScreen() {
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
               rightIcon={
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
                   <Ionicons
                     name={showPassword ? "eye-outline" : "eye-off-outline"}
                     size={20}
@@ -115,11 +134,11 @@ export default function SignupScreen() {
             <CommonButton
               title={loading ? "Loading..." : "Sign Up"}
               onPress={handleSubmit}
-              backgroundColor= {Colors.primary}
-              textColor= {Colors.white}
+              backgroundColor={Colors.primary}
+              textColor={Colors.white}
               style={{ margin: 10 }}
               bordered={true}
-              borderColor= {Colors.border}
+              borderColor={Colors.border}
               borderWidth={2}
               disabled={loading}
             />
@@ -135,12 +154,12 @@ export default function SignupScreen() {
               title="Sign Up with Google"
               onPress={() => router.replace("./(tabs)/home")}
               iconName="logo-google"
-              iconColor= {Colors.primary}
-              backgroundColor= {Colors.white}
-              textColor= {Colors.primary}
+              iconColor={Colors.primary}
+              backgroundColor={Colors.white}
+              textColor={Colors.primary}
               style={{ margin: 10 }}
               bordered={true}
-              borderColor= {Colors.border}
+              borderColor={Colors.border}
               borderWidth={2}
             />
           </View>
@@ -153,7 +172,6 @@ export default function SignupScreen() {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-    
   );
 }
 
@@ -177,7 +195,6 @@ const styles = StyleSheet.create({
   negativeMarginBottom: {
     marginBottom: -5,
   },
- 
 
   signupText: {
     color: "#8B95A5",

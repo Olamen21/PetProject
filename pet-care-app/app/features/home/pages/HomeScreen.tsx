@@ -6,11 +6,7 @@ import { HeaderBar } from "@/app/shared/components/HeaderBar";
 import { getPetList } from "@/app/shared/services/CommonApi";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Pet } from "../../../shared/types/Pet";
 import { getProfile } from "../../user/services/userService";
 import CommonMessage from "@/app/shared/components/CommonMessage";
@@ -27,9 +23,9 @@ export default function HomeScreen() {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const [message, setMessage] = useState<{
-      type: "error" | "success" | "warning" | "info";
-      text: string;
-    } | null>(null);
+    type: "error" | "success" | "warning" | "info";
+    text: string;
+  } | null>(null);
   const [photoUri, setPhotoUri] = useState<string | undefined>(undefined);
   const [isNewAvatar, setIsNewAvatar] = useState(false);
   const [breeds, setBreeds] = useState<Breed[]>([]);
@@ -45,26 +41,32 @@ export default function HomeScreen() {
           if (data.length > 0) {
             setSelectedPet(data[0]);
           }
-           const dataUser = await getProfile();
+          const dataUser = await getProfile();
           setUser(dataUser);
         } catch (error) {
           console.error("Lỗi lấy dữ liệu:", error);
         }
       };
       fetchData();
-    }, [])
+    }, []),
   );
 
   const handleAddPhoto = async () => {
     if (!selectedPet) {
-      setMessage({ type: "error", text: "You haven't selected a pet to update yet!" });
+      setMessage({
+        type: "error",
+        text: "You haven't selected a pet to update yet!",
+      });
       return;
     }
 
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      setMessage({ type: "error", text: "You need to grant permission to access the photos!" });
+      setMessage({
+        type: "error",
+        text: "You need to grant permission to access the photos!",
+      });
       return;
     }
 
@@ -100,50 +102,69 @@ export default function HomeScreen() {
         });
         const updatedPets = await getPetList();
         setPets(updatedPets);
-        const updatedPet = updatedPets.find((p:Pet) => p.id === selectedPet.id);
+        const updatedPet = updatedPets.find(
+          (p: Pet) => p.id === selectedPet.id,
+        );
         if (updatedPet) setSelectedPet(updatedPet);
       } catch (error) {
         console.error(error);
-        setMessage({ type: "error", text: "There was an error updating the pet!" });
+        setMessage({
+          type: "error",
+          text: "There was an error updating the pet!",
+        });
       }
     }
   };
-  
-   if (!selectedPet) {
+
+  if (!selectedPet || pets.length === 0) {
     return (
       <View style={styles.container}>
         <HeaderBar
           logo={require("../../../../assets/images/logo.png")}
-          rightIcons={[
-            {
-              type: "ion",
-              name: "chatbubble-ellipses-outline",
-              onPress: () => {},
-              showDot: true,
-            },
-            { type: "ion", name: "notifications-outline", onPress: () => router.push("/(tabs)/NotificationPage"), },
-            user?.avatar_url ?
-            {
-              type: "image",
-              source: { uri: user.avatar_url },
-              onPress: () => {},
-            } : {
-              type: "image",
-              source: require("../../../../assets/images/avatarDefault.jpg"),
-              onPress: () => {},
-            }
-          ]}
+          rightIcons={[]}
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <AvatarSection
-            pets={pets}
-            selectedPet={selectedPet}
-            onSelectPet={setSelectedPet}
-          />
+        
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.emptyScrollContent}
+        >
+          {pets.length === 0 ? (
+            <View style={styles.emptyCard}>
+              {/* Vòng tròn trang trí tạo điểm nhấn thị giác */}
+              <View style={styles.decoratorCircle} />
+              
+              <CommonMessage
+                type="info"
+                message="You don't have any pets yet. Please add a pet to see its profile."
+              />
+              
+              <View style={{ width: '100%', marginTop: 10 }}>
+                <CommonButton
+                  title="Add a Pet"
+                  onPress={() => router.push("/(tabs)/AddPetScreen")}
+                  iconName="add-circle-outline"
+                  iconColor={Colors.white}
+                  backgroundColor={Colors.primary}
+                  textColor={Colors.white}
+                  style={styles.emptyButton}
+                />
+              </View>
+            </View>
+          ) : (
+            <AvatarSection
+              pets={pets}
+              selectedPet={selectedPet}
+              onSelectPet={setSelectedPet}
+            />
+          )}
+
           {message && (
-            <CommonMessage type={message.type} message={message.text} />
+            <View style={{ paddingHorizontal: 16, marginTop: 10 }}>
+              <CommonMessage type={message.type} message={message.text} />
+            </View>
           )}
         </ScrollView>
+        
         <BottomNavBar />
       </View>
     );
@@ -155,22 +176,27 @@ export default function HomeScreen() {
       <HeaderBar
         logo={require("../../../../assets/images/logo.png")}
         rightIcons={[
-          user?.avatar_url ?
-          {
-            type: "image",
-            source: { uri: user.avatar_url },
-            onPress: () => {},
-          } : {
-            type: "image",
-            source: require("../../../../assets/images/avatarDefault.jpg"),
-            onPress: () => {},
-          }
+          user?.avatar_url
+            ? {
+                type: "image",
+                source: { uri: user.avatar_url },
+                onPress: () => {},
+              }
+            : {
+                type: "image",
+                source: require("../../../../assets/images/avatarDefault.jpg"),
+                onPress: () => {},
+              },
         ]}
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Pet Profile Card */}
-        <AvatarSection pets={pets} selectedPet={selectedPet} onSelectPet={setSelectedPet} />
+        <AvatarSection
+          pets={pets}
+          selectedPet={selectedPet}
+          onSelectPet={setSelectedPet}
+        />
         {message && (
           <CommonMessage type={message.type} message={message.text} />
         )}
@@ -188,9 +214,9 @@ export default function HomeScreen() {
             })
           }
           iconName="clipboard-outline"
-          iconColor= {Colors.white}
-          backgroundColor= {Colors.primary}
-          textColor= {Colors.white}
+          iconColor={Colors.white}
+          backgroundColor={Colors.primary}
+          textColor={Colors.white}
           style={styles.button}
         />
 
@@ -218,5 +244,50 @@ const styles = StyleSheet.create({
     gap: 10,
     marginHorizontal: 16,
     marginBottom: 12,
+  },
+  emptyScrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+  },
+  emptyCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 24,
+    padding: 24,
+    alignItems: "center",
+    position: "relative",
+    overflow: "hidden",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: "#F0F0F0",
+  },
+  decoratorCircle: {
+    position: "absolute",
+    top: -30,
+    right: -30,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "#FFF4ED", 
+    opacity: 0.7,
+  },
+  emptyButton: {
+    flexDirection: "row",
+    paddingVertical: 14,
+    borderRadius: 16, 
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginTop: 15,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 2,
   },
 });

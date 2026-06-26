@@ -87,7 +87,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({
         </div>
 
         <div style={styles.statBox}>
-          <div style={styles.statNumber}>4.9</div>
+          <div style={styles.statNumber}>{rating?.averageRating?.toFixed(1)}</div>
           <div style={styles.statLabel}>Rating</div>
         </div>
 

@@ -4,6 +4,9 @@ import { removeToken, saveToken } from "./AuthStorage";
 
 export const signUp = async (data: { email: string; full_name: string; password: string }) => {
   const res = await api.post(`/auth/register`, data);
+   if (res.data?.access_token) {
+    await saveToken(res.data.access_token);
+  }
   return res.data;
 };
 

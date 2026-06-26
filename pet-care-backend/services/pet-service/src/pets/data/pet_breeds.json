@@ -1,102 +1,127 @@
 [
   {
-    "name": "Golden Retriever",
+    "name": "Golden Retriever (Chó Golden)",
     "species": "Dog",
     "description": "Giống chó thông minh, trung thành, thân thiện và cực kỳ dễ huấn luyện."
   },
   {
-    "name": "Poodle",
+    "name": "Poodle (Chó Poodle)",
     "species": "Dog",
     "description": "Nổi tiếng với ngoại hình xoăn xù đáng yêu, thông minh top đầu và không bị rụng lông."
   },
   {
-    "name": "Corgi",
+    "name": "Corgi (Chó Corgi)",
     "species": "Dog",
     "description": "Giống chó chân ngắn, mông trái tim, tính cách tinh nghịch và vô cùng năng động."
   },
   {
-    "name": "Alaska Malamute",
+    "name": "Alaska Malamute (Chó Alaska)",
     "species": "Dog",
     "description": "Dòng chó kéo xe cỡ lớn, có bờ vai vững chãi, tính cách hiền lành nhưng hơi bướng bỉnh."
   },
   {
-    "name": "Husky Siberian",
+    "name": "Husky Siberian (Chó Husky)",
     "species": "Dog",
     "description": "Giống chó ngáo nổi tiếng với nhiều biểu cảm hài hước, năng lượng cao và rất thích hú."
   },
   {
-    "name": "Chihuahua",
+    "name": "Chihuahua (Chó Chihuahua)",
     "species": "Dog",
     "description": "Giống chó nhỏ con nhất thế giới, cực kỳ trung thành và có xu hướng quấn chủ."
   },
   {
-    "name": "Shiba Inu",
+    "name": "Shiba Inu (Chó Shiba)",
     "species": "Dog",
     "description": "Quốc khuyển của Nhật Bản, có khuôn mặt hay cười, tính cách độc lập và khá tự tôn."
   },
   {
-    "name": "Becgie",
+    "name": "German Shepherd (Chó Becgie)",
     "species": "Dog",
     "description": "Giống chó nghiệp vụ dũng cảm, có khả năng bảo vệ và canh gác tuyệt vời."
   },
   {
-    "name": "French Bulldog",
+    "name": "French Bulldog (Chó Bull Pháp)",
     "species": "Dog",
     "description": "Chó bò Pháp có ngoại hình cơ bắp ngộ nghĩnh, tai dơi, tính cách lười vận động và thích ngủ."
   },
   {
-    "name": "Pug",
+    "name": "Pug (Chó Pug)",
     "species": "Dog",
     "description": "Giống chó mặt xệ, mắt lồi đáng yêu, tính tình tham ăn, thân thiện và vui vẻ."
   },
   {
-    "name": "British Shorthair",
+    "name": "British Shorthair (Mèo Anh lông ngắn)",
     "species": "Cat",
     "description": "Thân hình mũm mĩm, mặt tròn má phúng phính, tính cách điềm tĩnh và rất lười biếng."
   },
   {
-    "name": "British Longhair",
+    "name": "British Longhair (Mèo Anh lông dài)",
     "species": "Cat",
     "description": "Sở hữu bộ lông dài quý phái, tính cách hiền lành, thích được ôm ấp nuông chiều."
   },
   {
-    "name": "Scottish Fold",
+    "name": "Scottish Fold (Mèo tai cụp)",
     "species": "Cat",
     "description": "Đặc trưng với đôi tai cụp sát đầu đáng yêu, tính cách ngọt ngào và cực kỳ quấn người."
   },
   {
-    "name": "Persian Cat",
+    "name": "Persian Cat (Mèo Ba Tư)",
     "species": "Cat",
     "description": "Giống mèo mặt tịt quý tộc, lông siêu dày hai lớp, tính tình lười nhác và thích không gian yên tĩnh."
   },
   {
-    "name": "Maine Coon",
+    "name": "Maine Coon (Mèo Maine Coon)",
     "species": "Cat",
     "description": "Giống mèo nhà có kích thước khổng lồ như thợ săn, bờm cổ giống sư tử nhưng tính cách lại như 'gã khổng lồ dịu dàng'."
   },
   {
-    "name": "Sphynx",
+    "name": "Sphynx (Mèo Sphynx không lông)",
     "species": "Cat",
     "description": "Mèo Ai Cập độc lạ không có lông, da nhăn nheo, tuy ngoại hình có vẻ ngoài lạnh lùng nhưng lại cực kỳ ấm áp và thông minh."
   },
   {
-    "name": "Ragdoll",
+    "name": "Ragdoll (Mèo Ragdoll)",
     "species": "Cat",
     "description": "Đôi mắt xanh dương như đại dương, cơ thể mềm nhũn ra khi được bế, tính cách nhẹ nhàng, ngoan ngoãn."
   },
   {
-    "name": "Siamese",
+    "name": "Siamese (Mèo Xiêm)",
     "species": "Cat",
     "description": "Giống mèo cổ xưa với các mảng lông đen điểm xuyết ở mặt và chân, tính cách năng động và thích kêu nhiều."
   },
   {
-    "name": "Bengal",
+    "name": "Bengal (Mèo Bengal)",
     "species": "Cat",
     "description": "Sở hữu bộ lông vằn báo hoang dã, cơ thể săn chắc, cực kỳ thích leo trèo và không sợ nước."
   },
   {
-    "name": "Munchkin",
+    "name": "Munchkin (Mèo chân ngắn)",
     "species": "Cat",
     "description": "Nổi bật với bốn chiếc chân ngắn ngủn, dáng đi lạch bạch vô cùng giải trí và tính cách vô cùng tinh nghịch."
+  },
+  {
+    "name": "Phu Quoc Ridgeback (Chó Phú Quốc)",
+    "species": "Dog",
+    "description": "Giống chó đặc hữu của Việt Nam, nổi bật với dải lông xoáy trên lưng, thông minh và trung thành."
+  },
+  {
+    "name": "Hmong Short-tail (Chó H'Mông cộc đuôi)",
+    "species": "Dog",
+    "description": "Giống chó bản địa vùng núi phía Bắc Việt Nam, khỏe mạnh, dũng cảm và trung thành."
+  },
+  {
+    "name": "Ta Cat (Mèo ta)",
+    "species": "Cat",
+    "description": "Giống mèo phổ biến ở Việt Nam, dễ nuôi, thân thiện và thích săn bắt chuột."
+  },
+  {
+    "name": "Tam The Cat (Mèo tam thể)",
+    "species": "Cat",
+    "description": "Giống mèo có bộ lông ba màu đặc trưng, hiền lành và thân thiện."
+  },
+  {
+    "name": "Mun Cat (Mèo mun)",
+    "species": "Cat",
+    "description": "Giống mèo lông đen tuyền, nhanh nhẹn, tinh nghịch và rất phổ biến ở Việt Nam."
   }
 ]
